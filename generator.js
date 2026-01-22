@@ -31,7 +31,7 @@ function newProblem(){
 }
 
 function showSolution(){
-    katex.render(currentSolutionLatex.tex()+"+C", solution, {
+    katex.render(currentSolutionLatex, solution, {
         displayMode: true,
     });
     if(watchVisible) pauseTimer();

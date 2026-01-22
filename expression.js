@@ -107,10 +107,6 @@ function baseProblem(){
 
     const integrand = randomExpr(1);
 
-    console.log(Algebrite.simplify(integrand));
-    console.log(integrand);
-    console.log(Algebrite.simplify(integrand).toString());
-
     return {
         integrand: Algebrite.simplify(integrand),
         solution: Algebrite.integral(integrand)
@@ -174,7 +170,7 @@ function generateProblem(){
 
     console.log(prob.integrand.toString());
 
-    console.log(integrand.toString());
+    console.log(Algebrite.printlatex(integrand));
 
     return {
         integrand,
