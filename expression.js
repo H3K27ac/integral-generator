@@ -177,6 +177,7 @@ function generateProblem(){
 }
 
 function printLaTeX(expression) {
+    console.log(Algebrite.run(`printlatex(${expression})`));
     return (Algebrite.run(`printlatex(${expression})`)
         .replace(/\bsin\b/g, "\\sin")
         .replace(/\bcos\b/g, "\\cos")
