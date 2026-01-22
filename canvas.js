@@ -10,14 +10,16 @@ const deleteSelectionBtn = document.getElementById("deleteSelectionBtn");
 let strokes=[];
 let redoStack=[];
 
-let current=null;
-let tool="pen";
+let current = null;
+let tool = "pen";
 
-let selection=null; // {x,y,w,h, indices[]}
+let selection = null; // {x,y,w,h, indices[]}
 let selecting = false;     // currently drawing a selection box
 let selectionConfirmed = false;
-let isMovingSelection=false;
-let dragStart=null;
+let isMovingSelection = false;
+let dragStart = null;
+
+let strokeErasing = false;
 
 function resize(){
     canvas.width=canvas.offsetWidth;
@@ -63,7 +65,8 @@ canvas.addEventListener("pointerdown",e=>{
     const p=getPos(e);
 
     /* stroke eraser */
-    if(tool==="stroke"){
+    if (tool === "stroke") {
+        strokeErasing = true;
         eraseStrokeAt(p);
         return;
     }
@@ -97,6 +100,11 @@ canvas.addEventListener("pointerdown",e=>{
 
 canvas.addEventListener("pointermove",e=>{
     const p=getPos(e);
+
+    if (tool === "stroke" && strokeErasing) {
+        eraseStrokeAt(p);
+        return;
+    }
 
     if (tool === "select" && selection) {
 
@@ -137,6 +145,8 @@ canvas.addEventListener("pointerup",()=>{
         redoStack=[];
         current=null;
     }
+
+    strokeErasing = false;
 
     if (tool === "select") {
 
@@ -262,8 +272,11 @@ function redraw(){
 
     /* draw selection box */
     if(selection){
+        ctx.save();
+        ctx.lineWidth = 1; 
         ctx.setLineDash([4,4]);
         ctx.strokeRect(selection.x,selection.y,selection.w,selection.h);
         ctx.setLineDash([]);
+        ctx.restore();
     }
 }

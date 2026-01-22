@@ -7,6 +7,10 @@ body{
 
 h1{ text-align:center; }
 
+.is-hidden {
+    display: none;
+}
+
 .controls,.tools{
     display:flex;
     flex-wrap:wrap;
