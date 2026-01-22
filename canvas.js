@@ -1,5 +1,8 @@
 /* =========================
    Canvas System
+   Bugs:
+   Pixels erased by pixel eraser are counted as strokes (affects behavior of stroke eraser and select tool)
+   Undo and redo does not work for stroke eraser and select tool
    ========================= */
 
 const canvas = document.getElementById("board");
