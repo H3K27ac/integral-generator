@@ -1,0 +1,58 @@
+body{
+    font-family: system-ui, sans-serif;
+    margin:0;
+    padding:12px;
+    background:#f6f7fb;
+}
+
+h1{
+    text-align:center;
+}
+
+.controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    justify-content:center;
+    margin-bottom:10px;
+}
+
+button{
+    padding:10px 14px;
+    border-radius:10px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    font-size:14px;
+}
+
+button.secondary{
+    background:#555;
+}
+
+.math{
+    font-size:1.6rem;
+    text-align:center;
+    margin:18px 0;
+}
+
+#solution{
+    margin-top:10px;
+    text-align:center;
+    font-size:1.3rem;
+}
+
+canvas{
+    border:2px solid #ccc;
+    background:white;
+    width:100%;
+    height:55vh;
+    touch-action:none;
+    border-radius:12px;
+}
+
+.stopwatch{
+    text-align:center;
+    margin-top:10px;
+    font-size:20px;
+}
