@@ -16,7 +16,8 @@
 </script>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
-<script defer type="text/javascript" src="display.js"></script>
+<script defer type="text/javascript" src="canvas.js"></script>
+<script defer type="text/javascript" src="stopwatch.js"></script>
 <script defer type="text/javascript" src="generator.js"></script>
 
 </head>
@@ -34,15 +35,18 @@
 
 <div class="tools">
     <button id="penBtn" onclick="setTool('pen')">Pen</button>
-    <button id="strokeEraseBtn" onclick="setTool('stroke')">Stroke Erase</button>
     <button id="pixelEraseBtn" onclick="setTool('pixel')">Pixel Erase</button>
+    <button id="strokeEraseBtn" onclick="setTool('stroke')">Stroke Erase</button>
+    <button id="selectBtn" onclick="setTool('select')">Select</button>
 
     Width
     <input type="range" id="width" min="2" max="30" value="4">
 
     <button onclick="undo()">Undo</button>
     <button onclick="redo()">Redo</button>
+    <button onclick="deleteSelection()">Delete</button>
 </div>
+
 
 
 <div id="problem" class="math"></div>
