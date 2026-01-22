@@ -168,14 +168,10 @@ function generateProblem(){
     const integrand = Algebrite.simplify(prob.integrand);
     const solution  = Algebrite.simplify(prob.solution);
 
-    console.log(Algebrite.printlatex(integrand));
-    console.log(Algebrite.printlatex(integrand).toString());
-    console.log(Algebrite.printlatex(integrand.toString()));
-
     return {
         integrand,
         solution,
-        latex: `\\int ${Algebrite.printlatex(integrand)}\\,dx`,
-        solutionLatex: Algebrite.printlatex(solution) + "+C"
+        latex: `\\int ${Algebrite.run(`printlatex(${integrand})`)}\\,dx`,
+        solutionLatex: Algebrite.run(`printlatex(${solution})`) + "+C"
     };
 }
