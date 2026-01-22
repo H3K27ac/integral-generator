@@ -108,7 +108,7 @@ function baseProblem(){
     const integrand = randomExpr(1);
 
     console.log(Algebrite.simplify(integrand));
-    console.log(integrand)l
+    console.log(integrand);
     console.log(Algebrite.simplify(integrand).toString());
 
     return {
