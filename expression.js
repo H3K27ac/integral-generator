@@ -181,5 +181,5 @@ function printLaTeX(expression) {
         .replace(/\bsin\b/g, "\\sin")
         .replace(/\bcos\b/g, "\\cos")
         .replace(/\btan\b/g, "\\tan")
-        .replace(/\blog\b/g, "\\ln")
+        .replace(/\blog\b/g, "\\ln");
 }
