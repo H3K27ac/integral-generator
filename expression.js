@@ -138,7 +138,7 @@ TECHNIQUES.push(function(){
     const f = randomExpr(1);
 
     /* pick outer integral in variable u */
-    let g = randomExpr(1).replaceAll("x","u");
+    let g = randomExpr(1);
 
     /* compose */
     const g_of_f = Algebrite.subst(f,"x",g);
@@ -171,7 +171,15 @@ function generateProblem(){
     return {
         integrand,
         solution,
-        latex: `\\int ${Algebrite.run(`printlatex(${integrand})`)}\\,dx`,
-        solutionLatex: Algebrite.run(`printlatex(${solution})`) + "+C"
+        latex: `\\int ${printLaTeX(integrand)}\\,dx`,
+        solutionLatex: printLaTeX(solution) + "+C"
     };
+}
+
+function printLaTeX(expression) {
+    return Algebrite.run(`printlatex(${expression})`)
+        .replace(/\bsin\b/g, "\\sin")
+        .replace(/\bcos\b/g, "\\cos")
+        .replace(/\btan\b/g, "\\tan")
+        .replace(/\blog\b/g, "\\ln")
 }
