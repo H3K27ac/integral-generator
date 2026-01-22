@@ -88,4 +88,5 @@ function newProblem(){
 
 function showSolution(){
     katex.render(solutionLatex+"+C", solution);
+    if(watchVisible) pauseTimer();
 }

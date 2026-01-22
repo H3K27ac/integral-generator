@@ -26,29 +26,37 @@
 <h1>Integral Practice</h1>
 
 <div class="controls">
-    <button onclick="newProblem()">New Integral</button>
-    <button onclick="showSolution()">Show Solution</button>
-    <button class="secondary" onclick="clearCanvas()">Clear</button>
-    <button class="secondary" onclick="toggleStopwatch()">Stopwatch</button>
+    <button onclick="newProblem()">New</button>
+    <button onclick="showSolution()">Solution</button>
+    <button onclick="clearCanvas()">Clear</button>
+    <button id="toggleWatchBtn" onclick="toggleStopwatch()">Stopwatch</button>
 </div>
 
 <div class="tools">
-    <button id="penBtn" onclick="setTool('pen')">✏️ Pen</button>
-    <button id="eraserBtn" onclick="setTool('eraser')" class="secondary">🧽 Eraser</button>
+    <button id="penBtn" onclick="setTool('pen')">Pen</button>
+    <button id="strokeEraseBtn" onclick="setTool('stroke')">Stroke Erase</button>
+    <button id="pixelEraseBtn" onclick="setTool('pixel')">Pixel Erase</button>
+
     Width
-    <input type="range" id="width" min="2" max="25" value="4">
-    <button class="secondary" onclick="undo()">↩️ Undo</button>
+    <input type="range" id="width" min="2" max="30" value="4">
+
+    <button onclick="undo()">Undo</button>
+    <button onclick="redo()">Redo</button>
 </div>
+
 
 <div id="problem" class="math"></div>
 <div id="solution" class="math"></div>
 
-<div id="watch" class="stopwatch" style="display:none">
-    <span id="time">00:00.0</span><br>
-    <button onclick="startTimer()">Start</button>
-    <button onclick="pauseTimer()">Pause</button>
-    <button onclick="resetTimer()">Reset</button>
+<div id="watch" class="stopwatch">
+    <span id="time">00:00.0</span>
+    <div class="controls">
+        <button id="startBtn" onclick="startTimer()">Start</button>
+        <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
+        <button onclick="resetTimer()">Reset</button>
+    </div>
 </div>
+
 
 <canvas id="board"></canvas>
 

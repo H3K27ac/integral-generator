@@ -1,55 +1,70 @@
 /* =========================
-   Canvas with undo/eraser
+   Canvas
    ========================= */
 
-const canvas=board;
-const ctx=canvas.getContext("2d");
+const canvas = document.getElementById("board");
+const ctx = canvas.getContext("2d");
 
 let strokes=[];
+let redoStack=[];
 let current=null;
 let tool="pen";
 
 function resize(){
-    canvas.width=canvas.offsetWidth;
-    canvas.height=canvas.offsetHeight;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
     redraw();
 }
 resize();
-window.onresize=resize;
+window.addEventListener("resize",resize);
 
 function setTool(t){
     tool=t;
-    penBtn.className = t==="pen"?"":"secondary";
-    eraserBtn.className = t==="eraser"?"":"secondary";
+
+    [penBtn,strokeEraseBtn,pixelEraseBtn].forEach(b=>b.classList.remove("active"));
+
+    if(t==="pen") penBtn.classList.add("active");
+    if(t==="stroke") strokeEraseBtn.classList.add("active");
+    if(t==="pixel") pixelEraseBtn.classList.add("active");
 }
 
-function start(e){
-    const p=pos(e);
-    current={
-        tool,
-        width:+width.value,
-        points:[p]
+setTool("pen");
+
+function getPos(e){
+    const r = canvas.getBoundingClientRect();
+    return {
+        x:e.clientX-r.left,
+        y:e.clientY-r.top
     };
 }
 
-function move(e){
-    if(!current) return;
-    current.points.push(pos(e));
-    redraw();
-}
+canvas.addEventListener("pointerdown",e=>{
+    canvas.setPointerCapture(e.pointerId);
 
-function end(){
+    if(tool==="stroke"){
+        eraseStroke(getPos(e));
+        return;
+    }
+
+    current={
+        tool,
+        width:+width.value,
+        points:[getPos(e)]
+    };
+});
+
+canvas.addEventListener("pointermove",e=>{
+    if(!current) return;
+    current.points.push(getPos(e));
+    redraw();
+});
+
+canvas.addEventListener("pointerup",()=>{
     if(!current) return;
     strokes.push(current);
+    redoStack=[];
     current=null;
-}
-
-function pos(e){
-    const r=canvas.getBoundingClientRect();
-    let x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
-    let y=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
-    return {x,y};
-}
+});
 
 function redraw(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -58,7 +73,7 @@ function redraw(){
         ctx.lineWidth=s.width;
         ctx.lineCap="round";
 
-        if(s.tool==="eraser"){
+        if(s.tool==="pixel"){
             ctx.globalCompositeOperation="destination-out";
         } else {
             ctx.globalCompositeOperation="source-over";
@@ -69,27 +84,34 @@ function redraw(){
         for(let p of s.points) ctx.lineTo(p.x,p.y);
         ctx.stroke();
     }
+
     ctx.globalCompositeOperation="source-over";
 }
 
+function eraseStroke(p){
+    strokes = strokes.filter(s=>{
+        return !s.points.some(pt=>Math.hypot(pt.x-p.x,pt.y-p.y)<12);
+    });
+    redraw();
+}
+
 function undo(){
-    strokes.pop();
+    if(!strokes.length) return;
+    redoStack.push(strokes.pop());
+    redraw();
+}
+
+function redo(){
+    if(!redoStack.length) return;
+    strokes.push(redoStack.pop());
     redraw();
 }
 
 function clearCanvas(){
     strokes=[];
-    current=null;
+    redoStack=[];
     redraw();
 }
-
-canvas.onmousedown=start;
-canvas.onmousemove=move;
-canvas.onmouseup=end;
-
-canvas.ontouchstart=start;
-canvas.ontouchmove=move;
-canvas.ontouchend=end;
 
 /* =========================
    Stopwatch
@@ -99,28 +121,35 @@ let watchVisible=false;
 let running=false;
 let elapsed=0;
 let last=0;
-let timer=null;
+let raf;
 
 function toggleStopwatch(){
     watchVisible=!watchVisible;
-    watch.style.display=watchVisible?"block":"none";
+    watch.style.display = watchVisible ? "block":"none";
+    toggleWatchBtn.classList.toggle("active",watchVisible);
 }
 
 function startTimer(){
     if(running) return;
+
     running=true;
     last=performance.now();
-    timer=requestAnimationFrame(tick);
+    startBtn.classList.add("active");
+    pauseBtn.classList.remove("active");
+
+    raf=requestAnimationFrame(tick);
 }
 
 function pauseTimer(){
     running=false;
-    cancelAnimationFrame(timer);
+    cancelAnimationFrame(raf);
+
+    startBtn.classList.remove("active");
+    pauseBtn.classList.add("active");
 }
 
 function resetTimer(){
-    running=false;
-    cancelAnimationFrame(timer);
+    pauseTimer();
     elapsed=0;
     updateDisplay();
 }
@@ -130,7 +159,7 @@ function tick(now){
     elapsed+=now-last;
     last=now;
     updateDisplay();
-    timer=requestAnimationFrame(tick);
+    raf=requestAnimationFrame(tick);
 }
 
 function updateDisplay(){
@@ -140,7 +169,3 @@ function updateDisplay(){
     time.textContent=
         String(m).padStart(2,"0")+":"+String(s).padStart(4,"0");
 }
-
-/* ========================= */
-
-window.onload=newProblem;
