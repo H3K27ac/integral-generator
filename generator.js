@@ -2,23 +2,24 @@
    New Problem Generator
    ========================= */
 
-let solutionExpr=null;
+let currentSolutionLatex="";
+
+const solution = document.getElementById("solution");
+const problem = document.getElementById("problem");
 
 function newProblem(){
 
     clearCanvas();
-    document.getElementById("solution").innerHTML="";
+    solution.innerHTML="";
 
-    let t = TECHNIQUES[randomInt(0,TECHNIQUES.length-1)];
+    const p = generateProblem();
 
-    let prob = t();
+    currentSolutionLatex = p.solutionLatex;
 
-    let integrand = prob.integrand.simplify();
-    solutionExpr = prob.solution.simplify();
+    katex.render(p.latex, problem);
 
     katex.render(
-        `\\int ${integrand.tex()}\\,dx`,
-        problem, {
+        p.latex, problem, {
             displayMode: true,
         }
     );
@@ -30,8 +31,10 @@ function newProblem(){
 }
 
 function showSolution(){
-    katex.render(solutionExpr.tex()+"+C", solution, {
+    katex.render(currentSolutionLatex.tex()+"+C", solution, {
         displayMode: true,
     });
     if(watchVisible) pauseTimer();
 }
+
+
