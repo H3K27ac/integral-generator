@@ -13,6 +13,7 @@ function newProblem(){
     solution.innerHTML="";
 
     const p = generateProblem();
+    if (!p) return;
 
     currentSolutionLatex = p.solutionLatex;
 

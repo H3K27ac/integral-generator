@@ -35,8 +35,15 @@
     <button onclick="newProblem()">New</button>
     <button onclick="showSolution()">Solution</button>
     <button onclick="clearCanvas()">Clear</button>
+    <button id="techToggleBtn" onclick="toggleTechPanel()">Techniques</button>
     <button id="toggleWatchBtn" onclick="toggleStopwatch()">Stopwatch</button>
 </div>
+
+<div id="techPanel" class="tech-panel" style="display:none">
+    <h3>Select Techniques</h3>
+    <div id="techList"></div>
+</div>
+
 
 <div class="tools">
     <button id="penBtn" onclick="setTool('pen')">Pen</button>

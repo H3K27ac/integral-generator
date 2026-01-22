@@ -115,53 +115,19 @@ function baseProblem(){
 
 
 /* =========================
-   Technique Registry
-========================= */
-
-const TECHNIQUES = [];
-
-
-/* -------------------------------------------------
-   Technique 1 - direct
-------------------------------------------------- */
-
-TECHNIQUES.push(baseProblem);
-
-
-/* -------------------------------------------------
-   Technique 2 - u-substitution
-   int g(f(x)) f'(x) dx
-------------------------------------------------- */
-
-TECHNIQUES.push(function(){
-
-    const f = randomExpr(1);
-
-    /* pick outer integral in variable u */
-    let g = randomExpr(1);
-
-    /* compose */
-    const g_of_f = Algebrite.subst(f,"x",g);
-
-    const fprime = Algebrite.derivative(f);
-
-    const integrand = `(${g_of_f}) * (${fprime})`;
-
-    return {
-        integrand: Algebrite.simplify(integrand),
-        solution: Algebrite.integral(g)
-    };
-});
-
-
-
-/* =========================
    Public generator
 ========================= */
 
 function generateProblem(){
+    
+    const enabled = TECHNIQUES.filter(t=>t.enabled);
 
-    const tech = pick(TECHNIQUES);
+    if(enabled.length===0){
+        alert("Select at least one technique.");
+        return null;
+    }
+
+    const tech = pick(enabled);
 
     const prob = tech();
 
@@ -177,11 +143,7 @@ function generateProblem(){
 }
 
 function printLaTeX(expression) {
-    console.log(Algebrite.run(`printlatex(${expression})`));
-    return (Algebrite.run(`printlatex(${expression})`)
-        .replace(/\bsin\b/g, "\\sin")
-        .replace(/\bcos\b/g, "\\cos")
-        .replace(/\btan\b/g, "\\tan")
-        .replace(/\blog\b/g, "\\ln")
+    return Algebrite.run(`printlatex(${expression})`).replace(/sin|cos|tan|log/g, m => 
+        m === "log" ? "\\ln" : `\\${m}`
     );
 }
