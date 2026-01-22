@@ -47,6 +47,8 @@ function randomExpr(depth=0){
 
         () => `(${randomExpr(depth+1)} + ${randomExpr(depth+1)})`,
 
+        /*
+
         () => `(${randomExpr(depth+1)} * ${randomExpr(depth+1)})`,
 
         () => `(${randomExpr(depth+1)})^${rint(2,5)}`,
@@ -58,6 +60,8 @@ function randomExpr(depth=0){
         () => `exp(${randomExpr(depth+1)})`,
 
         () => `log(${randomExpr(depth+1)})`,
+
+        */
 
         () => `${rint(2,6)}*(${randomExpr(depth+1)})`
     ];
@@ -101,7 +105,7 @@ function randomPrimitive(){
 
 function baseProblem(){
 
-    const integrand = randomExpr(1);
+    const integrand = randomExpr(2);
 
     console.log(integrand)
 
@@ -141,7 +145,7 @@ TECHNIQUES.push(function(){
     /* compose */
     const g_of_f = Algebrite.subst(f,"x",g);
 
-    const fprime = d(f, "x");
+    const fprime = Algebrite.d(f);
 
     const integrand = `(${g_of_f}) * (${fprime})`;
 
