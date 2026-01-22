@@ -18,7 +18,9 @@ function newProblem(){
 
     katex.render(
         `\\int ${integrand.tex()}\\,dx`,
-        problem
+        problem, {
+            displayMode: true,
+        }
     );
 
     if(watchVisible){
@@ -28,6 +30,8 @@ function newProblem(){
 }
 
 function showSolution(){
-    katex.render(solutionExpr.tex()+"+C", solution);
+    katex.render(solutionExpr.tex()+"+C", solution, {
+        displayMode: true,
+    });
     if(watchVisible) pauseTimer();
 }
