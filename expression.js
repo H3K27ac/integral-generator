@@ -105,9 +105,7 @@ function randomPrimitive(){
 
 function baseProblem(){
 
-    const integrand = randomExpr(2);
-
-    console.log(integrand)
+    const integrand = randomExpr(1);
 
     return {
         integrand: Algebrite.simplify(integrand),
@@ -169,6 +167,10 @@ function generateProblem(){
 
     const integrand = Algebrite.simplify(prob.integrand);
     const solution  = Algebrite.simplify(prob.solution);
+
+    console.log(prob.integrand)
+
+    console.log(integrand)
 
     return {
         integrand,
