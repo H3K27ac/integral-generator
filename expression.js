@@ -149,7 +149,7 @@ TECHNIQUES.push(function(){
 
     return {
         integrand: Algebrite.simplify(integrand),
-        solution: Algebrite.integral(integrand)
+        solution: Algebrite.integral(g)
     };
 });
 
@@ -177,9 +177,10 @@ function generateProblem(){
 }
 
 function printLaTeX(expression) {
-    return Algebrite.run(`printlatex(${expression})`)
+    return (Algebrite.run(`printlatex(${expression})`)
         .replace(/\bsin\b/g, "\\sin")
         .replace(/\bcos\b/g, "\\cos")
         .replace(/\btan\b/g, "\\tan")
-        .replace(/\blog\b/g, "\\ln");
+        .replace(/\blog\b/g, "\\ln")
+    );
 }
