@@ -10,13 +10,15 @@ function newProblem(){
     document.getElementById("solution").innerHTML="";
 
     let t = TECHNIQUES[randomInt(0,TECHNIQUES.length-1)];
+
     let prob = t();
 
-    solutionExpr = prob.solution;
+    let integrand = prob.integrand.simplify();
+    solutionExpr = prob.solution.simplify();
 
     katex.render(
-        `\\int ${prob.integrand.tex()}\\,dx`,
-        document.getElementById("problem")
+        `\\int ${integrand.tex()}\\,dx`,
+        problem
     );
 
     if(watchVisible){
