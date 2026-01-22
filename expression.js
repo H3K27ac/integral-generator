@@ -129,7 +129,7 @@ function generateProblem(){
 
     const tech = pick(enabled);
 
-    const prob = tech();
+    const prob = tech.fn();
 
     const integrand = Algebrite.simplify(prob.integrand);
     const solution  = Algebrite.simplify(prob.solution);
