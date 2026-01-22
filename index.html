@@ -28,14 +28,22 @@
 <div class="controls">
     <button onclick="newProblem()">New Integral</button>
     <button onclick="showSolution()">Show Solution</button>
-    <button class="secondary" onclick="clearCanvas()">Clear Work</button>
-    <button class="secondary" onclick="toggleStopwatch()">Toggle Stopwatch</button>
+    <button class="secondary" onclick="clearCanvas()">Clear</button>
+    <button class="secondary" onclick="toggleStopwatch()">Stopwatch</button>
 </div>
 
-<div class="math" id="problem"></div>
-<div id="solution"></div>
+<div class="tools">
+    <button id="penBtn" onclick="setTool('pen')">✏️ Pen</button>
+    <button id="eraserBtn" onclick="setTool('eraser')" class="secondary">🧽 Eraser</button>
+    Width
+    <input type="range" id="width" min="2" max="25" value="4">
+    <button class="secondary" onclick="undo()">↩️ Undo</button>
+</div>
 
-<div class="stopwatch" id="watch" style="display:none">
+<div id="problem" class="math"></div>
+<div id="solution" class="math"></div>
+
+<div id="watch" class="stopwatch" style="display:none">
     <span id="time">00:00.0</span><br>
     <button onclick="startTimer()">Start</button>
     <button onclick="pauseTimer()">Pause</button>

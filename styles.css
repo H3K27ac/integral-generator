@@ -1,13 +1,11 @@
 body{
-    font-family: system-ui, sans-serif;
+    font-family:system-ui;
     margin:0;
     padding:12px;
-    background:#f6f7fb;
+    background:#f5f6fb;
 }
 
-h1{
-    text-align:center;
-}
+h1{ text-align:center; }
 
 .controls{
     display:flex;
@@ -23,36 +21,36 @@ button{
     border:none;
     background:#2563eb;
     color:white;
-    font-size:14px;
 }
 
-button.secondary{
-    background:#555;
-}
+.secondary{ background:#555; }
 
 .math{
+    text-align:center;
     font-size:1.6rem;
-    text-align:center;
-    margin:18px 0;
-}
-
-#solution{
-    margin-top:10px;
-    text-align:center;
-    font-size:1.3rem;
+    margin:16px 0;
 }
 
 canvas{
-    border:2px solid #ccc;
-    background:white;
     width:100%;
     height:55vh;
-    touch-action:none;
+    border:2px solid #ccc;
+    background:white;
     border-radius:12px;
+    touch-action:none;
 }
 
 .stopwatch{
     text-align:center;
     margin-top:10px;
     font-size:20px;
+}
+
+.tools{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:8px;
+    flex-wrap:wrap;
 }

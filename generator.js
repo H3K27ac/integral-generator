@@ -1,52 +1,70 @@
 /* =========================
-   Random expression generator
+   Polynomial helpers
    ========================= */
 
-function rand(a,b){
-    return Math.floor(Math.random()*(b-a+1))+a;
+function rand(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+
+function formatTerm(c,p){
+    if(c===0) return "";
+
+    let sign = c<0 ? "-" : "+";
+    c = Math.abs(c);
+
+    let coeff = "";
+    if(!(c===1 && p!==0)) coeff = c;
+
+    let variable = "";
+    if(p>1) variable = `x^{${p}}`;
+    else if(p===1) variable = "x";
+
+    if(p===0) return sign + coeff;
+
+    return sign + coeff + variable;
+}
+
+function tidy(expr){
+    expr = expr.replace(/^\+/,"");
+    expr = expr.replace(/\+\-/g,"-");
+    return expr || "0";
 }
 
 function randomPolynomial(){
-    let degree = rand(2,4);
-    let terms = [];
+    let deg = rand(2,4);
+    let s="";
 
-    for(let i=degree;i>=0;i--){
+    for(let p=deg;p>=0;p--){
         let c = rand(-5,5);
-        if(c===0) continue;
-
-        if(i===0) terms.push(`${c}`);
-        else if(i===1) terms.push(`${c}x`);
-        else terms.push(`${c}x^{${i}}`);
+        if(c!==0) s += formatTerm(c,p);
     }
-
-    return terms.join("+").replace(/\+\-/g,"-");
+    return tidy(s);
 }
 
 function differentiate(poly){
-    let parts = poly.match(/[+-]?[^+-]+/g);
-    let result=[];
+    let terms = poly.match(/[+-]?[^+-]+/g);
+    let out="";
 
-    for(let t of parts){
-        let match = t.match(/([+-]?\d*)x\^{(\d+)}/);
-        if(match){
-            let c = match[1]===""||match[1]==="+"?1:match[1]==="-"?-1:+match[1];
-            let p = +match[2];
-            result.push(`${c*p}x^{${p-1}}`);
+    for(let t of terms){
+        let m = t.match(/([+-]?)(\d*)x\^{(\d+)}/);
+        if(m){
+            let sign=m[1]==="-"?-1:1;
+            let c=m[2]===""?1:+m[2];
+            let p=+m[3];
+            out+=formatTerm(sign*c*p,p-1);
             continue;
         }
 
-        match = t.match(/([+-]?\d*)x$/);
-        if(match){
-            let c = match[1]===""||match[1]==="+"?1:match[1]==="-"?-1:+match[1];
-            result.push(`${c}`);
+        m = t.match(/([+-]?)(\d*)x$/);
+        if(m){
+            let sign=m[1]==="-"?-1:1;
+            let c=m[2]===""?1:+m[2];
+            out+=formatTerm(sign*c,0);
         }
     }
-
-    return result.join("+").replace(/\+\-/g,"-") || "0";
+    return tidy(out);
 }
 
 /* =========================
-   Problem logic
+   Problem
    ========================= */
 
 let solutionLatex="";
@@ -55,16 +73,19 @@ function newProblem(){
     clearCanvas();
     document.getElementById("solution").innerHTML="";
 
-    let F = randomPolynomial();
-    let f = differentiate(F);
+    let F=randomPolynomial();
+    let f=differentiate(F);
 
-    solutionLatex = F;
+    solutionLatex=F;
 
-    let latex = `\\int ${f}\\, dx`;
+    katex.render(`\\int ${f}\\,dx`, problem);
 
-    katex.render(latex, document.getElementById("problem"));
+    if(watchVisible){
+        resetTimer();
+        startTimer();
+    }
 }
 
 function showSolution(){
-    katex.render(solutionLatex + " + C", document.getElementById("solution"));
+    katex.render(solutionLatex+"+C", solution);
 }
