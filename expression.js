@@ -2,7 +2,7 @@
    CAS-BASED INTEGRAL GENERATION FRAMEWORK
 ===================================================== */
 
-import Algebrite from "algebrite";
+var Algebrite = require("algebrite");
 
 /* =========================
    Utilities
@@ -148,7 +148,6 @@ TECHNIQUES.push(function(){
         solution: Algebrite.integral(integrand)
     };
 });
-
 
 
 
