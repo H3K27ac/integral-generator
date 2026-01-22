@@ -172,9 +172,9 @@ function generateProblem(){
     const integrand = Algebrite.simplify(prob.integrand);
     const solution  = Algebrite.simplify(prob.solution);
 
-    console.log(prob.integrand).toString();
+    console.log(prob.integrand.toString());
 
-    console.log(integrand).toString();
+    console.log(integrand.toString());
 
     return {
         integrand,
