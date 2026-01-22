@@ -51,7 +51,6 @@ addTechnique("u-substitution", function(){
 
 
 
-
 /* =========================
    Technique panel UI
 ========================= */
