@@ -143,7 +143,7 @@ TECHNIQUES.push(function(){
     /* compose */
     const g_of_f = Algebrite.subst(f,"x",g);
 
-    const fprime = Algebrite.d(f);
+    const fprime = Algebrite.derivative(f);
 
     const integrand = `(${g_of_f}) * (${fprime})`;
 
@@ -168,9 +168,9 @@ function generateProblem(){
     const integrand = Algebrite.simplify(prob.integrand);
     const solution  = Algebrite.simplify(prob.solution);
 
-    console.log(prob.integrand.toString());
-
     console.log(Algebrite.printlatex(integrand));
+    console.log(Algebrite.printlatex(integrand).toString());
+    console.log(Algebrite.printlatex(integrand.toString()));
 
     return {
         integrand,
