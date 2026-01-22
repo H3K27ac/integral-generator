@@ -2,6 +2,12 @@
    Stopwatch
    ========================= */
 
+const watch = document.getElementById("watch");
+const startBtn = document.getElementById("startBtn");
+const pauseBtn = document.getElementById("pauseBtn");
+const toggleWatchBtn = document.getElementById("toggleWatchBtn");
+const time = document.getElementById("time");
+
 let watchVisible=false;
 let running=false;
 let elapsed=0;

@@ -5,6 +5,8 @@
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 
+const deleteSelectionBtn = document.getElementById("deleteSelectionBtn");
+
 let strokes=[];
 let redoStack=[];
 
@@ -12,7 +14,9 @@ let current=null;
 let tool="pen";
 
 let selection=null; // {x,y,w,h, indices[]}
-let draggingSelection=false;
+let selecting = false;     // currently drawing a selection box
+let selectionConfirmed = false;
+let isMovingSelection=false;
 let dragStart=null;
 
 function resize(){
@@ -65,14 +69,21 @@ canvas.addEventListener("pointerdown",e=>{
     }
 
     /* selection tool */
-    if(tool==="select"){
-        if(selection && pointInRect(p,selection)){
-            draggingSelection=true;
-            dragStart=p;
-        } else {
-            selection={x:p.x,y:p.y,w:0,h:0,indices:[]};
-            draggingSelection=false;
+    if (tool === "select") {
+
+        // Click inside confirmed selection, start dragging
+        if (selectionConfirmed && selection && pointInRect(p, selection)) {
+            isMovingSelection = true;
+            dragStart = p;
+            return;
         }
+
+        // Start new selection
+        selection = { x: p.x, y: p.y, w: 0, h: 0, indices: [] };
+        selecting = true;
+        selectionConfirmed = false;
+        isMovingSelection = false;
+        redraw();
         return;
     }
 
@@ -87,22 +98,29 @@ canvas.addEventListener("pointerdown",e=>{
 canvas.addEventListener("pointermove",e=>{
     const p=getPos(e);
 
-    if(tool==="select" && selection){
-        if(draggingSelection){
-            let dx=p.x-dragStart.x;
-            let dy=p.y-dragStart.y;
+    if (tool === "select" && selection) {
 
-            for(let i of selection.indices){
-                for(let pt of strokes[i].points){
-                    pt.x+=dx;
-                    pt.y+=dy;
+        if (isMovingSelection) {
+            const dx = p.x - dragStart.x;
+            const dy = p.y - dragStart.y;
+
+            for (let i of selection.indices) {
+                for (let pt of strokes[i].points) {
+                    pt.x += dx;
+                    pt.y += dy;
                 }
             }
-            dragStart=p;
-        } else {
-            selection.w=p.x-selection.x;
-            selection.h=p.y-selection.y;
+
+            selection.x += dx;
+            selection.y += dy;
+
+            dragStart = p;
         }
+        else if (selecting) {
+            selection.w = p.x - selection.x;
+            selection.h = p.y - selection.y;
+        }
+
         redraw();
         return;
     }
@@ -120,11 +138,20 @@ canvas.addEventListener("pointerup",()=>{
         current=null;
     }
 
-    if(tool==="select" && selection && !draggingSelection){
-        computeSelection();
+    if (tool === "select") {
+
+        // Finish selection on release (desktop + mobile)
+        if (selecting) {
+            selecting = false;
+            selectionConfirmed = true;
+            computeSelection();
+            updateSelectionUI();
+        }
+
+        isMovingSelection = false;
     }
 
-    draggingSelection=false;
+    redraw();
 });
 
 /* ---------- stroke erase ---------- */
@@ -177,6 +204,17 @@ function pointInRect(p,r){
     return p.x>=minX&&p.x<=maxX&&p.y>=minY&&p.y<=maxY;
 }
 
+function updateSelectionUI() {
+    const show =
+        tool === "select" &&
+        selection &&
+        selectionConfirmed &&
+        selection.indices.length > 0;
+
+    deleteSelectionBtn.style.display = show ? "block" : "none";
+}
+
+
 /* ---------- undo/redo ---------- */
 
 function undo(){
@@ -224,7 +262,7 @@ function redraw(){
 
     /* draw selection box */
     if(selection){
-        ctx.setLineDash([6,6]);
+        ctx.setLineDash([4,4]);
         ctx.strokeRect(selection.x,selection.y,selection.w,selection.h);
         ctx.setLineDash([]);
     }
