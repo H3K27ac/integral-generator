@@ -104,8 +104,8 @@ function baseProblem(){
     const integrand = randomExpr(1);
 
     return {
-        integrand: Algebrite.simplify(integrand),
-        solution: Algebrite.integral(integrand)
+        integrand: simplify(integrand),
+        solution: integral(integrand)
     };
 }
 
@@ -137,15 +137,15 @@ TECHNIQUES.push(function(){
     let g = randomExpr(1).replaceAll("x","u");
 
     /* compose */
-    const g_of_f = Algebrite.subst(f,"x",g);
+    const g_of_f = subst(f,"x",g);
 
-    const fprime = Algebrite.d(f, "x");
+    const fprime = d(f, "x");
 
     const integrand = `(${g_of_f}) * (${fprime})`;
 
     return {
-        integrand: Algebrite.simplify(integrand),
-        solution: Algebrite.integral(integrand)
+        integrand: simplify(integrand),
+        solution: integral(integrand)
     };
 });
 
@@ -161,13 +161,13 @@ function generateProblem(){
 
     const prob = tech();
 
-    const integrand = Algebrite.simplify(prob.integrand);
-    const solution  = Algebrite.simplify(prob.solution);
+    const integrand = simplify(prob.integrand);
+    const solution  = simplify(prob.solution);
 
     return {
         integrand,
         solution,
-        latex: `\\int ${Algebrite.printlatex(integrand)}\\,dx`,
-        solutionLatex: Algebrite.printlatex(solution) + "+C"
+        latex: `\\int ${printlatex(integrand)}\\,dx`,
+        solutionLatex: printlatex(solution) + "+C"
     };
 }
