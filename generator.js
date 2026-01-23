@@ -10,6 +10,11 @@ function pick(a){
     return a[rint(0,a.length-1)];
 }
 
+function pickFast(arr){
+    return arr[(Math.random() * arr.length) | 0];
+}
+
+
 
 /* =========================
    Public generator

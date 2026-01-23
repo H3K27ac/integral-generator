@@ -3,28 +3,43 @@
 ===================================================== */
 
 const FUNCTION_CATEGORIES = [];
-
-
-/* ---------- registry helpers ---------- */
+const ENABLED_CATEGORIES = [];
 
 function addCategory(name){
     const cat = {
         name,
-        enabled:true,
-        functions:[]
+        enabled: true,
+        functions: [],
+        enabledFunctions: []
     };
     FUNCTION_CATEGORIES.push(cat);
+    ENABLED_CATEGORIES.push(cat);
     return cat;
 }
 
 function addFunction(cat, name, generator){
-    cat.functions.push({
+    const fn = {
         name,
         gen: generator,
-        enabled:true
-    });
+        enabled: true
+    };
+    cat.functions.push(fn);
+    cat.enabledFunctions.push(fn);
 }
 
+function updateCategoryState(cat){
+    cat.enabledFunctions.length = 0;
+
+    for(const fn of cat.functions){
+        if(fn.enabled) cat.enabledFunctions.push(fn);
+    }
+
+    cat.enabled = cat.enabledFunctions.length > 0;
+
+    const idx = ENABLED_CATEGORIES.indexOf(cat);
+    if(cat.enabled && idx === -1) ENABLED_CATEGORIES.push(cat);
+    else if(!cat.enabled && idx !== -1) ENABLED_CATEGORIES.splice(idx,1);
+}
 
 
 /* =====================================================
@@ -36,22 +51,25 @@ function addFunction(cat, name, generator){
 
 const polyCat = addCategory("Polynomials");
 
-addFunction(polyCat,"Polynomial", function(){
+addFunction(polyCat,"Polynomial", ()=>{
 
-    const degree=rint(1,3);
-    let terms=[];
+    const degree = rint(1,3);
+    const terms = [];
 
-    for(let i=degree;i>=0;i--){
-        let c=rint(-5,5);
-        if(c===0) continue;
+    for(let i = degree; i >= 0; i--){
+        const c = rint(-5,5);
+        if(!c) continue;
 
-        if(i===0) terms.push(`${c}`);
-        else if(i===1) terms.push(`${c}*x`);
+        if(i === 0) terms.push(c);
+        else if(i === 1) terms.push(`${c}*x`);
         else terms.push(`${c}*x^${i}`);
     }
 
-    return terms.join("+").replace(/\+\-/g,"-") || "x";
+    return terms.length
+        ? terms.join("+").replace("+-","-")
+        : "x";
 });
+
 
 
 /* ---------- TRIG ---------- */
@@ -114,17 +132,13 @@ function randomFunctionFromCategory(cat){
    Build a single base function
 */
 function randomBaseFunction(){
+    if(ENABLED_CATEGORIES.length === 0) return "x";
 
-    const cats = enabledCategories();
-
-    if(cats.length===0){
-        alert("Enable at least one function category.");
-        return "x";
-    }
-
-    const cat = pick(cats);
-    return randomFunctionFromCategory(cat);
+    const cat = pickFast(ENABLED_CATEGORIES);
+    const fns = cat.enabledFunctions;
+    return fns.length ? pickFast(fns).gen() : "x";
 }
+
 
 
 /*
@@ -135,37 +149,42 @@ function randomBaseFunction(){
 */
 function randomExpr(allowMultiply=false, allowCompose=false){
 
-    const cats = enabledCategories();
-    if(cats.length===0) return "x";
+    if(ENABLED_CATEGORIES.length === 0) return "x";
 
+    let f, g;
     const sameCategory = Math.random() < 0.75;
 
-    let f,g;
-
     if(sameCategory){
-        const cat = pick(cats);
-        f = randomFunctionFromCategory(cat);
-        g = randomFunctionFromCategory(cat);
+        const cat = pickFast(ENABLED_CATEGORIES);
+        const fns = cat.enabledFunctions;
+        if(fns.length === 0) return "x";
+        f = pickFast(fns).gen();
+        g = pickFast(fns).gen();
     } else {
         f = randomBaseFunction();
         g = randomBaseFunction();
     }
 
-    const a=rint(1,5);
-    const b=rint(1,5);
+    console.log(f);
+    console.log(g);
 
-    const mode=Math.random();
+    const a = rint(1,5);
+    const b = rint(1,5);
+    const mode = Math.random();
 
     if(mode < 0.7){
-        return nerdamer(`${a}*(${f}) + ${b}*(${g})`);
+        return nerdamer(`${a}*(${f})+${b}*(${g})`);
     }
-    else if(mode < 0.9 && allowMultiply){
+    if(mode < 0.9 && allowMultiply){
         return nerdamer(`(${f})*(${g})`);
     }
-    else if(allowCompose){
-        return nerdamer(f, {x: `(${g})`});
+    if(allowCompose){
+        return nerdamer(f, {x:`(${g})`});
     }
+
+    return f;
 }
+
 
 
 
@@ -175,84 +194,105 @@ function randomExpr(allowMultiply=false, allowCompose=false){
 
 function buildFuncPanel(){
 
-    const list=document.getElementById("funcList");
-    list.innerHTML="";
+    const list = document.getElementById("funcList");
+    list.textContent = "";
 
-    FUNCTION_CATEGORIES.forEach(cat=>{
+    for(const cat of FUNCTION_CATEGORIES){
 
-        const block=document.createElement("div");
+        const block = document.createElement("div");
+        cat._el = block;
 
-        const enabledFns = cat.functions.filter(f=>f.enabled);
-        cat.enabled = enabledFns.length>0;
+        /* ---------- category header ---------- */
 
+        const header = document.createElement("div");
+        header.className = "list-item";
 
-        const header=document.createElement("div");
-        header.className="list-item";
+        const title = document.createElement("strong");
+        title.textContent = cat.name;
 
-        if(!cat.enabled) header.classList.add("item-disabled");
+        const catBox = document.createElement("input");
+        catBox.type = "checkbox";
+        catBox.checked = cat.enabled;
+        cat._box = catBox;
 
-        const title=document.createElement("strong");
-        title.textContent=cat.name;
-
-        const catBox=document.createElement("input");
-        catBox.type="checkbox";
-        catBox.checked=cat.enabled;
-
-        header.appendChild(title);
-        header.appendChild(catBox);
+        header.append(title, catBox);
         block.appendChild(header);
 
-        catBox.onchange=()=>{
+        /* ---------- functions ---------- */
 
-            cat.enabled=catBox.checked;
+        if(cat.functions.length > 1){
+            for(const fn of cat.functions){
 
-            cat.functions.forEach(fn=>fn.enabled=cat.enabled);
+                const row = document.createElement("div");
+                row.className = "list-item";
+                row.style.paddingLeft = "22px";
 
-            buildFuncPanel(); // rebuild for sync
-        };
+                const label = document.createElement("span");
+                label.textContent = fn.name;
 
+                const box = document.createElement("input");
+                box.type = "checkbox";
+                box.checked = fn.enabled;
 
-        if(cat.functions.length>1){
+                fn._el = row;
+                fn._box = box;
 
-            cat.functions.forEach(fn=>{
-
-                const row=document.createElement("div");
-                row.className="list-item";
-                row.style.paddingLeft="22px";
-
-                if(!fn.enabled) row.classList.add("item-disabled");
-
-                const label=document.createElement("span");
-                label.textContent=fn.name;
-
-                const box=document.createElement("input");
-                box.type="checkbox";
-                box.checked=fn.enabled;
-
-                /* child toggle */
-                box.onchange=()=>{
-
-                    fn.enabled=box.checked;
-
-                    /* update category state */
-                    const anyEnabled =
-                        cat.functions.some(f=>f.enabled);
-
-                    cat.enabled = anyEnabled;
-
-                    buildFuncPanel();
-                };
-
-                row.appendChild(label);
-                row.appendChild(box);
-
+                row.append(label, box);
                 block.appendChild(row);
-            });
+            }
         }
 
         list.appendChild(block);
-    });
+        syncCategoryUI(cat);
+    }
 }
+
+function syncCategoryUI(cat){
+
+    cat._box.checked = cat.enabled;
+    cat._el
+        .querySelector(".list-item")
+        .classList.toggle("item-disabled", !cat.enabled);
+
+    for(const fn of cat.functions){
+        fn._box.checked = fn.enabled;
+        fn._el?.classList.toggle("item-disabled", !fn.enabled);
+    }
+}
+
+document.getElementById("funcList").addEventListener("change", e => {
+
+    const input = e.target;
+    if(input.type !== "checkbox") return;
+
+    /* ---------- category toggle ---------- */
+    for(const cat of FUNCTION_CATEGORIES){
+        if(cat._box === input){
+
+            cat.enabled = input.checked;
+            for(const fn of cat.functions){
+                fn.enabled = cat.enabled;
+            }
+
+            updateCategoryState(cat);
+            syncCategoryUI(cat);
+            return;
+        }
+
+        /* ---------- function toggle ---------- */
+        for(const fn of cat.functions){
+            if(fn._box === input){
+
+                fn.enabled = input.checked;
+
+                cat.enabled = cat.functions.some(f => f.enabled);
+                updateCategoryState(cat);
+                syncCategoryUI(cat);
+                return;
+            }
+        }
+    }
+});
 
 
 function toggleFuncPanel(){
