@@ -108,8 +108,8 @@ function baseProblem(){
     const integrand = randomExpr(1);
 
     return {
-        integrand: Algebrite.simplify(integrand),
-        solution: Algebrite.integral(integrand)
+        integrand: nerdamer.simplify(integrand),
+        solution: nerdamer.integral(integrand)
     };
 }
 
@@ -131,14 +131,14 @@ function generateProblem(){
 
     const prob = tech.fn();
 
-    const integrand = Algebrite.simplify(prob.integrand);
-    const solution  = Algebrite.simplify(prob.solution);
+    const integrand = nerdamer.simplify(prob.integrand);
+    const solution  = nerdamer.simplify(prob.solution);
 
     return {
         integrand,
         solution,
-        latex: `\\int ${printLaTeX(integrand)}\\,dx`,
-        solutionLatex: printLaTeX(solution) + "+C"
+        latex: `\\int ${nerdamer(integrand).toTex}\\,dx`,
+        solutionLatex: nerdamer(solution).toTex + "+C"
     };
 }
 

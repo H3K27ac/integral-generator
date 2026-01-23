@@ -34,15 +34,15 @@ addTechnique("u-substitution", function(){
     let g = randomExpr(1);
 
     /* compose */
-    const g_of_f = Algebrite.subst(f,"x",g);
+    const g_of_f = nerdamer(g, {x:f});
 
-    const fprime = Algebrite.derivative(f);
+    const fprime = nerdamer.diff(f);
 
     const integrand = `(${g_of_f}) * (${fprime})`;
 
     return {
-        integrand: Algebrite.simplify(integrand),
-        solution: Algebrite.subst(f,"x",Algebrite.integral(g))
+        integrand: nerdamer.simplify(integrand),
+        solution: nerdamer(nerdamer.integral(g), {x:f})
     };
 });
 
