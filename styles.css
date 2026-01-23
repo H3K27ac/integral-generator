@@ -49,10 +49,10 @@ canvas{
 }
 
 /* =========================
-   Technique Panel
+   List Panel
 ========================= */
 
-.tech-panel{
+.list-panel{
     max-width:420px;
     margin:12px auto;
     padding:14px 16px;
@@ -61,12 +61,12 @@ canvas{
     box-shadow:0 6px 18px rgba(0,0,0,.12);
 }
 
-.tech-panel h3{
+.list-panel h3{
     margin:0 0 10px 0;
     text-align:center;
 }
 
-.tech-item{
+.list-item{
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -74,15 +74,15 @@ canvas{
     border-radius:8px;
 }
 
-.tech-item:hover{
+.list-item:hover{
     background:#f3f4f6;
 }
 
-.tech-item input{
+.list-item input{
     transform:scale(1.2);
 }
 
-.tech-disabled{
+.item-disabled{
     opacity:.4;
 }
 

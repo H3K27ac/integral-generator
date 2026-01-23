@@ -18,7 +18,15 @@ function addTechnique(name, fn, enabled=true){
    Technique 1 - direct
 ------------------------------------------------- */
 
-addTechnique("Base integral", baseProblem);
+addTechnique("Base integral", function() {
+
+    const integrand = randomExpr();
+
+    return {
+        integrand: nerdamer(integrand),
+        solution: nerdamer.integrate(integrand)
+    };
+});
 
 
 /* -------------------------------------------------
@@ -28,10 +36,10 @@ addTechnique("Base integral", baseProblem);
 
 addTechnique("u-substitution", function(){
 
-    const f = randomExpr(1);
+    const f = randomExpr(true, true);
 
     /* pick outer integral in variable u */
-    let g = randomExpr(1);
+    let g = randomExpr();
 
     /* compose */
     const g_of_f = nerdamer(g, {x:f});
@@ -63,7 +71,7 @@ function buildTechPanel(){
     TECHNIQUES.forEach((t,i)=>{
 
         const row=document.createElement("div");
-        row.className="tech-item";
+        row.className="list-item";
 
         const label=document.createElement("span");
         label.textContent=t.name;
@@ -74,10 +82,10 @@ function buildTechPanel(){
 
         box.onchange=()=>{
             t.enabled=box.checked;
-            row.classList.toggle("tech-disabled", !t.enabled);
+            row.classList.toggle("item-disabled", !t.enabled);
         };
 
-        if(!t.enabled) row.classList.add("tech-disabled");
+        if(!t.enabled) row.classList.add("item-disabled");
 
         row.appendChild(label);
         row.appendChild(box);
@@ -96,4 +104,8 @@ function toggleTechPanel(){
     btn.classList.toggle("active", show);
 }
 
-window.addEventListener("load", buildTechPanel);
+window.addEventListener("load", ()=>{
+    buildTechPanel();
+    buildFuncPanel();
+});
+

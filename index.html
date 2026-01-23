@@ -18,7 +18,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/all.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="styles.css">
-<script defer type="text/javascript" src="expression.js"></script>
+<script defer type="text/javascript" src="functions.js"></script>
 <script defer type="text/javascript" src="techniques.js"></script>
 <script defer type="text/javascript" src="canvas.js"></script>
 <script defer type="text/javascript" src="stopwatch.js"></script>
@@ -34,13 +34,20 @@
     <button onclick="newProblem()">New</button>
     <button onclick="showSolution()">Solution</button>
     <button id="techToggleBtn" onclick="toggleTechPanel()">Techniques</button>
+    <button id="funcToggleBtn" onclick="toggleFuncPanel()">Functions</button>
     <button id="toggleWatchBtn" onclick="toggleStopwatch()">Stopwatch</button>
 </div>
 
-<div id="techPanel" class="tech-panel" style="display:none">
+<div id="techPanel" class="list-panel is-hidden">
     <h3>Select Techniques</h3>
     <div id="techList"></div>
 </div>
+
+<div id="funcPanel" class="list-panel is-hidden">
+    <h3>Select Function Types</h3>
+    <div id="funcList"></div>
+</div>
+
 
 <div id="watch" class="stopwatch">
     <span id="time">00:00.0</span>
