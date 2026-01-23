@@ -157,13 +157,13 @@ function randomExpr(allowMultiply=false, allowCompose=false){
     const mode=Math.random();
 
     if(mode < 0.7){
-        return `${a}*(${f}) + ${b}*(${g})`;
+        return nerdamer(`${a}*(${f}) + ${b}*(${g})`);
     }
     else if(mode < 0.9 && allowMultiply){
-        return `(${f})*(${g})`;
+        return nerdamer(`(${f})*(${g})`);
     }
     else if(allowCompose){
-        return f.replaceAll("x",`(${g})`);
+        return nerdamer(f, {x: `(${g})`});
     }
 }
 
