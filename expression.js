@@ -127,8 +127,6 @@ function generateProblem(){
 
     const prob = tech.fn();
 
-    console.log(nerdamer(prob.integrand).toTeX());
-
     const integrand = nerdamer.simplify(prob.integrand);
     const solution  = nerdamer.simplify(prob.solution);
 

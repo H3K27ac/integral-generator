@@ -108,7 +108,7 @@ var nerdamer = (function (imports) {
                 '39193200305992181741359662904357290033429526059563073813232862794349076323382988075319525101901',
         PI: Math.PI,
         E: Math.E,
-        LOG: 'log',
+        LOG: 'ln',
         LOG10: 'log10',
         LOG10_LATEX: 'log_{10}',
         MAX_EXP: 200000,
