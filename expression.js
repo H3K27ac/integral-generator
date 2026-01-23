@@ -104,7 +104,7 @@ function baseProblem(){
     const integrand = randomExpr(1);
 
     return {
-        integrand: nerdamer.simplify(integrand),
+        integrand: nerdamer(integrand),
         solution: nerdamer.integrate(integrand)
     };
 }
@@ -127,8 +127,8 @@ function generateProblem(){
 
     const prob = tech.fn();
 
-    const integrand = nerdamer.simplify(prob.integrand);
-    const solution  = nerdamer.simplify(prob.solution);
+    const integrand = nerdamer(prob.integrand);
+    const solution  = nerdamer(prob.solution);
 
     return {
         integrand,

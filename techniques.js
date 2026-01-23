@@ -40,11 +40,8 @@ addTechnique("u-substitution", function(){
 
     const integrand = `(${g_of_f}) * (${fprime})`;
 
-    console.log(integrand);
-    console.log(nerdamer.simplify(integrand));
-
     return {
-        integrand: nerdamer.simplify(integrand),
+        integrand: nerdamer(integrand),
         solution: nerdamer(nerdamer.integrate(g), {x:f})
     };
 });
