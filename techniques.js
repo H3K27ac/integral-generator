@@ -42,7 +42,7 @@ addTechnique("u-substitution", function(){
 
     return {
         integrand: Algebrite.simplify(integrand),
-        solution: Algebrite.substitute(f,"x",Algebrite.integral(g))
+        solution: Algebrite.subst(f,"x",Algebrite.integral(g))
     };
 });
 

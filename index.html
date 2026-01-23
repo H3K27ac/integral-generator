@@ -34,7 +34,6 @@
 <div class="controls">
     <button onclick="newProblem()">New</button>
     <button onclick="showSolution()">Solution</button>
-    <button onclick="clearCanvas()">Clear</button>
     <button id="techToggleBtn" onclick="toggleTechPanel()">Techniques</button>
     <button id="toggleWatchBtn" onclick="toggleStopwatch()">Stopwatch</button>
 </div>
@@ -43,6 +42,19 @@
     <h3>Select Techniques</h3>
     <div id="techList"></div>
 </div>
+
+<div id="watch" class="stopwatch">
+    <span id="time">00:00.0</span>
+    <div class="controls">
+        <button id="startBtn" onclick="startTimer()">Start</button>
+        <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
+        <button onclick="resetTimer()">Reset</button>
+    </div>
+</div>
+
+
+<div id="problem" class="math"></div>
+<div id="solution" class="math"></div>
 
 
 <div class="tools">
@@ -56,21 +68,8 @@
 
     <button onclick="undo()">Undo</button>
     <button onclick="redo()">Redo</button>
+    <button onclick="clearCanvas()">Clear</button>
     <button id="deleteSelectionBtn" class="is-hidden" onclick="deleteSelection()">Delete Selection</button>
-</div>
-
-
-
-<div id="problem" class="math"></div>
-<div id="solution" class="math"></div>
-
-<div id="watch" class="stopwatch">
-    <span id="time">00:00.0</span>
-    <div class="controls">
-        <button id="startBtn" onclick="startTimer()">Start</button>
-        <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
-        <button onclick="resetTimer()">Reset</button>
-    </div>
 </div>
 
 
