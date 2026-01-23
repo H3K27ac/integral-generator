@@ -146,3 +146,48 @@ function randomExpr(allowMultiply=false, allowCompose=false){
 
     return f;
 }
+
+
+/* =====================================================
+   Function panel UI
+===================================================== */
+
+function buildFuncPanel(){
+
+    const list=document.getElementById("funcList");
+    list.innerHTML="";
+
+    FUNCTION_CATEGORIES.forEach(category=>{
+
+        const row=document.createElement("div");
+        row.className="list-item";
+
+        const label=document.createElement("span");
+        label.textContent=category.name;
+
+        const box=document.createElement("input");
+        box.type="checkbox";
+        box.checked=category.enabled;
+
+        box.onchange=()=>{
+            category.enabled=box.checked;
+            row.classList.toggle("item-disabled",!category.enabled);
+        };
+
+        row.appendChild(label);
+        row.appendChild(box);
+
+        list.appendChild(row);
+    });
+}
+
+
+function toggleFuncPanel(){
+    const p=document.getElementById("funcPanel");
+    const btn=document.getElementById("funcToggleBtn");
+
+    const show = p.style.display==="none";
+
+    p.style.display = show ? "block":"none";
+    btn.classList.toggle("active",show);
+}
