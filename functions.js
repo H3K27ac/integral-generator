@@ -1,32 +1,44 @@
 /* =====================================================
-   FUNCTION CATEGORY SYSTEM
+   FUNCTION CATEGORY + SUBFUNCTION SYSTEM
 ===================================================== */
 
 const FUNCTION_CATEGORIES = [];
 
 
-/* ---------- helper ---------- */
+/* ---------- registry helpers ---------- */
 
-function addFunctionCategory(name, generator, enabled=true){
-    FUNCTION_CATEGORIES.push({
+function addCategory(name){
+    const cat = {
         name,
-        generator,
-        enabled
+        enabled:true,
+        functions:[]
+    };
+    FUNCTION_CATEGORIES.push(cat);
+    return cat;
+}
+
+function addFunction(cat, name, generator){
+    cat.functions.push({
+        name,
+        gen: generator,
+        enabled:true
     });
 }
 
 
+
 /* =====================================================
-   CATEGORY GENERATORS
+   CATEGORY DEFINITIONS
 ===================================================== */
 
 
-/* ---------- polynomial ---------- */
-/* ax^n + bx^(n-1) + ... */
+/* ---------- POLYNOMIALS ---------- */
 
-function polyGenerator(maxDegree=3){
+const polyCat = addCategory("Polynomials");
 
-    const degree = rint(1,maxDegree);
+addFunction(polyCat,"Polynomial", function(){
+
+    const degree=rint(1,3);
     let terms=[];
 
     for(let i=degree;i>=0;i--){
@@ -39,117 +51,126 @@ function polyGenerator(maxDegree=3){
     }
 
     return terms.join("+").replace(/\+\-/g,"-") || "x";
-}
+});
 
 
-/* ---------- trig ---------- */
+/* ---------- TRIG ---------- */
 
-function trigGenerator(){
+const trigCat = addCategory("Trigonometric");
 
+addFunction(trigCat,"sin", ()=>{
+    const a=rint(1,5), b=rint(-5,5);
+    return `sin(${a}*x${b>=0?"+":""}${b})`;
+});
+
+addFunction(trigCat,"cos", ()=>{
+    const a=rint(1,5), b=rint(-5,5);
+    return `cos(${a}*x${b>=0?"+":""}${b})`;
+});
+
+
+/* ---------- EXP ---------- */
+
+const expCat = addCategory("Exponential");
+
+addFunction(expCat,"exp", ()=>{
     const a=rint(1,5);
-    const b=rint(-5,5);
-
-    const inner = `${a}*x${b>=0?"+":""}${b}`;
-
-    return pick([
-        `sin(${inner})`,
-        `cos(${inner})`
-    ]);
-}
-
-
-/* ---------- exponential ---------- */
-
-function expGenerator(){
-
-    const a=rint(1,5);
-
     return `exp(${a}*x)`;
-}
+});
 
 
-/* ---------- logarithmic ---------- */
+/* ---------- LOG ---------- */
 
-function logGenerator(){
+const logCat = addCategory("Logarithmic");
 
-    const a=rint(1,5);
-    const b=rint(1,5);
-
+addFunction(logCat,"log", ()=>{
+    const a=rint(1,5), b=rint(1,5);
     return `log(${a}*x+${b})`;
-}
-
-
-/* =====================================================
-   Register categories
-===================================================== */
-
-addFunctionCategory("Polynomials", polyGenerator);
-addFunctionCategory("Trig", trigGenerator);
-addFunctionCategory("Exponentials", expGenerator);
-addFunctionCategory("Logarithms", logGenerator);
+});
 
 
 
 /* =====================================================
-   Structured function generator
+   STRUCTURED GENERATOR
 ===================================================== */
+
 
 function enabledCategories(){
     return FUNCTION_CATEGORIES.filter(c=>c.enabled);
 }
 
+function enabledFunctions(cat){
+    return cat.functions.filter(f=>f.enabled);
+}
 
-function randomBaseFunction(){
-
-    const categories = enabledCategories();
-
-    if(categories.length===0){
-        alert("Enable at least one function type.");
-        return "x";
-    }
-
-    return pick(categories).generator();
+function randomFunctionFromCategory(cat){
+    const fns = enabledFunctions(cat);
+    if(fns.length===0) return "x";
+    return pick(fns).gen();
 }
 
 
 /*
-   Controlled combining
+   Build a single base function
 */
+function randomBaseFunction(){
 
-function randomExpr(allowMultiply=false, allowCompose=false){
+    const cats = enabledCategories();
 
-    let f = randomBaseFunction();
-
-    /* 50% chance combine with another */
-    if(Math.random()<0.5){
-
-        let g = randomBaseFunction();
-
-        let a=rint(1,5);
-        let b=rint(1,5);
-
-        const mode = Math.random();
-
-        if(mode < 0.7){
-            /* linear combo */
-            return `${a}*(${f}) + ${b}*(${g})`;
-        }
-        else if(mode < 0.9 && allowMultiply){
-            /* multiply */
-            return `(${f})*(${g})`;
-        }
-        else if (allowCompose){
-            /* composition */
-            return f.replaceAll("x",`(${g})`);
-        }
+    if(cats.length===0){
+        alert("Enable at least one function category.");
+        return "x";
     }
 
-    return f;
+    const cat = pick(cats);
+    return randomFunctionFromCategory(cat);
 }
 
 
+/*
+   Main expression builder
+
+   75% same category
+   25% mixed
+*/
+function randomExpr(allowMultiply=false, allowCompose=false){
+
+    const cats = enabledCategories();
+    if(cats.length===0) return "x";
+
+    const sameCategory = Math.random() < 0.75;
+
+    let f,g;
+
+    if(sameCategory){
+        const cat = pick(cats);
+        f = randomFunctionFromCategory(cat);
+        g = randomFunctionFromCategory(cat);
+    } else {
+        f = randomBaseFunction();
+        g = randomBaseFunction();
+    }
+
+    const a=rint(1,5);
+    const b=rint(1,5);
+
+    const mode=Math.random();
+
+    if(mode < 0.7){
+        return `${a}*(${f}) + ${b}*(${g})`;
+    }
+    else if(mode < 0.9 && allowMultiply){
+        return `(${f})*(${g})`;
+    }
+    else if(allowCompose){
+        return f.replaceAll("x",`(${g})`);
+    }
+}
+
+
+
 /* =====================================================
-   Function panel UI
+   Function selector UI
 ===================================================== */
 
 function buildFuncPanel(){
@@ -157,37 +178,55 @@ function buildFuncPanel(){
     const list=document.getElementById("funcList");
     list.innerHTML="";
 
-    FUNCTION_CATEGORIES.forEach(category=>{
+    FUNCTION_CATEGORIES.forEach(cat=>{
 
-        const row=document.createElement("div");
-        row.className="list-item";
+        const block=document.createElement("div");
 
-        const label=document.createElement("span");
-        label.textContent=category.name;
+        /* category header */
+        const header=document.createElement("div");
+        header.className="list-item";
 
-        const box=document.createElement("input");
-        box.type="checkbox";
-        box.checked=category.enabled;
+        const title=document.createElement("strong");
+        title.textContent=cat.name;
 
-        box.onchange=()=>{
-            category.enabled=box.checked;
-            row.classList.toggle("item-disabled",!category.enabled);
+        const catBox=document.createElement("input");
+        catBox.type="checkbox";
+        catBox.checked=cat.enabled;
+
+        header.appendChild(title);
+        header.appendChild(catBox);
+        block.appendChild(header);
+
+        /* children */
+        cat.functions.forEach(fn=>{
+
+            const row=document.createElement("div");
+            row.className="list-item";
+            row.style.paddingLeft="20px";
+
+            const label=document.createElement("span");
+            label.textContent=fn.name;
+
+            const box=document.createElement("input");
+            box.type="checkbox";
+            box.checked=fn.enabled;
+
+            box.onchange=()=>{
+                fn.enabled=box.checked;
+            };
+
+            row.appendChild(label);
+            row.appendChild(box);
+            block.appendChild(row);
+        });
+
+        /* category toggle all */
+        catBox.onchange=()=>{
+            cat.enabled=catBox.checked;
+            cat.functions.forEach(fn=>fn.enabled=cat.enabled);
+            buildFuncPanel();
         };
 
-        row.appendChild(label);
-        row.appendChild(box);
-
-        list.appendChild(row);
+        list.appendChild(block);
     });
-}
-
-
-function toggleFuncPanel(){
-    const p=document.getElementById("funcPanel");
-    const btn=document.getElementById("funcToggleBtn");
-
-    const show = p.style.display==="none";
-
-    p.style.display = show ? "block":"none";
-    btn.classList.toggle("active",show);
 }
