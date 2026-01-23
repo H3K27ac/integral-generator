@@ -230,3 +230,13 @@ function buildFuncPanel(){
         list.appendChild(block);
     });
 }
+
+function toggleFuncPanel(){
+    const p=document.getElementById("funcPanel");
+    const btn=document.getElementById("funcToggleBtn");
+
+    const show = p.style.display==="none";
+
+    p.style.display = show ? "block":"none";
+    btn.classList.toggle("active",show);
+}
