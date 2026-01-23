@@ -182,11 +182,16 @@ function buildFuncPanel(){
 
         const block=document.createElement("div");
 
-        /* category header */
+        const enabledFns = cat.functions.filter(f=>f.enabled);
+        cat.enabled = enabledFns.length>0;
+
+
         const header=document.createElement("div");
         header.className="list-item";
 
-        const title=document.createElement("strong");
+        if(!cat.enabled) header.classList.add("item-disabled");
+
+        const title=document.createElement("span");
         title.textContent=cat.name;
 
         const catBox=document.createElement("input");
@@ -197,39 +202,58 @@ function buildFuncPanel(){
         header.appendChild(catBox);
         block.appendChild(header);
 
-        /* children */
-        cat.functions.forEach(fn=>{
-
-            const row=document.createElement("div");
-            row.className="list-item";
-            row.style.paddingLeft="20px";
-
-            const label=document.createElement("span");
-            label.textContent=fn.name;
-
-            const box=document.createElement("input");
-            box.type="checkbox";
-            box.checked=fn.enabled;
-
-            box.onchange=()=>{
-                fn.enabled=box.checked;
-            };
-
-            row.appendChild(label);
-            row.appendChild(box);
-            block.appendChild(row);
-        });
-
-        /* category toggle all */
         catBox.onchange=()=>{
+
             cat.enabled=catBox.checked;
+
             cat.functions.forEach(fn=>fn.enabled=cat.enabled);
-            buildFuncPanel();
+
+            buildFuncPanel(); // rebuild for sync
         };
+
+
+        if(cat.functions.length>1){
+
+            cat.functions.forEach(fn=>{
+
+                const row=document.createElement("div");
+                row.className="list-item";
+                row.style.paddingLeft="22px";
+
+                if(!fn.enabled) row.classList.add("item-disabled");
+
+                const label=document.createElement("span");
+                label.textContent=fn.name;
+
+                const box=document.createElement("input");
+                box.type="checkbox";
+                box.checked=fn.enabled;
+
+                /* child toggle */
+                box.onchange=()=>{
+
+                    fn.enabled=box.checked;
+
+                    /* update category state */
+                    const anyEnabled =
+                        cat.functions.some(f=>f.enabled);
+
+                    cat.enabled = anyEnabled;
+
+                    buildFuncPanel();
+                };
+
+                row.appendChild(label);
+                row.appendChild(box);
+
+                block.appendChild(row);
+            });
+        }
 
         list.appendChild(block);
     });
 }
+
 
 function toggleFuncPanel(){
     const p=document.getElementById("funcPanel");
