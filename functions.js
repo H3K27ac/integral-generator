@@ -255,6 +255,7 @@ function syncCategoryUI(cat){
         .classList.toggle("item-disabled", !cat.enabled);
 
     for(const fn of cat.functions){
+        if(!fn._box) continue;
         fn._box.checked = fn.enabled;
         fn._el?.classList.toggle("item-disabled", !fn.enabled);
     }
