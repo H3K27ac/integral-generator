@@ -109,7 +109,7 @@ function baseProblem(){
 
     return {
         integrand: nerdamer.simplify(integrand),
-        solution: nerdamer.integral(integrand)
+        solution: nerdamer.integrate(integrand)
     };
 }
 
@@ -142,8 +142,4 @@ function generateProblem(){
     };
 }
 
-function printLaTeX(expression) {
-    return Algebrite.run(`printlatex(${expression})`).replace(/sin|cos|tan|log/g, m => 
-        m === "log" ? "\\ln" : `\\${m}`
-    );
-}
+

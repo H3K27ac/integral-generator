@@ -42,7 +42,7 @@ addTechnique("u-substitution", function(){
 
     return {
         integrand: nerdamer.simplify(integrand),
-        solution: nerdamer(nerdamer.integral(g), {x:f})
+        solution: nerdamer(nerdamer.integrate(g), {x:f})
     };
 });
 
