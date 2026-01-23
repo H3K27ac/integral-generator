@@ -137,8 +137,8 @@ function generateProblem(){
     return {
         integrand,
         solution,
-        latex: `\\int ${nerdamer.toTex(integrand)}\\,dx`,
-        solutionLatex: nerdamer.toTex(solution) + "+C"
+        latex: `\\int ${nerdamer(integrand).toTeX()}\\,dx`,
+        solutionLatex: nerdamer(solution).toTeX() + "+C"
     };
 }
 
