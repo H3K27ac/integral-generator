@@ -191,7 +191,7 @@ function buildFuncPanel(){
 
         if(!cat.enabled) header.classList.add("item-disabled");
 
-        const title=document.createElement("span");
+        const title=document.createElement("strong");
         title.textContent=cat.name;
 
         const catBox=document.createElement("input");
