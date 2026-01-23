@@ -82,8 +82,6 @@ function randomPrimitive(){
 
         `x^${n}`,
 
-        `${n}*x`,
-
         `sin(x)`,
 
         `cos(x)`,
