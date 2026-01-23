@@ -2,6 +2,8 @@
    CAS-BASED INTEGRAL GENERATION FRAMEWORK
 ===================================================== */
 
+nerdamer.set('USE_LN', true);
+
 /* =========================
    Utilities
 ========================= */
