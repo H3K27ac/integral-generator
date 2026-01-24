@@ -70,7 +70,6 @@ function updateDisplay(){
 
 const canvas = new fabric.Canvas("canvas", {
     isDrawingMode: true,
-    selection: false,
 });
 
 canvas.upperCanvasEl.style.touchAction = 'none';
