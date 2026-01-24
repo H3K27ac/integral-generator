@@ -44,7 +44,7 @@ addTechnique("u-substitution", [
 
     {
         integral: "x*sqrt(a*x+b)",
-        solution: "(a*x+b)^(3/2)(6*a*x-4*b) / (15*a^2)",
+        solution: "(a*x+b)^(3/2)*(6*a*x-4*b) / (15*a^2)",
     }
 
 ]);
