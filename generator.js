@@ -111,7 +111,8 @@ const method = document.getElementById("method");
 function newProblem(){
 
     canvas.clear();
-    solution.innerHTML="";
+    problem.style.display = "block";
+    solution.style.display = "none";
     method.innerHTML="";
 
     const p = generateProblem();
@@ -139,6 +140,7 @@ function showSolution(){
         displayMode: true,
     });
     method.innerHTML = currentMethod;
+    solution.style.display = "block";
     if(watchVisible) pauseTimer();
 }
 

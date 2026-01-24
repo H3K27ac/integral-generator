@@ -40,7 +40,7 @@ button.inactive{
     padding: 12px;
     background: #ffffff;
     border-radius: 16px;
-    box-shadow: 0 6px 16px rgba(0,0,0,.08);
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
 }
 
 canvas{
