@@ -83,62 +83,11 @@ addTemplate({
    Blacklist logic
 ===================================================== */
 
-let AUTO_BLACKLIST = true;
-
-function computeBlacklist(){
-
-    /* clear manual blacklists remain untouched */
-    METHODS.forEach(m => {
-        if(m.autoBlacklisted) {
-            m.blacklisted = false;
-            m.autoBlacklisted = false;
-        }
-    });
-
-    if(!AUTO_BLACKLIST) return;
-
-    const enabled = METHODS.filter(m=>m.enabled);
-
-    if(enabled.length===0) return;
-
-    const maxDifficulty = Math.max(...enabled.map(m=>m.difficulty));
-
-    METHODS.forEach(m=>{
-        if(m.difficulty > maxDifficulty){
-            m.blacklisted = true;
-            m.autoBlacklisted = true;
-        }
-    });
-}
-
 
 function buildTechPanel(){
 
     const list=document.getElementById("techList");
     list.innerHTML="";
-
-    /* auto toggle */
-
-    const autoRow=document.createElement("div");
-    autoRow.className="list-item";
-
-    const autoLabel=document.createElement("span");
-    autoLabel.textContent="Auto blacklist by difficulty";
-
-    const autoBox=document.createElement("input");
-    autoBox.type="checkbox";
-    autoBox.checked=AUTO_BLACKLIST;
-
-    autoBox.onchange=()=>{
-        AUTO_BLACKLIST=autoBox.checked;
-        buildTechPanel();
-    };
-
-    autoRow.appendChild(autoLabel);
-    autoRow.appendChild(autoBox);
-
-    list.appendChild(autoRow);
-
 
     /* method rows */
 
@@ -148,7 +97,7 @@ function buildTechPanel(){
         row.className="list-item";
 
         const label=document.createElement("span");
-        label.textContent=`${m.name}  (d${m.difficulty})`;
+        label.textContent=`${m.name}`;
 
         const enable=document.createElement("input");
         enable.type="checkbox";
@@ -157,13 +106,16 @@ function buildTechPanel(){
         const block=document.createElement("input");
         block.type="checkbox";
         block.title="Blacklist";
-        block.checked=m.blacklisted && !m.autoBlacklisted;
+        block.checked=m.blacklisted;
+        block.classList.add("blacklist-item");
 
         enable.onchange=()=>{
             m.enabled=enable.checked;
             if (enable.checked) {
                 m.blacklisted=false;
                 block.checked=false;
+            } else {
+                row.classList.add("item-disabled")
             }
         };
 
@@ -172,6 +124,7 @@ function buildTechPanel(){
             if (block.checked) {
                 m.enabled=false;
                 enable.checked=false;
+                row.classList.add("item-blocked");
             }
         };
 
@@ -185,8 +138,6 @@ function buildTechPanel(){
         controls.appendChild(block);
 
         row.appendChild(controls);
-
-        if(m.blacklisted) row.classList.add("item-disabled");
 
         list.appendChild(row);
     });
