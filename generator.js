@@ -82,7 +82,7 @@ function generateProblem(){
 }
 
 function toLaTeX(expression) {
-    return nerdamer(expression).toTeX().replace(/\\cdot/g, "").replace(/log/g, "ln");
+    return nerdamer.convertToLaTeX(expression).replace(/\\cdot/g, "").replace(/log/g, "ln");
 }
 
 
