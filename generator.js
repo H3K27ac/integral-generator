@@ -51,6 +51,9 @@ function generateProblem(){
     const integrand = substituteConstants(template.integral);
     const solution  = substituteConstants(template.solution);
 
+    console.log(integrand);
+    console.log(solution);
+
     return {
         integrand,
         solution,

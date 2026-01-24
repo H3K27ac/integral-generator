@@ -20,7 +20,7 @@ addTechnique("Basic Integrals", [
 
     {
         integral: "a*x^n",
-        solution: "a*x^(n+1)/(n+1)",
+        solution: "a* x^(n+1) / (n+1)",
     },
 
     {
@@ -78,5 +78,5 @@ function toggleTechPanel(){
 
 window.addEventListener("load", ()=>{
     buildTechPanel();
-    buildFuncPanel();
+ //   buildFuncPanel();
 });
