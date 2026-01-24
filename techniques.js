@@ -171,7 +171,7 @@ function buildTechPanel(){
             m.blacklisted=block.checked;
             if (block.checked) {
                 m.enabled=false;
-                enabled.checked=false;
+                enable.checked=false;
             }
         };
 

@@ -88,8 +88,7 @@ function generateProblem(){
         return null;
     }
 
-    const tech = pick(valid);
-    const template = pick(tech.templates);
+    const template = pick(valid);
 
     const replaced = replaceConstants(template.integral,template.solution);
     
