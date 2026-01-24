@@ -107,8 +107,8 @@ function randomExpr(){
 
     if(sameCategory){
         const cat = pick(cats);
-        f = cat.gen();
-        g = cat.gen();
+        f = cat.generator();
+        g = cat.generator();
     } else {
         f = randomBaseFunction();
         g = randomBaseFunction();
