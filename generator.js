@@ -2,7 +2,7 @@
    Utilities
 ========================= */
 
-function rint(min, max, noZero=false) {
+function rint(min, max, nonZero=false) {
     let val;
     do {
       val = Math.floor(Math.random() * (max - min + 1)) + min;
