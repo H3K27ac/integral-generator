@@ -62,14 +62,33 @@ function replaceConstants(str1, str2, options = {}) {
 
 function generateProblem(){
 
-    const enabled = TECHNIQUES.filter(t=>t.enabled);
+    computeBlacklist();
 
-    if(enabled.length===0){
-        alert("Select at least one technique.");
+    const enabledMethods = METHODS.filter(m=>m.enabled).map(m=>m.name);
+
+    if(enabledMethods.length===0){
+        alert("Select at least one method.");
         return null;
     }
 
-    const tech = pick(enabled);
+    const blacklistedMethods = METHODS.filter(m=>m.blacklisted).map(m=>m.name);
+
+
+    const valid = TEMPLATES.filter(t =>
+        /* must match at least one enabled */
+        t.methods.some(m => enabledMethods.includes(m)) &&
+
+        /* must not contain any blacklisted */
+        !t.methods.some(m => blacklistedMethods.includes(m))
+    );
+
+
+    if(valid.length===0){
+        alert("No templates match selected methods.");
+        return null;
+    }
+
+    const tech = pick(valid);
     const template = pick(tech.templates);
 
     const replaced = replaceConstants(template.integral,template.solution);
