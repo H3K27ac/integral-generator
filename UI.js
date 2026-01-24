@@ -68,7 +68,7 @@ function updateDisplay(){
 ========================= */
 
 
-const canvas = new fabric.Canvas(canvas, {
+const canvas = new fabric.Canvas("canvas", {
     isDrawingMode: true,
     selection: false,
 });
