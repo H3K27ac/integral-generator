@@ -35,6 +35,13 @@ h1{ text-align:center; }
     padding:10px;
 }
 
+.tools{
+    position:absolute;
+    top:12px;
+    right:12px;
+    flex-direction:column;
+}
+
 button{
     padding:10px 14px;
     border-radius:10px;
