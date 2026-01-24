@@ -188,9 +188,6 @@ canvas.on('path:created', (e) => {
     savePath(e.path);
 });
 
-// Freehand stroke finished
-canvas.on('path:created', saveState);
-
 function resizeCanvas() {
     const container = canvas.wrapperEl.parentNode;
     canvas.setWidth(container.clientWidth);
