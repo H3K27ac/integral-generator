@@ -91,7 +91,6 @@ canvas{
 }
 
 .item-blacklisted span{
-    opacity:.4;
     text-decoration: line-through;
 }
 

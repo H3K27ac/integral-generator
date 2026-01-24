@@ -105,8 +105,8 @@ function buildTechPanel(){
 
         const block=document.createElement("input");
         block.type="checkbox";
+        block.className="blacklist-item";
         block.title="Blacklist";
-        block.classList.add("blacklist-item");
         block.checked=m.blacklisted;
 
         enable.onchange=()=>{
