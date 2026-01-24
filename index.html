@@ -81,29 +81,32 @@
 -->
 
 <div class="tools">
-  <button id="drawing-mode">Cancel drawing</button>
+    <button id="drawing-mode">Cancel drawing</button>
 
-  <label>
-    Width
-    <input
-      type="range"
-      id="drawing-line-width"
-      min="1"
-      max="30"
-      value="4"
-    />
-  </label>
+    <label>
+        Width
+        <input
+        type="range"
+        id="drawing-line-width"
+        min="1"
+        max="30"
+        value="4"
+        />
+    </label>
 
-  <label>
-    Color
-    <input
-      type="color"
-      id="drawing-color"
-      value="#000000"
-    />
-  </label>
+    <label>
+        Color
+        <input
+        type="color"
+        id="drawing-color"
+        value="#000000"
+        />
+    </label>
 
-  <button id="clear-canvas">Clear</button>
+    <button id="clear-canvas">Clear</button>
+    <button id="undo">Undo</button>
+    <button id="redo">Redo</button>
+    <button id="delete-selected" class="is-hidden">Delete Selected</button>
 </div>
 
 <canvas id="canvas"></canvas>

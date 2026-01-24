@@ -82,12 +82,49 @@ const drawingModeEl = $('drawing-mode');
 const drawingColorEl = $('drawing-color');
 const drawingLineWidthEl = $('drawing-line-width');
 const clearEl = $('clear-canvas');
+const undoEl = $('undo'); // Add undo button in HTML
+const redoEl = $('redo'); // Add redo button in HTML
+const deleteEl = $('delete-selected'); // Add delete button in HTML
 
-clearEl.onclick = () => canvas.clear();
+// State stack for undo/redo
+let state = [];
+let mods = 0; // pointer to current state
+
+function saveState() {
+    mods += 1;
+    if (mods < state.length) {
+        state = state.slice(0, mods); // clear redo stack if new action
+    }
+    state.push(JSON.stringify(canvas));
+}
+
+function undo() {
+    if (mods > 1) {
+        mods -= 1;
+        canvas.clear();
+        canvas.loadFromJSON(state[mods - 1], () => canvas.renderAll());
+    }
+}
+
+function redo() {
+    if (mods < state.length) {
+        canvas.clear();
+        canvas.loadFromJSON(state[mods], () => canvas.renderAll());
+        mods += 1;
+    }
+}
+
+// Initialize first state
+saveState();
+
+clearEl.onclick = () => {
+    canvas.clear();
+    saveState();
+};
 
 drawingModeEl.onclick = function () {
     canvas.isDrawingMode = !canvas.isDrawingMode;
-    this.classList.toggle("active",canvas.isDrawingMode);
+    this.classList.toggle("active", canvas.isDrawingMode);
     this.innerHTML = canvas.isDrawingMode
         ? 'Cancel drawing'
         : 'Draw';
@@ -99,23 +136,65 @@ canvas.freeDrawingBrush.width = parseInt(drawingLineWidthEl.value, 10) || 1;
 // Controls
 drawingColorEl.onchange = function () {
     canvas.freeDrawingBrush.color = this.value;
-  };
+};
 
 drawingLineWidthEl.onchange = function () {
     canvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
 };
 
+// Undo / Redo buttons
+undoEl.onclick = undo;
+redoEl.onclick = redo;
+
+// Show delete button only when objects are selected
+canvas.on('selection:created', () => {
+    deleteEl.style.display = 'inline-block';
+});
+canvas.on('selection:updated', () => {
+    deleteEl.style.display = 'inline-block';
+});
+canvas.on('selection:cleared', () => {
+    deleteEl.style.display = 'none';
+});
+
+
+// Delete selected object function
+function deleteSelected() {
+    const activeObjects = canvas.getActiveObjects();
+    if (activeObjects.length) {
+        activeObjects.forEach(obj => canvas.remove(obj));
+        canvas.discardActiveObject();
+        canvas.renderAll();
+        saveState();
+    }
+}
+
+// Delete button click
+deleteEl.onclick = deleteSelected;
+
+// Delete key support
+document.addEventListener('keydown', (e) => {
+    if ((e.key === 'Delete' || e.key === 'Backspace') && canvas.getActiveObjects().length) {
+        e.preventDefault(); // prevent browser navigation
+        deleteSelected();
+    }
+});
+
+// Save state after each modification
+canvas.on('object:added', saveState);
+canvas.on('object:modified', saveState);
+canvas.on('object:removed', saveState);
+
 function resizeCanvas() {
-  const container = canvas.wrapperEl.parentNode;
-
-  canvas.setWidth(container.clientWidth);
-  canvas.setHeight(window.innerHeight);
-
-  canvas.renderAll();
+    const container = canvas.wrapperEl.parentNode;
+    canvas.setWidth(container.clientWidth);
+    canvas.setHeight(window.innerHeight);
+    canvas.renderAll();
 }
 
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
+
 
 
 /* =====================================================
