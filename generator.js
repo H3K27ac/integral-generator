@@ -49,8 +49,8 @@ function replaceConstants(str1, str2, options = {}) {
   }
 
   return {
-    integrand: replaceString(str1),
-    solution: replaceString(str2),
+    integrand: replaceString(str1).toString(),
+    solution: replaceString(str2).toString(),
     values: constants
   };
 }
