@@ -87,39 +87,56 @@ const redoEl = $('redo'); // Add redo button in HTML
 const deleteEl = $('delete-selected'); // Add delete button in HTML
 
 // State stack for undo/redo
-let state = [];
-let mods = 0; // pointer to current state
+let pathsStack = [];
+let redoStack = []
 
-function saveState() {
-    // Remove redo stack if new action occurs
-    if (mods < state.length) {
-        state = state.slice(0, mods);
-    }
-    state.push(JSON.stringify(canvas));
-    mods = state.length; // set pointer to latest
+// Save a path to stack
+function savePath(path) {
+    pathsStack.push(path);
+    redoStack = []; // clear redo when new path is drawn
 }
 
+// Undo
 function undo() {
-    if (mods > 1) {
-        mods -= 1;
-        canvas.loadFromJSON(state[mods - 1], () => canvas.renderAll());
+    if (pathsStack.length > 0) {
+        const last = pathsStack.pop();
+        redoStack.push(last);
+        redrawPaths();
     }
 }
 
+// Redo
 function redo() {
-    if (mods < state.length) {
-        canvas.loadFromJSON(state[mods], () => canvas.renderAll());
-        mods += 1;
+    if (redoStack.length > 0) {
+        const path = redoStack.pop();
+        pathsStack.push(path);
+        redrawPaths();
     }
 }
 
-// Initialize first state
-saveState();
-
-clearEl.onclick = () => {
+// Redraw canvas from current pathsStack
+function redrawPaths() {
     canvas.clear();
-    saveState();
-};
+    pathsStack.forEach(p => canvas.add(p));
+    canvas.renderAll();
+}
+
+// Delete last selected path
+function deleteSelected() {
+    const activeObjects = canvas.getActiveObjects();
+    if (activeObjects.length) {
+        activeObjects.forEach(obj => {
+            const index = pathsStack.indexOf(obj);
+            if (index !== -1) pathsStack.splice(index, 1);
+            canvas.remove(obj);
+        });
+        canvas.discardActiveObject();
+        canvas.renderAll();
+        redoStack = [];
+    }
+}
+
+clearEl.onclick = () => { pathsStack = []; redoStack = []; canvas.clear(); };
 
 drawingModeEl.onclick = function () {
     canvas.isDrawingMode = !canvas.isDrawingMode;
@@ -156,18 +173,6 @@ canvas.on('selection:cleared', () => {
     deleteEl.style.display = 'none';
 });
 
-
-// Delete selected object function
-function deleteSelected() {
-    const activeObjects = canvas.getActiveObjects();
-    if (activeObjects.length) {
-        activeObjects.forEach(obj => canvas.remove(obj));
-        canvas.discardActiveObject();
-        canvas.renderAll();
-        saveState();
-    }
-}
-
 // Delete button click
 deleteEl.onclick = deleteSelected;
 
@@ -179,12 +184,9 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Only after objects are added, modified, removed, or freehand stroke is finished
-canvas.on('object:added', function (e) {
-    if (!e.target.__corner) saveState(); // ignore during drawing?
+canvas.on('path:created', (e) => {
+    savePath(e.path);
 });
-canvas.on('object:modified', saveState);
-canvas.on('object:removed', saveState);
 
 // Freehand stroke finished
 canvas.on('path:created', saveState);
