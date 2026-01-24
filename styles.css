@@ -82,7 +82,7 @@ canvas{
     transform:scale(1.2);
 }
 
-.blacklist-item input[type="checkbox"]{
+.blacklist-item input{
     accent-color: red;
 }
 

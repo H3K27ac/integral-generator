@@ -116,6 +116,7 @@ function buildTechPanel(){
                 block.checked=false;
             }
             row.classList.toggle("item-disabled",!m.enabled);
+            row.classList.toggle("item-blacklisted",m.blacklisted);
         };
 
         block.onchange=()=>{
@@ -124,6 +125,7 @@ function buildTechPanel(){
                 m.enabled=false;
                 enable.checked=false;
             }
+            row.classList.toggle("item-disabled",!m.enabled);
             row.classList.toggle("item-blacklisted",m.blacklisted);
         };
 
