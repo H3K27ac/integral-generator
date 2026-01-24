@@ -6,11 +6,7 @@ function rint(a,b){
     return Math.floor(Math.random()*(b-a+1))+a;
 }
 
-function pick(a){
-    return a[rint(0,a.length-1)];
-}
-
-function pickFast(arr){
+function pick(arr){
     return arr[(Math.random() * arr.length) | 0];
 }
 

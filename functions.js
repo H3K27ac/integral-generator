@@ -1,46 +1,19 @@
 /* =====================================================
-   FUNCTION CATEGORY + SUBFUNCTION SYSTEM
+   FUNCTION CATEGORY SYSTEM
 ===================================================== */
 
 const FUNCTION_CATEGORIES = [];
-const ENABLED_CATEGORIES = [];
 
-function addCategory(name){
-    const cat = {
+
+/* ---------- helper ---------- */
+
+function addFunctionCategory(name, generator, enabled=true){
+    FUNCTION_CATEGORIES.push({
         name,
-        enabled: true,
-        functions: [],
-        enabledFunctions: []
-    };
-    FUNCTION_CATEGORIES.push(cat);
-    ENABLED_CATEGORIES.push(cat);
-    return cat;
+        generator,
+        enabled
+    });
 }
-
-function addFunction(cat, name, generator){
-    const fn = {
-        name,
-        gen: generator,
-        enabled: true
-    };
-    cat.functions.push(fn);
-    cat.enabledFunctions.push(fn);
-}
-
-function updateCategoryState(cat){
-    cat.enabledFunctions.length = 0;
-
-    for(const fn of cat.functions){
-        if(fn.enabled) cat.enabledFunctions.push(fn);
-    }
-
-    cat.enabled = cat.enabledFunctions.length > 0;
-
-    const idx = ENABLED_CATEGORIES.indexOf(cat);
-    if(cat.enabled && idx === -1) ENABLED_CATEGORIES.push(cat);
-    else if(!cat.enabled && idx !== -1) ENABLED_CATEGORIES.splice(idx,1);
-}
-
 
 /* =====================================================
    CATEGORY DEFINITIONS
@@ -49,49 +22,39 @@ function updateCategoryState(cat){
 
 /* ---------- POLYNOMIALS ---------- */
 
-const polyCat = addCategory("Polynomials");
+addCategory("Polynomials", function(){
 
-addFunction(polyCat,"Polynomial", ()=>{
+    const degree=rint(1,2);
+    let terms=[];
 
-    const degree = rint(1,3);
-    const terms = [];
+    for(let i=degree;i>=0;i--){
+        let c=rint(-5,5);
+        if(c===0) continue;
 
-    for(let i = degree; i >= 0; i--){
-        const c = rint(-5,5);
-        if(!c) continue;
-
-        if(i === 0) terms.push(c);
-        else if(i === 1) terms.push(`${c}*x`);
+        if(i===0) terms.push(`${c}`);
+        else if(i===1) terms.push(`${c}*x`);
         else terms.push(`${c}*x^${i}`);
     }
 
-    return terms.length
-        ? terms.join("+").replace("+-","-")
-        : "x";
+    return terms.join("+").replace(/\+\-/g,"-") || "x";
 });
-
 
 
 /* ---------- TRIG ---------- */
 
-const trigCat = addCategory("Trigonometric");
-
-addFunction(trigCat,"sin", ()=>{
+addCategory("Trigonometric", ()=>{
     const a=rint(1,5), b=rint(-5,5);
-    return `sin(${a}*x${b>=0?"+":""}${b})`;
-});
+    const inner = `${a}*x${b>=0?"+":""}${b}`;
 
-addFunction(trigCat,"cos", ()=>{
-    const a=rint(1,5), b=rint(-5,5);
-    return `cos(${a}*x${b>=0?"+":""}${b})`;
+    return pick([
+        `sin(${inner})`,
+        `cos(${inner})`
+    ]);
 });
-
 
 /* ---------- EXP ---------- */
 
-const expCat = addCategory("Exponential");
-
-addFunction(expCat,"exp", ()=>{
+addCategory("Exponential", ()=>{
     const a=rint(1,5);
     return `exp(${a}*x)`;
 });
@@ -99,17 +62,13 @@ addFunction(expCat,"exp", ()=>{
 
 /* ---------- LOG ---------- */
 
-const logCat = addCategory("Logarithmic");
-
-addFunction(logCat,"log", ()=>{
+addCategory("Logarithms", ()=>{
     const a=rint(1,5), b=rint(1,5);
     return `log(${a}*x+${b})`;
 });
 
-
-
 /* =====================================================
-   STRUCTURED GENERATOR
+   STRUCTURED GENERATOR (NEW LOGIC)
 ===================================================== */
 
 
@@ -117,28 +76,18 @@ function enabledCategories(){
     return FUNCTION_CATEGORIES.filter(c=>c.enabled);
 }
 
-function enabledFunctions(cat){
-    return cat.functions.filter(f=>f.enabled);
-}
 
-function randomFunctionFromCategory(cat){
-    const fns = enabledFunctions(cat);
-    if(fns.length===0) return "x";
-    return pick(fns).gen();
-}
-
-
-/*
-   Build a single base function
-*/
 function randomBaseFunction(){
-    if(ENABLED_CATEGORIES.length === 0) return "x";
 
-    const cat = pickFast(ENABLED_CATEGORIES);
-    const fns = cat.enabledFunctions;
-    return fns.length ? pickFast(fns).gen() : "x";
+    const cats = enabledCategories();
+
+    if(cats.length===0){
+        alert("Enable at least one function type.");
+        return "x";
+    }
+
+    return pick(cats).generator();
 }
-
 
 
 /*
@@ -147,153 +96,74 @@ function randomBaseFunction(){
    75% same category
    25% mixed
 */
-function randomExpr(allowMultiply=false, allowCompose=false){
+function randomExpr(){
 
-    if(ENABLED_CATEGORIES.length === 0) return "x";
+    const cats = enabledCategories();
+    if(cats.length===0) return "x";
 
-    let f, g;
     const sameCategory = Math.random() < 0.75;
 
+    let f,g;
+
     if(sameCategory){
-        const cat = pickFast(ENABLED_CATEGORIES);
-        const fns = cat.enabledFunctions;
-        if(fns.length === 0) return "x";
-        f = pickFast(fns).gen();
-        g = pickFast(fns).gen();
+        const cat = pick(cats);
+        f = cat.gen();
+        g = cat.gen();
     } else {
         f = randomBaseFunction();
         g = randomBaseFunction();
     }
 
-    console.log(f);
-    console.log(g);
+    const a=rint(1,5);
+    const b=rint(1,5);
 
-    const a = rint(1,5);
-    const b = rint(1,5);
-    const mode = Math.random();
+    const mode=Math.random();
 
     if(mode < 0.7){
-        return nerdamer(`${a}*(${f})+${b}*(${g})`);
+        return nerdamer(`${a}*(${f}) + ${b}*(${g})`);
     }
-    if(mode < 0.9 && allowMultiply){
+    else if(mode < 0.9){
         return nerdamer(`(${f})*(${g})`);
     }
-    if(allowCompose){
-        return nerdamer(f, {x:`(${g})`});
+    else{
+        return nerdamer(f,{x: g});
     }
-
-    return f;
 }
-
 
 
 
 /* =====================================================
-   Function selector UI
+   Function panel UI
 ===================================================== */
 
 function buildFuncPanel(){
 
-    const list = document.getElementById("funcList");
-    list.textContent = "";
+    const list=document.getElementById("funcList");
+    list.innerHTML="";
 
-    for(const cat of FUNCTION_CATEGORIES){
+    FUNCTION_CATEGORIES.forEach(cat=>{
 
-        const block = document.createElement("div");
-        cat._el = block;
+        const row=document.createElement("div");
+        row.className="list-item";
 
-        /* ---------- category header ---------- */
+        const label=document.createElement("span");
+        label.textContent=cat.name;
 
-        const header = document.createElement("div");
-        header.className = "list-item";
+        const box=document.createElement("input");
+        box.type="checkbox";
+        box.checked=cat.enabled;
 
-        const title = document.createElement("strong");
-        title.textContent = cat.name;
+        box.onchange=()=>{
+            cat.enabled=box.checked;
+            row.classList.toggle("item-disabled",!cat.enabled);
+        };
 
-        const catBox = document.createElement("input");
-        catBox.type = "checkbox";
-        catBox.checked = cat.enabled;
-        cat._box = catBox;
+        row.appendChild(label);
+        row.appendChild(box);
 
-        header.append(title, catBox);
-        block.appendChild(header);
-
-        /* ---------- functions ---------- */
-
-        if(cat.functions.length > 1){
-            for(const fn of cat.functions){
-
-                const row = document.createElement("div");
-                row.className = "list-item";
-                row.style.paddingLeft = "22px";
-
-                const label = document.createElement("span");
-                label.textContent = fn.name;
-
-                const box = document.createElement("input");
-                box.type = "checkbox";
-                box.checked = fn.enabled;
-
-                fn._el = row;
-                fn._box = box;
-
-                row.append(label, box);
-                block.appendChild(row);
-            }
-        }
-
-        list.appendChild(block);
-        syncCategoryUI(cat);
-    }
+        list.appendChild(row);
+    });
 }
-
-function syncCategoryUI(cat){
-
-    cat._box.checked = cat.enabled;
-    cat._el
-        .querySelector(".list-item")
-        .classList.toggle("item-disabled", !cat.enabled);
-
-    for(const fn of cat.functions){
-        if(!fn._box) continue;
-        fn._box.checked = fn.enabled;
-        fn._el?.classList.toggle("item-disabled", !fn.enabled);
-    }
-}
-
-document.getElementById("funcList").addEventListener("change", e => {
-
-    const input = e.target;
-    if(input.type !== "checkbox") return;
-
-    /* ---------- category toggle ---------- */
-    for(const cat of FUNCTION_CATEGORIES){
-        if(cat._box === input){
-
-            cat.enabled = input.checked;
-            for(const fn of cat.functions){
-                fn.enabled = cat.enabled;
-            }
-
-            updateCategoryState(cat);
-            syncCategoryUI(cat);
-            return;
-        }
-
-        /* ---------- function toggle ---------- */
-        for(const fn of cat.functions){
-            if(fn._box === input){
-
-                fn.enabled = input.checked;
-
-                cat.enabled = cat.functions.some(f => f.enabled);
-                updateCategoryState(cat);
-                syncCategoryUI(cat);
-                return;
-            }
-        }
-    }
-});
 
 
 function toggleFuncPanel(){
