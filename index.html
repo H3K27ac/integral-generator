@@ -17,10 +17,11 @@
 
 <script defer src="https://cdn.jsdelivr.net/npm/nerdamer@1.1.13/all.min.js"></script>
 
+<script defer src="https://cdn.jsdelivr.net/npm/fabric@6.4.3/dist/index.js"></script>
+
 <link rel="stylesheet" type="text/css" href="styles.css">
 <script defer type="text/javascript" src="techniques.js"></script>
-<script defer type="text/javascript" src="canvas.js"></script>
-<script defer type="text/javascript" src="stopwatch.js"></script>
+<script defer type="text/javascript" src="UI.js"></script>
 <script defer type="text/javascript" src="generator.js"></script>
 
 </head>
@@ -62,7 +63,7 @@
 <div id="solution" class="math"></div>
 <div id="method"></div>
 
-
+<!--
 <div class="tools">
     <button id="penBtn" onclick="setTool('pen')">Pen</button>
     <button id="pixelEraseBtn" onclick="setTool('pixel')">Pixel Erase</button>
@@ -76,10 +77,36 @@
     <button onclick="redo()">Redo</button>
     <button onclick="clearCanvas()">Clear</button>
     <button id="deleteSelectionBtn" class="is-hidden" onclick="deleteSelection()">Delete Selection</button>
+</div> 
+-->
+
+<div class="tools">
+  <button id="drawing-mode">Draw</button>
+
+  <label>
+    Width
+    <input
+      type="range"
+      id="drawing-line-width"
+      min="1"
+      max="30"
+      value="4"
+    />
+  </label>
+
+  <label>
+    Color
+    <input
+      type="color"
+      id="drawing-color"
+      value="#000000"
+    />
+  </label>
+
+  <button id="clear-canvas">Clear</button>
 </div>
 
-
-<canvas id="board"></canvas>
+<canvas id="canvas"></canvas>
 
 </body>
 </html>
