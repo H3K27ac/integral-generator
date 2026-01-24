@@ -82,7 +82,7 @@ canvas{
     transform:scale(1.2);
 }
 
-.blacklist-item input{
+.blacklist-item{
     accent-color: red;
 }
 
