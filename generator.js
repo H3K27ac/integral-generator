@@ -49,8 +49,8 @@ function replaceConstants(str1, str2, options = {}) {
   }
 
   return {
-    integrand: replaceString(str1).toString(),
-    solution: replaceString(str2).toString(),
+    integrand: replaceString(str1),
+    solution: replaceString(str2),
     values: constants
   };
 }
@@ -82,8 +82,7 @@ function generateProblem(){
 }
 
 function toLaTeX(expression) {
-    console.log(expression);
-    return nerdamer.convertToLaTeX(expression).replace(/\\cdot/g, "").replace(/log/g, "ln");
+    return nerdamer(expression).toTeX().replace(/\\cdot/g, "").replace(/log/g, "ln");
 }
 
 
