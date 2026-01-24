@@ -10,11 +10,66 @@ function pick(arr){
     return arr[(Math.random() * arr.length) | 0];
 }
 
+/* =====================================================
+   Constant replacement
+   a,b,c,k,m,n - random integers
+===================================================== */
+
+
+function substituteConstants(expr){
+
+    const map = {};
+
+    return expr.replace(/[a-z]/g, letter=>{
+
+        if("x".includes(letter)) return letter;
+
+        if(!map[letter]){
+            map[letter] = rint(-5,5);
+        }
+
+        return map[letter];
+    });
+}
+
+/* =====================================================
+   Template generator
+===================================================== */
+
+function generateProblem(){
+
+    const enabled = TECHNIQUES.filter(t=>t.enabled);
+
+    if(enabled.length===0){
+        alert("Select at least one technique.");
+        return null;
+    }
+
+    const tech = pick(enabled);
+    const template = pick(tech.templates);
+
+    const integrand = substituteConstants(template.integral);
+    const solution  = substituteConstants(template.solution);
+
+    return {
+        integrand,
+        solution,
+        method: tech.name,
+        latex: `\\int ${toLaTeX(integrand)}\\,dx`,
+        solutionLatex: `= ${toLaTeX(solution)} +C`
+    };
+}
+
+function toLaTeX(expression) {
+    return nerdamer(expression).toTeX().replace(/\\cdot/g, "").replace(/log/g, "ln");
+}
+
+
 
 
 /* =========================
    Public generator
-========================= */
+========================= 
 
 function generateProblem(){
     
@@ -40,7 +95,7 @@ function generateProblem(){
     };
 }
 
-
+*/
 
 
 
@@ -54,9 +109,11 @@ function generateProblem(){
    ========================= */
 
 let currentSolutionLatex="";
+let currentMethod="";
 
 const solution = document.getElementById("solution");
 const problem = document.getElementById("problem");
+const method = document.getElementById("method");
 
 function newProblem(){
 
@@ -67,6 +124,7 @@ function newProblem(){
     if (!p) return;
 
     currentSolutionLatex = p.solutionLatex;
+    currentMethod = p.method;
 
     katex.render(p.latex, problem);
 
@@ -86,6 +144,7 @@ function showSolution(){
     katex.render(currentSolutionLatex, solution, {
         displayMode: true,
     });
+    method.innerHTML = currentMethod;
     if(watchVisible) pauseTimer();
 }
 
