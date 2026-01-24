@@ -76,7 +76,7 @@ canvas{
 }
 
 .icon-tool i {
-  font-size: 12px;
+  font-size: 14px;
   color: #374151;
 }
 
@@ -85,7 +85,7 @@ canvas{
 }
 
 .icon-tool input[type="color"] {
-  width: 24px;
+  width: 70px;
   height: 24px;
   padding: 0;
   border: none;
@@ -212,40 +212,40 @@ canvas{
 ========================= */
 
 .tools [data-tooltip] {
-  position: relative;
+    position: relative;
 }
 
 /* Base tooltip */
 .tools [data-tooltip]::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  white-space: nowrap;
-  background: #111827;
-  color: #fff;
-  font-size: 11px;
-  padding: 4px 8px;
-  border-radius: 6px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity .15s ease, transform .15s ease;
-  z-index: 1000;
+    content: attr(data-tooltip);
+    position: absolute;
+    white-space: nowrap;
+    background: #111827;
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s ease, transform .15s ease;
+    z-index: 1000;
 }
 
 /* LEFT (default) */
 .tools [data-tooltip]::after {
-  right: 110%;
-  top: 50%;
-  transform: translateY(-50%);
+    right: 110%;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
-/* BOTTOM fallback */
-.tools [data-tooltip][data-tip="bottom"]::after {
-  right: 50%;
-  top: 120%;
-  transform: translateX(50%);
+/* RIGHT fallback */
+.tools [data-tooltip][data-tip="right"]::after {
+    left: 110%;
+    right: auto;
+    transform: translateY(-50%);
 }
 
 /* Hover */
 .tools [data-tooltip]:hover::after {
-  opacity: 1;
+    opacity: 1;
 }

@@ -294,12 +294,14 @@ window.addEventListener("load", ()=>{
 document.querySelectorAll('[data-tooltip]').forEach(el => {
   el.addEventListener('mouseenter', () => {
     const rect = el.getBoundingClientRect();
-    const tooltipWidth = el.offsetWidth + 120;
+    const tooltipEstimate = 140; // px
 
-    if (rect.left < tooltipWidth) {
-      el.setAttribute('data-tip', 'bottom');
+    // If left tooltip would overflow viewport
+    if (rect.left < tooltipEstimate) {
+      el.setAttribute('data-tip', 'right');
     } else {
-      el.setAttribute('data-tip', 'left');
+      el.removeAttribute('data-tip');
     }
   });
 });
+
