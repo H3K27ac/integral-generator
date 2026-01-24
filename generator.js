@@ -93,7 +93,7 @@ function generateProblem(){
     const replaced = replaceConstants(template.integral,template.solution);
     
     return {
-        method: tech.name,
+        method: JSON.stringify(template.methods),
         latex: `\\int ${toLaTeX(replaced.integrand)}\\,dx`,
         solutionLatex: `= ${toLaTeX(replaced.solution)} +C`
     };
