@@ -75,7 +75,6 @@ const canvas = new fabric.Canvas("canvas", {
 canvas.upperCanvasEl.style.touchAction = 'none';
 
 canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-canvas.freeDrawingBrush.decimate = 8;
 
 fabric.Object.prototype.transparentCorners = false;
 
