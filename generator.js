@@ -2,8 +2,12 @@
    Utilities
 ========================= */
 
-function rint(a,b){
-    return Math.floor(Math.random()*(b-a+1))+a;
+function rint(min, max, noZero=false) {
+    let val;
+    do {
+      val = Math.floor(Math.random() * (max - min + 1)) + min;
+    } while (nonZero && val === 0);
+    return val;
 }
 
 function pick(arr){
@@ -16,21 +20,43 @@ function pick(arr){
 ===================================================== */
 
 
-function substituteConstants(expr){
+function replaceConstants(str1, str2, options = {}) {
+  const {
+    intRange = [-9, 9],      // range for a,b,c,d (excluding 0)
+    posIntRange = [1, 9]     // range for m,n,k
+  } = options;
 
-    const map = {};
+  const constants = {
+    a: null, b: null, c: null, d: null,
+    m: null, n: null, k: null
+  };
 
-    return expr.replace(/[a-z]/g, letter=>{
+  // Assign values
+  for (const key of ["a", "b", "c", "d"]) {
+    constants[key] = rint(intRange[0], intRange[1], true);
+  }
 
-        if("x".includes(letter)) return letter;
+  for (const key of ["m", "n", "k"]) {
+    constants[key] = rint(posIntRange[0], posIntRange[1]);
+  }
 
-        if(!map[letter]){
-            map[letter] = rint(-5,5);
-        }
+  // Replace whole-word matches only
+  function replaceString(str) {
+    let result = str;
+    for (const [key, value] of Object.entries(constants)) {
+      const regex = new RegExp(`\\${key}\\`, "g");
+      result = result.replace(regex, value);
+    }
+    return result;
+  }
 
-        return map[letter];
-    });
+  return {
+    integrand: replaceString(str1),
+    solution: replaceString(str2),
+    values: constants
+  };
 }
+
 
 /* =====================================================
    Template generator
@@ -48,8 +74,7 @@ function generateProblem(){
     const tech = pick(enabled);
     const template = pick(tech.templates);
 
-    const integrand = substituteConstants(template.integral);
-    const solution  = substituteConstants(template.solution);
+    const replaced = replaceConstants(template.integral,template.solution);
 
     console.log(integrand);
     console.log(solution);
@@ -58,8 +83,8 @@ function generateProblem(){
         integrand,
         solution,
         method: tech.name,
-        latex: `\\int ${toLaTeX(integrand)}\\,dx`,
-        solutionLatex: `= ${toLaTeX(solution)} +C`
+        latex: `\\int ${toLaTeX(replaced.integrand)}\\,dx`,
+        solutionLatex: `= ${toLaTeX(replaced.solution)} +C`
     };
 }
 
