@@ -44,8 +44,7 @@ function replaceConstants(str1, str2, options = {}) {
   function replaceString(str) {
     let result = str;
     for (const [key, value] of Object.entries(constants)) {
-      const regex = new RegExp(key, "g");
-      result = result.replace(regex, value);
+      result = result.replace(key, value);
     }
     return result;
   }
@@ -75,13 +74,8 @@ function generateProblem(){
     const template = pick(tech.templates);
 
     const replaced = replaceConstants(template.integral,template.solution);
-
-    console.log(integrand);
-    console.log(solution);
-
+    
     return {
-        integrand,
-        solution,
         method: tech.name,
         latex: `\\int ${toLaTeX(replaced.integrand)}\\,dx`,
         solutionLatex: `= ${toLaTeX(replaced.solution)} +C`
