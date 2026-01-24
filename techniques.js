@@ -106,8 +106,8 @@ function buildTechPanel(){
         const block=document.createElement("input");
         block.type="checkbox";
         block.title="Blacklist";
-        block.checked=m.blacklisted;
         block.classList.add("blacklist-item");
+        block.checked=m.blacklisted;
 
         enable.onchange=()=>{
             m.enabled=enable.checked;
@@ -115,7 +115,7 @@ function buildTechPanel(){
                 m.blacklisted=false;
                 block.checked=false;
             } else {
-                row.classList.add("item-disabled")
+                row.classList.add("item-disabled");
             }
         };
 

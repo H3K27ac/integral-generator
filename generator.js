@@ -62,8 +62,6 @@ function replaceConstants(str1, str2, options = {}) {
 
 function generateProblem(){
 
-    computeBlacklist();
-
     const enabledMethods = METHODS.filter(m=>m.enabled).map(m=>m.name);
 
     if(enabledMethods.length===0){
