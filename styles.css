@@ -33,10 +33,14 @@ button.inactive{
     background:#6b7280;
 }
 
-.math{
-    font-size:1.6rem;
-    text-align:center;
-    margin:16px 0;
+.math {
+    font-size: 1.8rem;
+    text-align: center;
+    margin: 20px 0;
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.08);
 }
 
 canvas{

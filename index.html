@@ -33,9 +33,9 @@
 <div class="controls">
     <button onclick="newProblem()">New</button>
     <button onclick="showSolution()">Solution</button>
-    <button id="techToggleBtn" onclick="toggleTechPanel()">Techniques</button>
+    <button id="techToggleBtn" class="inactive" onclick="toggleTechPanel()">Techniques</button>
 <!--    <button id="funcToggleBtn" onclick="toggleFuncPanel()">Functions</button> -->
-    <button id="toggleWatchBtn" onclick="toggleStopwatch()">Stopwatch</button>
+    <button id="toggleWatchBtn" class="inactive" onclick="toggleStopwatch()">Stopwatch</button>
 </div>
 
 <div id="techPanel" class="list-panel is-hidden">
@@ -53,7 +53,7 @@
     <span id="time">00:00.0</span>
     <div class="controls">
         <button id="startBtn" onclick="startTimer()">Start</button>
-        <button id="pauseBtn" onclick="pauseTimer()">Pause</button>
+        <button id="pauseBtn" class="inactive" onclick="pauseTimer()">Pause</button>
         <button onclick="resetTimer()">Reset</button>
     </div>
 </div>
@@ -81,7 +81,7 @@
 -->
 
 <div class="tools">
-    <button id="drawing-mode">Cancel drawing</button>
+    <button id="drawing-mode" class="inactive">Cancel drawing</button>
 
     <label>
         Width
