@@ -22,8 +22,8 @@ function pick(arr){
 
 function replaceConstants(str1, str2, options = {}) {
   const {
-    intRange = [-9, 9],      // range for a,b,c,d (excluding 0)
-    posIntRange = [1, 9]     // range for m,n,k
+    intRange = [-5, 5],      // range for a,b,c,d (excluding 0)
+    posIntRange = [1, 5]     // range for m,n,k
   } = options;
 
   const constants = {
@@ -43,7 +43,7 @@ function replaceConstants(str1, str2, options = {}) {
   function replaceString(str) {
     let result = str;
     for (const [key, value] of Object.entries(constants)) {
-      result = nerdamer(result, {key: value});
+      result = nerdamer(result, {[key]: value});
     }
     return result;
   }
