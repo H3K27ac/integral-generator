@@ -91,24 +91,23 @@ let state = [];
 let mods = 0; // pointer to current state
 
 function saveState() {
-    mods += 1;
+    // Remove redo stack if new action occurs
     if (mods < state.length) {
-        state = state.slice(0, mods); // clear redo stack if new action
+        state = state.slice(0, mods);
     }
     state.push(JSON.stringify(canvas));
+    mods = state.length; // set pointer to latest
 }
 
 function undo() {
     if (mods > 1) {
         mods -= 1;
-        canvas.clear();
         canvas.loadFromJSON(state[mods - 1], () => canvas.renderAll());
     }
 }
 
 function redo() {
     if (mods < state.length) {
-        canvas.clear();
         canvas.loadFromJSON(state[mods], () => canvas.renderAll());
         mods += 1;
     }
@@ -180,10 +179,15 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Save state after each modification
-canvas.on('object:added', saveState);
+// Only after objects are added, modified, removed, or freehand stroke is finished
+canvas.on('object:added', function (e) {
+    if (!e.target.__corner) saveState(); // ignore during drawing?
+});
 canvas.on('object:modified', saveState);
 canvas.on('object:removed', saveState);
+
+// Freehand stroke finished
+canvas.on('path:created', saveState);
 
 function resizeCanvas() {
     const container = canvas.wrapperEl.parentNode;
