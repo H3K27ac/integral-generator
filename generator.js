@@ -110,7 +110,7 @@ const method = document.getElementById("method");
 
 function newProblem(){
 
-    clearCanvas();
+    canvas.clear();
     solution.innerHTML="";
     method.innerHTML="";
 
