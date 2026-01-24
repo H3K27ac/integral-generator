@@ -118,56 +118,61 @@ addTemplate({
 
     generate: ({a,n}) => {
 
-        /* build polynomial:
-           x^n - n x^(n-1) + n(n-1)x^(n-2) ...
-        */
-
-        let terms = [];
-        let coeff = 1;
-
-        for(let k=0;k<=n;k++){
-
-            const power = n-k;
-
-            let sign = (k%2===0) ? 1 : -1;
-
-            let c = sign * coeff;
-
-            let term;
-
-            if(power===0)
-                term = `${c}`;
-            else if(power===1)
-                term = `${c}*x`;
-            else
-                term = `${c}*x^${power}`;
-
-            terms.push(term);
-
-            coeff *= (n-k);
-        }
-
-        const poly = terms.join("+").replace(/\+\-/g,"-");
-
         return {
-
             integral: `${a}*x^${n}*exp(x)`,
-            solution: `${a}*exp(x)*(${poly})`
+            solution: `${a}*exp(x)*(${generateIBPPolynomial(n)})`
         };
     }
 });
 
 
-/*
-
 addTemplate({
-    integral: "(log(x))^3",
-    solution: "x*((log(x))^3-3*(log(x))^2+6*log(x)-6)",
-    methods: ["u-substitution","Logarithms"],
-    difficulty: 2
+
+    methods:["u-substitution","Integration by parts","Logarithms","Exponentials"],
+    difficulty: 2,
+
+    generate: ({a,n}) => {
+
+        return {
+            integral: `${a}*log(x)^${n}`,
+            solution: `${a}*x*(${generateIBPPolynomial(n,"log(x)")})`
+        };
+    }
 });
 
-*/
+
+function generateIBPPolynomial(n,variable="x") {
+    /* build polynomial:
+        x^n - n x^(n-1) + n(n-1)x^(n-2) ...
+    */
+
+    let terms = [];
+    let coeff = 1;
+
+    for(let k=0;k<=n;k++){
+
+        const power = n-k;
+
+        let sign = (k%2===0) ? 1 : -1;
+
+        let c = sign * coeff;
+
+        let term;
+
+        if(power===0)
+            term = `${c}`;
+        else if(power===1)
+            term = `${c}*${variable}`;
+        else
+            term = `${c}*${variable}^${power}`;
+
+        terms.push(term);
+
+        coeff *= (n-k);
+    }
+
+    return terms.join("+").replace(/\+\-/g,"-");
+}
 
 
 /* =====================================================

@@ -94,40 +94,6 @@ function toLaTeX(expression) {
 
 
 
-/* =========================
-   Public generator
-========================= 
-
-function generateProblem(){
-    
-    const enabled = TECHNIQUES.filter(t=>t.enabled);
-
-    if(enabled.length===0){
-        alert("Select at least one technique.");
-        return null;
-    }
-
-    const tech = pick(enabled);
-
-    const prob = tech.fn();
-
-    const integrand = nerdamer(prob.integrand);
-    const solution  = nerdamer(prob.solution);
-
-    return {
-        integrand,
-        solution,
-        latex: `\\int ${nerdamer(integrand).toTeX().replace(/\\cdot/g, "")}\\,dx`,
-        solutionLatex: `= ${nerdamer(solution).toTeX().replace(/\\cdot/g, "")} +C`
-    };
-}
-
-*/
-
-
-
-
-
 
 
 
@@ -146,6 +112,7 @@ function newProblem(){
 
     clearCanvas();
     solution.innerHTML="";
+    method.innerHTML="";
 
     const p = generateProblem();
     if (!p) return;
@@ -176,3 +143,35 @@ function showSolution(){
 }
 
 
+
+
+
+/* =========================
+   Public generator
+========================= 
+
+function generateProblem(){
+    
+    const enabled = TECHNIQUES.filter(t=>t.enabled);
+
+    if(enabled.length===0){
+        alert("Select at least one technique.");
+        return null;
+    }
+
+    const tech = pick(enabled);
+
+    const prob = tech.fn();
+
+    const integrand = nerdamer(prob.integrand);
+    const solution  = nerdamer(prob.solution);
+
+    return {
+        integrand,
+        solution,
+        latex: `\\int ${nerdamer(integrand).toTeX().replace(/\\cdot/g, "")}\\,dx`,
+        solutionLatex: `= ${nerdamer(solution).toTeX().replace(/\\cdot/g, "")} +C`
+    };
+}
+
+*/
