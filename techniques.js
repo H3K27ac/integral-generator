@@ -114,9 +114,8 @@ function buildTechPanel(){
             if (enable.checked) {
                 m.blacklisted=false;
                 block.checked=false;
-            } else {
-                row.classList.add("item-disabled");
             }
+            row.classList.toggle("item-disabled",!m.enabled);
         };
 
         block.onchange=()=>{
@@ -124,8 +123,8 @@ function buildTechPanel(){
             if (block.checked) {
                 m.enabled=false;
                 enable.checked=false;
-                row.classList.add("item-blocked");
             }
+            row.classList.toggle("item-blacklisted",m.blacklisted);
         };
 
         row.appendChild(label);

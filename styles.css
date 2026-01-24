@@ -82,7 +82,7 @@ canvas{
     transform:scale(1.2);
 }
 
-.blacklist-item input[type="checkbox"]:checked{
+.blacklist-item input[type="checkbox"]{
     accent-color: red;
 }
 
@@ -90,7 +90,7 @@ canvas{
     opacity:.4;
 }
 
-.item-blocked span{
+.item-blacklisted span{
     opacity:.4;
     text-decoration: line-through;
 }
