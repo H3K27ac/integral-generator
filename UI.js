@@ -19,6 +19,11 @@ function toggleStopwatch(){
     $("toggleWatchBtn").classList.toggle("inactive",!watchVisible);
 }
 
+function toggleCompress() {
+    const watch = document.getElementById('watch');
+    watch.classList.toggle('compressed');
+}
+
 function startTimer(){
     if(running) return;
 

@@ -19,6 +19,8 @@
 
 <script defer src="https://cdn.jsdelivr.net/npm/fabric@6.4.3/dist/index.js"></script>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+
 <link rel="stylesheet" type="text/css" href="styles.css">
 <script defer type="text/javascript" src="techniques.js"></script>
 <script defer type="text/javascript" src="UI.js"></script>
@@ -30,12 +32,59 @@
 
 <h1>Integral Practice</h1>
 
-<div class="controls">
-    <button onclick="newProblem()">New</button>
-    <button onclick="showSolution()">Solution</button>
-    <button id="techToggleBtn" class="inactive" onclick="toggleTechPanel()">Techniques</button>
+<div id="topBar">
+    <div class="controls">
+        <button onclick="newProblem()">New</button>
+        <button onclick="showSolution()">Solution</button>
+        <button id="techToggleBtn" class="inactive" onclick="toggleTechPanel()">Techniques</button>
 <!--    <button id="funcToggleBtn" onclick="toggleFuncPanel()">Functions</button> -->
-    <button id="toggleWatchBtn" class="inactive" onclick="toggleStopwatch()">Stopwatch</button>
+        <button id="toggleWatchBtn" class="inactive" onclick="toggleStopwatch()">Stopwatch</button>
+    </div>
+    <div id="watch" class="stopwatch">
+        <span id="time">00:00.0</span>
+        <div class="controls">
+            <button id="startBtn" onclick="startTimer()"><span class="text">Start</span><i class="fa fa-play icon" style="display:none"></i></button>
+            <button id="pauseBtn" class="inactive" onclick="pauseTimer()"><span class="text">Pause</span><i class="fa fa-pause icon" style="display:none"></i></button>
+            <button id="resetBtn" onclick="resetTimer()"><span class="text">Reset</span><i class="fa fa-rotate-right icon" style="display:none"></i></button>
+            <button id="toggleBtn" onclick="toggleCompress()"><span class="text">Compress</span><i class="fa fa-compress icon" style="display:none"></i></button>
+        </div>
+    </div>
+
+    <div id="problem" class="math is-hidden"></div>
+    <div id="solution" class="math is-hidden"></div>
+    <div id="method"></div>
+</div>
+
+<div id="workspace">
+    <canvas id="canvas"></canvas>
+    <div class="tools">
+        <button id="drawing-mode" class="inactive">Cancel drawing</button>
+
+        <label>
+            Width
+            <input
+            type="range"
+            id="drawing-line-width"
+            min="1"
+            max="30"
+            value="4"
+            />
+        </label>
+
+        <label>
+            Color
+            <input
+            type="color"
+            id="drawing-color"
+            value="#000000"
+            />
+        </label>
+
+        <button id="clear-canvas">Clear</button>
+        <button id="undo">Undo</button>
+        <button id="redo">Redo</button>
+        <button id="delete-selected" class="is-hidden">Delete Selected</button>
+    </div>
 </div>
 
 <div id="techPanel" class="list-panel is-hidden">
@@ -43,73 +92,6 @@
     <div id="techList"></div>
 </div>
 
-<div id="funcPanel" class="list-panel is-hidden">
-    <h3>Select Function Types</h3>
-    <div id="funcList"></div>
-</div>
-
-
-<div id="watch" class="stopwatch">
-    <span id="time">00:00.0</span>
-    <div class="controls">
-        <button id="startBtn" onclick="startTimer()">Start</button>
-        <button id="pauseBtn" class="inactive" onclick="pauseTimer()">Pause</button>
-        <button onclick="resetTimer()">Reset</button>
-    </div>
-</div>
-
-
-<div id="problem" class="math is-hidden"></div>
-<div id="solution" class="math is-hidden"></div>
-<div id="method"></div>
-
-<!--
-<div class="tools">
-    <button id="penBtn" onclick="setTool('pen')">Pen</button>
-    <button id="pixelEraseBtn" onclick="setTool('pixel')">Pixel Erase</button>
-    <button id="strokeEraseBtn" onclick="setTool('stroke')">Stroke Erase</button>
-    <button id="selectBtn" onclick="setTool('select')">Select</button>
-
-    Width
-    <input type="range" id="width" min="1" max="30" value="4">
-
-    <button onclick="undo()">Undo</button>
-    <button onclick="redo()">Redo</button>
-    <button onclick="clearCanvas()">Clear</button>
-    <button id="deleteSelectionBtn" class="is-hidden" onclick="deleteSelection()">Delete Selection</button>
-</div> 
--->
-
-<div class="tools">
-    <button id="drawing-mode" class="inactive">Cancel drawing</button>
-
-    <label>
-        Width
-        <input
-        type="range"
-        id="drawing-line-width"
-        min="1"
-        max="30"
-        value="4"
-        />
-    </label>
-
-    <label>
-        Color
-        <input
-        type="color"
-        id="drawing-color"
-        value="#000000"
-        />
-    </label>
-
-    <button id="clear-canvas">Clear</button>
-    <button id="undo">Undo</button>
-    <button id="redo">Redo</button>
-    <button id="delete-selected" class="is-hidden">Delete Selected</button>
-</div>
-
-<canvas id="canvas"></canvas>
 
 </body>
 </html>
