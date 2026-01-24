@@ -125,7 +125,7 @@ canvas{
     display:none;
     margin:12px auto;
     padding:14px;
-    width:260px;
+    width:300px;
     background:white;
     border-radius:18px;
     box-shadow:0 6px 18px rgba(0,0,0,.12);
@@ -134,7 +134,7 @@ canvas{
 }
 
 .stopwatch.compressed {
-    width: 120px;
+    width: 200px;
     padding: 8px;
     border-radius: 50px;
     font-size: 16px;
