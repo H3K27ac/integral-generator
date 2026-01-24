@@ -29,16 +29,6 @@ function addTemplate({ integral, solution, methods }){
     });
 }
 
-
-/* =====================================================
-   METHOD LIST
-===================================================== */
-
-addMethod("Basic Integrals");
-addMethod("Exponentials");
-addMethod("Trigonometric functions");
-addMethod("Logarithms");
-addMethod("u-substitution");
 /* =====================================================
    METHODS WITH DIFFICULTY
 ===================================================== */
@@ -55,7 +45,7 @@ addMethod("u-substitution", 2);
 addTemplate({
     integral: "a*x^n",
     solution: "a* x^(n+1) / (n+1)",
-    methods: ["Basic Integrals"]
+    methods: ["Polynomials"]
 });
 
 addTemplate({
@@ -171,10 +161,18 @@ function buildTechPanel(){
 
         enable.onchange=()=>{
             m.enabled=enable.checked;
+            if (enable.checked) {
+                m.blacklisted=false;
+                block.checked=false;
+            }
         };
 
         block.onchange=()=>{
             m.blacklisted=block.checked;
+            if (block.checked) {
+                m.enabled=false;
+                enabled.checked=false;
+            }
         };
 
         row.appendChild(label);
