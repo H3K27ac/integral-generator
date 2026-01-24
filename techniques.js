@@ -11,7 +11,6 @@ const TEMPLATES = [];
 function addMethod(name, difficulty=1, enabled=true){
     METHODS.push({
         name,
-        difficulty,
         enabled,
         blacklisted:false
     });
@@ -23,9 +22,9 @@ function addMethod(name, difficulty=1, enabled=true){
 function addTemplate({ integral, solution, methods }){
 
     TEMPLATES.push({
-        integral,
-        solution,
-        methods   // array of method names
+        generate,
+        methods,   // array of method names
+        difficulty
     });
 }
 
@@ -33,54 +32,97 @@ function addTemplate({ integral, solution, methods }){
    METHODS WITH DIFFICULTY
 ===================================================== */
 
-addMethod("Polynomials", 1);
-addMethod("Exponentials", 1);
-addMethod("Trigonometric functions", 1);
-addMethod("Logarithms", 1);
+addMethod("Power rule");
+addMethod("Exponentials");
+addMethod("Trigonometric functions");
+addMethod("Logarithms");
 
-addMethod("u-substitution", 2);
+addMethod("u-substitution");
 
+
+addTemplate({
+
+    methods:["Power rule"],
+    difficulty: 1,
+
+    generate: ({a,n}) => ({
+
+        integral: `${a}*x^${n}`,
+        solution: `${a}*x^${n+1}/${n+1}`
+
+    })
+});
 
 
 addTemplate({
-    integral: "a*x^n",
-    solution: "a* x^(n+1) / (n+1)",
-    methods: ["Polynomials"]
+
+    methods:["Exponentials"],
+    difficulty: 1,
+
+    generate: ({n}) => ({
+
+        integral: `e^(${n}*x)`,
+        solution: `e^(${n}*x) / ${n}`
+
+    })
 });
 
-addTemplate({
-    integral: "e^(n*x)",
-    solution: "e^(n*x) / n",
-    methods: ["Exponentials"]
-});
 
 addTemplate({
-    integral: "sin(n*x)",
-    solution: "-cos(n*x) / n",
-    methods: ["Trigonometric functions"]
+
+    methods:["Trigonometric functions"],
+    difficulty: 1,
+
+    generate: ({n}) => ({
+
+        integral: `sin(${n}*x)`,
+        solution: `-cos(${n}*x) / ${n}`
+
+    })
 });
 
-addTemplate({
-    integral: "cos(n*x)",
-    solution: "sin(n*x) / n",
-    methods: ["Trigonometric functions"]
-});
 
 addTemplate({
-    integral: "x*sqrt(a*x+b)",
-    solution: "(a*x+b)^(3/2)*(6*a*x-4*b) / (15*a^2)",
-    methods: ["u-substitution"]
+
+    methods:["Trigonometric functions"],
+    difficulty: 1,
+
+    generate: ({n}) => ({
+
+        integral: `cos(${n}*x)`,
+        solution: `sin(${n}*x) / ${n}`
+
+    })
 });
+
+
+addTemplate({
+
+    methods:["u-substitution"],
+    difficulty: 2,
+
+    generate: ({a,b}) => ({
+
+        integral: `x*sqrt(${a}*x+${b})`,
+        solution: `(${a}*x+${b})^(3/2)*(6*${a}*x-4*${b}) / (15*${a}^2)`
+
+    })
+});
+
+/*
 
 addTemplate({
     integral: "(log(x))^3",
     solution: "x*((log(x))^3-3*(log(x))^2+6*log(x)-6)",
-    methods: ["u-substitution","Logarithms"]
+    methods: ["u-substitution","Logarithms"],
+    difficulty: 2
 });
+
+*/
 
 
 /* =====================================================
-   Blacklist logic
+   Selection Panel
 ===================================================== */
 
 

@@ -20,45 +20,33 @@ function pick(arr){
 ===================================================== */
 
 
-function replaceConstants(str1, str2, options = {}) {
-  const {
-    intRange = [-5, 5],      // range for a,b,c,d (excluding 0)
-    posIntRange = [1, 5]     // range for m,n,k
-  } = options;
+function randomConstants(options={}){
+    const {
+        intRange = [-5, 5],      // range for a,b,c,d (excluding 0)
+        posIntRange = [1, 5]     // range for m,n,k
+        }= options;
 
-  const constants = {
-    a: null, b: null, c: null, d: null,
-    m: null, n: null, k: null
-  };
+    const constants = {
+        a: null, b: null, c: null, d: null,
+        m: null, n: null, k: null
+    };
 
-  // Assign values
-  for (const key of ["a", "b", "c", "d"]) {
-    constants[key] = rint(intRange[0], intRange[1], true);
-  }
-
-  for (const key of ["m", "n", "k"]) {
-    constants[key] = rint(posIntRange[0], posIntRange[1]);
-  }
-
-  function replaceString(str) {
-    let result = str;
-    for (const [key, value] of Object.entries(constants)) {
-      result = nerdamer(result, {[key]: value});
+    for (const key of ["a", "b", "c", "d"]) {
+        constants[key] = rint(intRange[0], intRange[1], true);
     }
-    return result;
-  }
 
-  return {
-    integrand: replaceString(str1),
-    solution: replaceString(str2),
-    values: constants
-  };
+    for (const key of ["m", "n", "k"]) {
+        constants[key] = rint(posIntRange[0], posIntRange[1]);
+    }
+
+    return constants;
 }
 
 
 /* =====================================================
-   Template generator
+   Hybrid generator
 ===================================================== */
+
 
 function generateProblem(){
 
@@ -88,12 +76,14 @@ function generateProblem(){
 
     const template = pick(valid);
 
-    const replaced = replaceConstants(template.integral,template.solution);
+    const constants = randomConstants();
+
+    const { integrand, solution } = template.generate(constants);
     
     return {
         method: JSON.stringify(template.methods),
-        latex: `\\int ${toLaTeX(replaced.integrand)}\\,dx`,
-        solutionLatex: `= ${toLaTeX(replaced.solution)} +C`
+        latex: `\\int ${toLaTeX(integrand)}\\,dx`,
+        solutionLatex: `= ${toLaTeX(solution)} +C`
     };
 }
 
