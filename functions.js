@@ -52,6 +52,13 @@ addFunctionCategory("Trigonometric", ()=>{
     ]);
 });
 
+addFunctionCategory("Inverse Trigonometric", ()=>{
+    return pick([
+        `asin(x)`,
+        `acos(x)`
+    ]);
+});
+
 /* ---------- EXP ---------- */
 
 addFunctionCategory("Exponential", ()=>{
@@ -77,9 +84,17 @@ function enabledCategories(){
 }
 
 
-function randomBaseFunction(){
+function categoriesByName(names){
+    if(!names) return enabledCategories();
 
-    const cats = enabledCategories();
+    return enabledCategories().filter(c => names.includes(c.name));
+}
+
+
+
+function randomBaseFunction(options={}){
+
+    const cats = categoriesByName(options.categories);
 
     if(cats.length===0){
         alert("Enable at least one function type.");
@@ -96,22 +111,34 @@ function randomBaseFunction(){
    75% same category
    25% mixed
 */
-function randomExpr(){
+function randomExpr(options={}){
 
-    const cats = enabledCategories();
+    const {
+        categories=null,
+        allowMix=true,
+        allowCombine=true,
+        allowMultiply=false,
+        allowCompose=false
+    } = options;
+
+    const cats = categoriesByName(categories);
     if(cats.length===0) return "x";
+
+    if(!allowCombine){
+        return randomBaseFunction({categories});
+    }
 
     const sameCategory = Math.random() < 0.75;
 
     let f,g;
 
-    if(sameCategory){
+    if(sameCategory || allowMix){ 
         const cat = pick(cats);
         f = cat.generator();
         g = cat.generator();
     } else {
-        f = randomBaseFunction();
-        g = randomBaseFunction();
+        f = randomBaseFunction({categories});
+        g = randomBaseFunction({categories});
     }
 
     const a=rint(1,5);
@@ -122,10 +149,10 @@ function randomExpr(){
     if(mode < 0.7){
         return nerdamer(`${a}*(${f}) + ${b}*(${g})`);
     }
-    else if(mode < 0.9){
+    else if(mode < 0.9 && allowMultiply){
         return nerdamer(`(${f})*(${g})`);
     }
-    else{
+    else if(allowCompose){
         return nerdamer(f,{x: g});
     }
 }

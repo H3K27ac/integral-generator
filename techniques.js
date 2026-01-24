@@ -36,7 +36,11 @@ addTechnique("Base integral", function() {
 
 addTechnique("u-substitution", function(){
 
-    const f = randomExpr(true, true);
+    const f = randomExpr({
+        allowMultiply: true,
+        allowCompose: true
+    });
+    
 
     /* pick outer integral in variable u */
     let g = randomExpr();
@@ -54,7 +58,44 @@ addTechnique("u-substitution", function(){
     };
 });
 
+addTechnique("Integration by parts (Polynomial)", function(){
+    const f = randomExpr({
+        categories: ["Polynomials"],
+        allowCombine: false
+    });
+    const g = randomExpr({
+        categories: ["Polynomials","Trigonometric","Exponential"]
+    });
 
+    const integrand = `(${f}) * (${g})`;
+
+    return {
+        integrand: nerdamer(integrand),
+        solution: nerdamer.integrate(integrand)
+    };
+});
+
+addTechnique("Integration by parts (General)", function(){
+    const f = randomExpr({
+        categories: ["Polynomials","Logarithms","Inverse Trigonometric"],
+        allowCombine: false
+    });
+
+    const fprime = nerdamer.diff(f);
+
+    const expression = randomExpr()
+
+    const g = nerdamer(`(${expression}) / (${fprime})`);
+
+    const gprime = nerdamer.diff(g);
+
+    const integrand = `(${f}) * (${gprime})`;
+
+    return {
+        integrand: nerdamer(integrand),
+        solution: `(${f}) * (${g}) - (${nerdamer.integrate(expression)})`
+    };
+});
 
 
 
