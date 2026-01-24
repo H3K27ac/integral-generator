@@ -38,6 +38,7 @@ addMethod("Trigonometric functions");
 addMethod("Logarithms");
 
 addMethod("u-substitution");
+addMethod("Integration by parts");
 
 
 addTemplate({
@@ -108,6 +109,53 @@ addTemplate({
 
     })
 });
+
+
+addTemplate({
+
+    methods:["Integration by parts","Exponentials"],
+
+    build: ({a,n}) => {
+
+        /* build polynomial:
+           x^n - n x^(n-1) + n(n-1)x^(n-2) ...
+        */
+
+        let terms = [];
+        let coeff = 1;
+
+        for(let k=0;k<=n;k++){
+
+            const power = n-k;
+
+            let sign = (k%2===0) ? 1 : -1;
+
+            let c = sign * coeff;
+
+            let term;
+
+            if(power===0)
+                term = `${c}`;
+            else if(power===1)
+                term = `${c}*x`;
+            else
+                term = `${c}*x^${power}`;
+
+            terms.push(term);
+
+            coeff *= (n-k);
+        }
+
+        const poly = terms.join("+").replace(/\+\-/g,"-");
+
+        return {
+
+            integral: `${a}*x^${n}*exp(x)`,
+            solution: `${a}*exp(x)*(${poly})`
+        };
+    }
+});
+
 
 /*
 
