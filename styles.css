@@ -139,6 +139,7 @@ canvas{
 }
 
 .stopwatch.compressed {
+    position: fixed;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -146,7 +147,15 @@ canvas{
     gap: 8px;
     padding: 8px 15px;
     border-radius: 999px;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
 }
+
+.stopwatch.compressed:hover {
+    transform: scale(1.05);
+}
+
 
 #time{
     font-size:34px;
@@ -161,10 +170,6 @@ canvas{
 .stopwatch.compressed .controls {
     gap: 4px;
     padding: 5px;
-}
-
-.controls button {
-    transition: all 0.3s ease;
 }
 
 .stopwatch.compressed button {
