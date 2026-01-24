@@ -22,7 +22,7 @@ function addFunctionCategory(name, generator, enabled=true){
 
 /* ---------- POLYNOMIALS ---------- */
 
-addCategory("Polynomials", function(){
+addFunctionCategory("Polynomials", function(){
 
     const degree=rint(1,2);
     let terms=[];
@@ -42,7 +42,7 @@ addCategory("Polynomials", function(){
 
 /* ---------- TRIG ---------- */
 
-addCategory("Trigonometric", ()=>{
+addFunctionCategory("Trigonometric", ()=>{
     const a=rint(1,5), b=rint(-5,5);
     const inner = `${a}*x${b>=0?"+":""}${b}`;
 
@@ -54,7 +54,7 @@ addCategory("Trigonometric", ()=>{
 
 /* ---------- EXP ---------- */
 
-addCategory("Exponential", ()=>{
+addFunctionCategory("Exponential", ()=>{
     const a=rint(1,5);
     return `exp(${a}*x)`;
 });
@@ -62,7 +62,7 @@ addCategory("Exponential", ()=>{
 
 /* ---------- LOG ---------- */
 
-addCategory("Logarithms", ()=>{
+addFunctionCategory("Logarithms", ()=>{
     const a=rint(1,5), b=rint(1,5);
     return `log(${a}*x+${b})`;
 });
