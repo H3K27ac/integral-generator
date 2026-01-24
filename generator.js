@@ -44,7 +44,7 @@ function replaceConstants(str1, str2, options = {}) {
   function replaceString(str) {
     let result = str;
     for (const [key, value] of Object.entries(constants)) {
-      const regex = new RegExp(`\\${key}\\`, "g");
+      const regex = new RegExp(key, "g");
       result = result.replace(regex, value);
     }
     return result;
