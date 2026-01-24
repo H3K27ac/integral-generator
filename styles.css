@@ -32,7 +32,7 @@ h1{ text-align:center; }
     flex-wrap:wrap;
     gap:8px;
     justify-content:center;
-    margin-bottom:10px;
+    padding:10px;
 }
 
 button{
@@ -127,9 +127,10 @@ canvas{
 
 .stopwatch{
     display:none;
+    flex-direction: column;
     margin:12px auto;
     padding:14px;
-    width:300px;
+    width:380px;
     background:white;
     border-radius:18px;
     box-shadow:0 6px 18px rgba(0,0,0,.12);
@@ -140,12 +141,11 @@ canvas{
 .stopwatch.compressed {
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     width: fit-content;
     padding: 8px 12px;
     border-radius: 999px;
 }
-
 
 #time{
     font-size:34px;
@@ -156,11 +156,11 @@ canvas{
 
 .stopwatch.compressed #time {
     font-size: 18px;
-    margin-right: 10px;
 }
 
 .stopwatch.compressed .controls {
     gap: 4px;
+    padding: 5px;
 }
 
 .controls button {

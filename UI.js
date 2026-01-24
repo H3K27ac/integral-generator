@@ -15,7 +15,7 @@ let raf;
 
 function toggleStopwatch(){
     watchVisible=!watchVisible;
-    $("watch").style.display = watchVisible ? "block":"none";
+    $("watch").style.display = watchVisible ? "flex":"none";
     $("toggleWatchBtn").classList.toggle("inactive",!watchVisible);
 }
 
