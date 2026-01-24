@@ -68,6 +68,10 @@ canvas{
     touch-action:none;
 }
 
+.icon {
+    display: none;
+}
+
 /* =========================
    List Panel
 ========================= */
@@ -154,6 +158,13 @@ canvas{
 
 .controls button {
     transition: all 0.3s ease;
+}
+
+.stopwatch.compressed button {
+    padding: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
 }
 
 .stopwatch.compressed .text {
