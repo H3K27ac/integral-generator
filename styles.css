@@ -23,14 +23,14 @@ button{
     padding:10px 14px;
     border-radius:10px;
     border:none;
-    background:#6b7280;
+    background:#2563eb;
     color:white;
     font-size:14px;
     transition:.15s;
 }
 
-button.active{
-    background:#2563eb;
+button.inactive{
+    background:#6b7280;
 }
 
 .math{

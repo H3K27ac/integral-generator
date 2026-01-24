@@ -16,7 +16,7 @@ let raf;
 function toggleStopwatch(){
     watchVisible=!watchVisible;
     $("watch").style.display = watchVisible ? "block":"none";
-    $("toggleWatchBtn").classList.toggle("active",watchVisible);
+    $("toggleWatchBtn").classList.toggle("inactive",!watchVisible);
 }
 
 function startTimer(){
@@ -24,8 +24,8 @@ function startTimer(){
 
     running=true;
     last=performance.now();
-    $("startBtn").classList.remove("active");
-    $("pauseBtn").classList.add("active");
+    $("startBtn").classList.add("inactive");
+    $("pauseBtn").classList.remove("inactive");
 
     raf=requestAnimationFrame(tick);
 }
@@ -34,8 +34,8 @@ function pauseTimer(){
     running=false;
     cancelAnimationFrame(raf);
 
-    $("startBtn").classList.add("active");
-    $("pauseBtn").classList.remove("active");
+    $("startBtn").classList.remove("inactive");
+    $("pauseBtn").classList.add("inactive");
 }
 
 function resetTimer(){
@@ -140,7 +140,7 @@ clearEl.onclick = () => { pathsStack = []; redoStack = []; canvas.clear(); };
 
 drawingModeEl.onclick = function () {
     canvas.isDrawingMode = !canvas.isDrawingMode;
-    this.classList.toggle("active", canvas.isDrawingMode);
+    this.classList.toggle("inactive", canvas.isDrawingMode);
     this.innerHTML = canvas.isDrawingMode
         ? 'Cancel drawing'
         : 'Draw';
@@ -273,7 +273,7 @@ function toggleTechPanel(){
     const show = p.style.display==="none";
 
     p.style.display = show ? "block":"none";
-    btn.classList.toggle("active", show);
+    btn.classList.toggle("inactive", !show);
 }
 
 window.addEventListener("load", ()=>{
