@@ -89,6 +89,7 @@ clearEl.onclick = () => canvas.clear();
 
 drawingModeEl.onclick = function () {
     canvas.isDrawingMode = !canvas.isDrawingMode;
+    this.classList.toggle("active",canvas.isDrawingMode);
     this.innerHTML = canvas.isDrawingMode
         ? 'Cancel drawing'
         : 'Draw';
@@ -106,7 +107,17 @@ drawingLineWidthEl.onchange = e => {
     canvas.freeDrawingBrush.width = parseInt(e.target.value, 10) || 2;
 };
 
+function resizeCanvas() {
+  const container = canvas.wrapperEl.parentNode;
 
+  canvas.setWidth(container.clientWidth);
+  canvas.setHeight(window.innerHeight);
+
+  canvas.renderAll();
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
 
 /* =====================================================
