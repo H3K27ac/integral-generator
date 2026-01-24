@@ -143,19 +143,19 @@ canvas{
     align-items: center;
     justify-content: center;
     width: fit-content;
-    padding: 8px 12px;
+    gap: 8px;
+    padding: 8px 15px;
     border-radius: 999px;
 }
 
 #time{
     font-size:34px;
     font-weight:600;
-    margin-bottom:10px;
     display:block;
 }
 
 .stopwatch.compressed #time {
-    font-size: 18px;
+    font-size: 25px;
 }
 
 .stopwatch.compressed .controls {
