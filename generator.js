@@ -78,11 +78,11 @@ function generateProblem(){
 
     const constants = randomConstants();
 
-    const { integrand, solution } = template.generate(constants);
+    const { integral, solution } = template.generate(constants);
     
     return {
         method: JSON.stringify(template.methods),
-        latex: `\\int ${toLaTeX(integrand)}\\,dx`,
+        latex: `\\int ${toLaTeX(integral)}\\,dx`,
         solutionLatex: `= ${toLaTeX(solution)} +C`
     };
 }
