@@ -8,18 +8,18 @@ const TEMPLATES = [];
 
 /* ---------- methods ---------- */
 
-function addMethod(name, difficulty=1, enabled=true){
+function addMethod(name, enabled=true, blacklisted=false){
     METHODS.push({
         name,
         enabled,
-        blacklisted:false
+        blacklisted
     });
 }
 
 
 /* ---------- templates ---------- */
 
-function addTemplate({ integral, solution, methods }){
+function addTemplate({ generate, methods, difficulty=1}){
 
     TEMPLATES.push({
         generate,
