@@ -43,10 +43,10 @@
     <div id="watch" class="stopwatch">
         <span id="time">00:00.0</span>
         <div class="controls">
-            <button id="startBtn" onclick="startTimer()"><span class="text">Start</span><i class="fa fa-play icon"></i></button>
-            <button id="pauseBtn" class="inactive" onclick="pauseTimer()"><span class="text">Pause</span><i class="fa fa-pause icon"></i></button>
-            <button id="resetBtn" onclick="resetTimer()"><span class="text">Reset</span><i class="fa fa-rotate-right icon"></i></button>
-            <button id="toggleBtn" onclick="toggleCompress()"><span class="text">Compress</span><i class="fa fa-compress icon"></i></button>
+            <button id="startBtn" onclick="startTimer()"><span class="text">Start</span><i class="fa fa-play icon is-hidden"></i></button>
+            <button id="pauseBtn" class="inactive" onclick="pauseTimer()"><span class="text">Pause</span><i class="fa fa-pause icon is-hidden"></i></button>
+            <button id="resetBtn" onclick="resetTimer()"><span class="text">Reset</span><i class="fa fa-rotate-right icon is-hidden"></i></button>
+            <button id="toggleBtn" onclick="toggleCompress()"><span class="text">Compress</span><i class="fa fa-compress icon is-hidden"></i></button>
         </div>
     </div>
 
@@ -58,32 +58,36 @@
 <div id="workspace">
     <canvas id="canvas"></canvas>
     <div class="tools">
-        <button id="drawing-mode" class="inactive">Cancel drawing</button>
+        <button id="drawing-mode" data-tooltip="Toggle Drawing">
+            <i class="fa-solid fa-pencil"></i>
+        </button>
 
-        <label>
-            Width
-            <input
-            type="range"
-            id="drawing-line-width"
-            min="1"
-            max="30"
-            value="4"
-            />
+        <label class="icon-tool" data-tooltip="Line Width">
+            <i class="fa-solid fa-minus"></i>
+            <input type="range" id="drawing-line-width" min="1" max="30" value="4" />
+            <i class="fa-solid fa-plus"></i>
         </label>
 
-        <label>
-            Color
-            <input
-            type="color"
-            id="drawing-color"
-            value="#000000"
-            />
+        <label class="icon-tool" data-tooltip="Color">
+            <i class="fa-solid fa-palette"></i>
+            <input type="color" id="drawing-color" value="#000000" />
         </label>
 
-        <button id="clear-canvas">Clear</button>
-        <button id="undo">Undo</button>
-        <button id="redo">Redo</button>
-        <button id="delete-selected" class="is-hidden">Delete Selected</button>
+        <button id="undo" data-tooltip="Undo">
+            <i class="fa-solid fa-rotate-left"></i>
+        </button>
+
+        <button id="redo" data-tooltip="Redo">
+            <i class="fa-solid fa-rotate-right"></i>
+        </button>
+
+        <button id="clear-canvas" data-tooltip="Clear Canvas">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+
+        <button id="delete-selected" class="is-hidden" data-tooltip="Delete Selected">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
     </div>
 </div>
 
