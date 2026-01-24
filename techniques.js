@@ -114,8 +114,9 @@ addTemplate({
 addTemplate({
 
     methods:["Integration by parts","Exponentials"],
+    difficulty: 2,
 
-    build: ({a,n}) => {
+    generate: ({a,n}) => {
 
         /* build polynomial:
            x^n - n x^(n-1) + n(n-1)x^(n-2) ...
