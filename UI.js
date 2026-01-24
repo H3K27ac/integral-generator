@@ -146,9 +146,9 @@ clearEl.onclick = () => { pathsStack = []; redoStack = []; canvas.clear(); };
 drawingModeEl.onclick = function () {
     canvas.isDrawingMode = !canvas.isDrawingMode;
     this.classList.toggle("inactive", canvas.isDrawingMode);
-    this.innerHTML = canvas.isDrawingMode
-        ? 'Cancel drawing'
-        : 'Draw';
+    // this.innerHTML = canvas.isDrawingMode
+    //    ? 'Cancel drawing'
+    //    : 'Draw';
 };
 
 canvas.freeDrawingBrush.color = drawingColorEl.value;
@@ -284,4 +284,22 @@ function toggleTechPanel(){
 window.addEventListener("load", ()=>{
     buildTechPanel();
  //   buildFuncPanel();
+});
+
+
+
+
+
+
+document.querySelectorAll('[data-tooltip]').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    const rect = el.getBoundingClientRect();
+    const tooltipWidth = el.offsetWidth + 120;
+
+    if (rect.left < tooltipWidth) {
+      el.setAttribute('data-tip', 'bottom');
+    } else {
+      el.setAttribute('data-tip', 'left');
+    }
+  });
 });
