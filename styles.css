@@ -138,11 +138,14 @@ canvas{
 }
 
 .stopwatch.compressed {
-    width: 200px;
-    padding: 8px;
-    border-radius: 50px;
-    font-size: 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: fit-content;
+    padding: 8px 12px;
+    border-radius: 999px;
 }
+
 
 #time{
     font-size:34px;
@@ -153,7 +156,11 @@ canvas{
 
 .stopwatch.compressed #time {
     font-size: 18px;
-    margin-bottom: 4px;
+    margin-right: 10px;
+}
+
+.stopwatch.compressed .controls {
+    gap: 4px;
 }
 
 .controls button {
