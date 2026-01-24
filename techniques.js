@@ -24,11 +24,30 @@ addTechnique("Basic Integrals", [
     },
 
     {
+        integral: "e^(n*x)",
+        solution: "e^(n*x) / n",
+    },
+
+    {
         integral: "sin(n*x)",
         solution: "-cos(n*x) / n",
     },
+
+    {
+        integral: "cos(n*x)",
+        solution: "sin(n*x) / n",
+    }
 ]);
 
+
+addTechnique("u-substitution", [
+
+    {
+        integral: "x*sqrt(a*x+b)",
+        solution: "(a*x+b)^(3/2)(6*a*x-4*b) / (15*a^2)",
+    }
+
+]);
 
 
 /* =========================
