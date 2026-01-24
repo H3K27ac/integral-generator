@@ -94,15 +94,15 @@ drawingModeEl.onclick = function () {
 };
 
 canvas.freeDrawingBrush.color = drawingColorEl.value;
-canvas.freeDrawingBrush.width = parseInt(drawingLineWidthEl.value, 10) || 2;
+canvas.freeDrawingBrush.width = parseInt(drawingLineWidthEl.value, 10) || 1;
 
 // Controls
-drawingColorEl.onchange = e => {
-    canvas.freeDrawingBrush.color = e.target.value;
-};
+drawingColorEl.onchange = function () {
+    canvas.freeDrawingBrush.color = this.value;
+  };
 
-drawingLineWidthEl.onchange = e => {
-    canvas.freeDrawingBrush.width = parseInt(e.target.value, 10) || 2;
+drawingLineWidthEl.onchange = function () {
+    canvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
 };
 
 function resizeCanvas() {
