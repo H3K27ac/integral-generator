@@ -40,11 +40,10 @@ function replaceConstants(str1, str2, options = {}) {
     constants[key] = rint(posIntRange[0], posIntRange[1]);
   }
 
-  // Replace whole-word matches only
   function replaceString(str) {
     let result = str;
     for (const [key, value] of Object.entries(constants)) {
-      result = result.replace(key, value);
+      result = nerdamer(result, {key: value});
     }
     return result;
   }
