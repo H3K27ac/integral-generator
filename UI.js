@@ -33,11 +33,13 @@ function toggleTimer() {
         toggleTimerText.textContent = 'Start';
         toggleTimerIcon.classList.remove('fa-pause');
         toggleTimerIcon.classList.add('fa-play');
+        toggleTimerBtn.classList.remove("inactive");
     } else {
         startTimer();
         toggleTimerText.textContent = 'Pause';
         toggleTimerIcon.classList.remove('fa-play');
         toggleTimerIcon.classList.add('fa-pause');
+        toggleTimerBtn.classList.add("inactive");
     }
 }
 
