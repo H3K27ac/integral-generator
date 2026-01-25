@@ -3,8 +3,7 @@ body{
     margin:0;
     padding:12px;
     background:#f3f4f8;
-    display:flex;
-    flex-direction:column;
+    overflow: hidden;
 }
 
 h1{ text-align:center; }
@@ -85,12 +84,6 @@ body.focus .math{
 .katex{
     max-width:100%;
     white-space:nowrap;
-}
-
-#workspace{
-    flex:1;
-    position:relative;
-    overflow:hidden;
 }
 
 canvas{

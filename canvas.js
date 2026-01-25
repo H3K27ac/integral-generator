@@ -164,7 +164,7 @@ canvas.on('path:created', (e) => {
 
 function resizeCanvas(){
 
-    canvas.setWidth(window.innerWidth-$("topBar").clientWidth);
+    canvas.setWidth(window.innerWidth);
     canvas.setHeight(window.innerHeight-$("topBar").clientHeight);
 
     canvas.renderAll();
