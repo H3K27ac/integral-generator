@@ -227,7 +227,7 @@ function showTab(name){
     document.getElementById("canvasTab").style.display =
         name==="canvas" ? "block":"none";
 
-    document.getElementById("techTab").style.display =
+    document.getElementById("techPanel").style.display =
         name==="tech" ? "block":"none";
 
     document.getElementById("tabCanvasBtn").classList.toggle("active", name==="canvas");
