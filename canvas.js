@@ -153,7 +153,7 @@ canvas.on('path:created', (e) => {
     if (!allowDrawing) {
         canvas.remove(e.path);
         canvas.requestRenderAll();
-        allowDrawing = true;
+        // allowDrawing = true;
         return;
     }
 
