@@ -269,6 +269,7 @@ let lastCenter = null;
 canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
 
     if(e.touches.length === 2){
+        console.log("dragging");
         previousMode = currentMode;
         setMode("none"); // disable drawing
         allowDrawing=false;
