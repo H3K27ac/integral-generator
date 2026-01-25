@@ -171,8 +171,8 @@ function resizeCanvas(){
 }
 
 
-// window.addEventListener('resize', resizeCanvas);
-// resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
 
 
