@@ -209,47 +209,47 @@ function generateIBPPolynomial(n,variable="x") {
 
 
 function integrateAxnTrig(a, n, b, c, trig = "sin") {
-
     let terms = [];
+
     let coeff = a;
     let power = n;
     let currentTrig = trig;
     let bPow = b;
 
-    while (power > 0) {
+    // initial sign: ∫sin = -cos, ∫cos = sin
+    let sign = (trig === "sin") ? -1 : 1;
 
+    while (power > 0) {
         const integratedTrig =
             currentTrig === "sin"
                 ? `cos(${b}*x+${c})`
                 : `sin(${b}*x+${c})`;
 
-        const sign = (currentTrig === "sin") ? -1 : 1;
-
         terms.push(
             `${sign * coeff}/${bPow}*x^${power}*${integratedTrig}`
         );
 
-        // prepare next IBP round
+        // prepare next IBP step
         coeff *= power;
         power--;
-        currentTrig = integratedTrig.startsWith("cos") ? "cos" : "sin";
         bPow *= b;
+
+        // flip trig and sign deterministically
+        currentTrig = currentTrig === "sin" ? "cos" : "sin";
+        sign *= -1;
     }
 
-    // final integral (power = 0)
+    // final term (power = 0)
     const finalIntegratedTrig =
         currentTrig === "sin"
             ? `cos(${b}*x+${c})`
             : `sin(${b}*x+${c})`;
 
-    const finalSign = (currentTrig === "sin") ? -1 : 1;
-
     terms.push(
-        `${finalSign * coeff}/${bPow}*${finalIntegratedTrig}`
+        `${sign * coeff}/${bPow}*${finalIntegratedTrig}`
     );
 
     return terms.join("+").replace(/\+\-/g, "-");
 }
-
 
 
