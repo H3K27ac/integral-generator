@@ -154,8 +154,8 @@ addTemplate({
             integral: `${a}*x^${n}*sin(${b}*x+${c})`,
             solution:
                 `${a}/(${b}^${n+1})*(` +
-                `${poly}*sin(${b}*x+${c})` +
-                `-${generateIBPPolynomial(n-1,"x")}*b*cos(${b}*x+${c})` +
+                `(${poly})*sin(${b}*x+${c})` +
+                `-(${generateIBPPolynomial(n-1,"x")})*b*cos(${b}*x+${c})` +
                 `)`
         };
     }
