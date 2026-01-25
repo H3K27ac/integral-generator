@@ -148,48 +148,27 @@ addTemplate({
 
     generate: ({a, b, c, n}) => {
 
-        let terms = [];
-        let coeff = a;
-        let power = n;
-        let trig = "sin";
-        let sign = -1;   // sin to -cos first
-        let bPow = b;
-
-        while (power > 0) {
-
-            const trigTerm =
-                sign === -1
-                    ? `cos(${b}*x+${c})`
-                    : `sin(${b}*x+${c})`;
-
-            terms.push(
-                `${sign * coeff}/${bPow}*x^${power}*${trigTerm}`
-            );
-
-            // update for next IBP round
-            coeff *= power;
-            power--;
-            trig = (trig === "sin") ? "cos" : "sin";
-            sign *= -1;
-            bPow *= b;
-        }
-
-        // last integral (power = 0)
-        const finalTrig =
-            trig === "sin"
-                ? `cos(${b}*x+${c})`
-                : `sin(${b}*x+${c})`;
-
-        terms.push(
-            `${sign * coeff}/${bPow}*${finalTrig}`
-        );
-
         return {
             integral: `${a}*x^${n}*sin(${b}*x+${c})`,
-            solution: terms.join("+").replace(/\+\-/g, "-").replace(/\-\-/g, "+")
+            solution: integrateAxnTrig(a, n, b, c, trig = "sin")
         };
     }
 });
+
+addTemplate({
+
+    methods: ["Integration by parts","Trigonometric functions"],
+    difficulty: 2,
+
+    generate: ({a, b, c, n}) => {
+
+        return {
+            integral: `${a}*x^${n}*cos(${b}*x+${c})`,
+            solution: integrateAxnTrig(a, n, b, c, trig = "cos")
+        };
+    }
+});
+
 
 
 
@@ -225,7 +204,57 @@ function generateIBPPolynomial(n,variable="x") {
         coeff *= (n-k);
     }
 
-    return terms.join("+").replace(/\+\-/g,"-").replace(/\-\-/g, "+");
+    return terms.join("+").replace(/\+\-/g,"-");
+}
+
+
+function integrateAxnTrig(a, n, b, c, trig = "sin") {
+
+    let terms = [];
+    let coeff = a;
+    let power = n;
+    let currentTrig = trig;
+    let bPow = b;
+
+    while (power > 0) {
+
+        const integratedTrig =
+            currentTrig === "sin"
+                ? `cos(${b}*x+${c})`
+                : `sin(${b}*x+${c})`;
+
+        const sign = (currentTrig === "sin") ? -1 : 1;
+
+        terms.push(
+            `${sign * coeff}/${bPow}*x^${power}*${integratedTrig}`
+        );
+
+        // prepare next IBP round
+        coeff *= power;
+        power--;
+        currentTrig = integratedTrig.startsWith("cos") ? "cos" : "sin";
+        bPow *= b;
+    }
+
+    // final integral (power = 0)
+    const finalIntegratedTrig =
+        currentTrig === "sin"
+            ? `cos(${b}*x+${c})`
+            : `sin(${b}*x+${c})`;
+
+    const finalSign = (currentTrig === "sin") ? -1 : 1;
+
+    let term = `${finalSign * coeff}/${bPow}*${finalIntegratedTrig}`;
+
+    if (term.includes("cos(") && term.startsWith("-")) {
+        term.slice(1); // remove leading "-"
+    }
+
+    terms.push(
+        term
+    );
+
+    return terms.join("+").replace(/\+\-/g, "-");
 }
 
 
