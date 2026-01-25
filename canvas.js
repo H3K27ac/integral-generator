@@ -29,7 +29,7 @@ const deleteEl = $('delete-selected'); // Add delete button in HTML
 ===================================================== */
 
 let currentMode = "draw";
-let allowDrawing = false;
+let allowDrawing = true;
 
 function setMode(mode){
 
@@ -225,8 +225,6 @@ canvas.on('mouse:down', function(opt){
 
         lastPosX = opt.e.clientX;
         lastPosY = opt.e.clientY;
-    } else {
-        allowDrawing = true;
     }
 });
 
@@ -250,7 +248,6 @@ canvas.on('mouse:move', function(opt){
 
 
 canvas.on('mouse:up', function(){
-    allowDrawing = false;
 
     if(isDragging){
         isDragging = false;
@@ -271,10 +268,9 @@ let lastCenter = null;
 canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
 
     if(e.touches.length === 2){
+        allowDrawing=false;
         previousMode = currentMode;
         setMode("none"); // disable drawing
-
-        isDragging=true;
 
         const t1=e.touches[0];
         const t2=e.touches[1];
@@ -288,59 +284,56 @@ canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
             x:(t1.clientX+t2.clientX)/2,
             y:(t1.clientY+t2.clientY)/2
         };
-    } else {
-        allowDrawing = true;
     }
 });
 
 
 canvas.upperCanvasEl.addEventListener("touchmove", (e)=>{
 
-    if (isDragging && e.touches.length == 2) {
-        e.preventDefault();
+    if (e.touches.length !== 2) return
 
-        const t1=e.touches[0];
-        const t2=e.touches[1];
+    e.preventDefault();
 
-        const dist = Math.hypot(
-            t1.clientX - t2.clientX,
-            t1.clientY - t2.clientY
-        );
+    const t1=e.touches[0];
+    const t2=e.touches[1];
 
-        const center = {
-            x:(t1.clientX+t2.clientX)/2,
-            y:(t1.clientY+t2.clientY)/2
-        };
+    const dist = Math.hypot(
+        t1.clientX - t2.clientX,
+        t1.clientY - t2.clientY
+    );
 
-        /* zoom */
-        let zoom = canvas.getZoom();
-        zoom *= dist/lastDist;
-        zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+    const center = {
+        x:(t1.clientX+t2.clientX)/2,
+        y:(t1.clientY+t2.clientY)/2
+    };
 
-        canvas.zoomToPoint(center, zoom);
+    /* zoom */
+    let zoom = canvas.getZoom();
+    zoom *= dist/lastDist;
+    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+
+    canvas.zoomToPoint(center, zoom);
 
 
-        /* pan */
-        const vpt = canvas.viewportTransform;
-        vpt[4] += center.x - lastCenter.x;
-        vpt[5] += center.y - lastCenter.y;
+    /* pan */
+    const vpt = canvas.viewportTransform;
+    vpt[4] += center.x - lastCenter.x;
+    vpt[5] += center.y - lastCenter.y;
 
-        canvas.requestRenderAll();
+    canvas.requestRenderAll();
 
-        lastDist = dist;
-        lastCenter = center;
-    }
+    lastDist = dist;
+    lastCenter = center;
 
 });
 
 
 canvas.upperCanvasEl.addEventListener("touchend", ()=>{
-    allowDrawing = false;
+    allowDrawing = true;
     lastDist = null;
     lastCenter = null;
     if(isDragging){
         isDragging = false;
-
         setMode(previousMode);
     }
 });
