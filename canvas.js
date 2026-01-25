@@ -261,11 +261,10 @@ let lastCenter = null;
 canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
 
     if(e.touches.length === 2){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
         previousMode = currentMode;
         setMode("pan"); // disable drawing
+
+        removeAccidentalPath();
 
         const t1=e.touches[0];
         const t2=e.touches[1];
@@ -339,6 +338,27 @@ canvas.upperCanvasEl.addEventListener("touchend", ()=>{
 
     setMode(previousMode);
 });
+
+
+function removeAccidentalPath() {
+
+    if (!lastCreatedPath) return;
+
+    // Measure path length (dots only)
+    const bounds = lastCreatedPath.getBoundingRect();
+    const size = Math.max(bounds.width, bounds.height);
+
+    // Threshold in canvas units
+    if (size < 10) {
+        canvas.remove(lastCreatedPath);
+
+        const i = pathsStack.indexOf(lastCreatedPath);
+        if (i !== -1) pathsStack.splice(i, 1);
+
+        lastCreatedPath = null;
+        canvas.requestRenderAll();
+    }
+}
 
 
 function resetView(){
