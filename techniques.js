@@ -186,7 +186,7 @@ addTemplate({
 
         return {
             integral: `${a}*x^${n}*sin(${b}*x+${c})`,
-            solution: terms.join("+").replace(/\+\-/g, "-")
+            solution: terms.join("+").replace(/\+\-/g, "-").replace(/\-\-/g, "+")
         };
     }
 });
@@ -225,7 +225,7 @@ function generateIBPPolynomial(n,variable="x") {
         coeff *= (n-k);
     }
 
-    return terms.join("+").replace(/\+\-/g,"-");
+    return terms.join("+").replace(/\+\-/g,"-").replace(/\-\-/g, "+");
 }
 
 
