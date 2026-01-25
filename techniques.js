@@ -210,46 +210,40 @@ function generateIBPPolynomial(n,variable="x") {
 
 function integrateAxnTrig(a, n, b, c, trig = "sin") {
     let terms = [];
-
     let coeff = a;
-    let power = n;
+    let currentPower = n;
     let currentTrig = trig;
-    let bPow = b;
+    let sign = 1; // We'll include the trig integration sign in this
 
-    // initial sign: ∫sin = -cos, ∫cos = sin
-    let sign = (trig === "sin") ? -1 : 1;
+    for (let k = 0; k <= n; k++) {
+        // Determine the trig factor for this term
+        let trigTerm;
+        if (currentTrig === "sin") {
+            trigTerm = `sin(${b}*x+${c})`;
+        } else {
+            trigTerm = `cos(${b}*x+${c})`;
+        }
 
-    while (power > 0) {
-        const integratedTrig =
-            currentTrig === "sin"
-                ? `cos(${b}*x+${c})`
-                : `sin(${b}*x+${c})`;
+        // Determine the coefficient: a * n! / (n-k)! * (1/b)^(k+1) * sign
+        let factorialPart = 1;
+        for (let i = 0; i < k; i++) factorialPart *= (currentPower - i);
 
-        terms.push(
-            `${sign * coeff}/${bPow}*x^${power}*${integratedTrig}`
-        );
+        let bPower = Math.pow(b, k + 1); // each trig integration contributes 1/b
+        let termCoeff = (sign * coeff * factorialPart) / bPower;
 
-        // prepare next IBP step
-        coeff *= power;
-        power--;
-        bPow *= b;
+        // Determine x power
+        let xPower = currentPower - k;
+        let xPart = xPower > 0 ? `x^${xPower}` : "";
 
-        // flip trig and sign deterministically
+        terms.push(`${termCoeff}${xPart ? "*" + xPart : ""}*${trigTerm}`);
+
+        // Prepare for next term: flip trig and sign
         currentTrig = currentTrig === "sin" ? "cos" : "sin";
-        sign *= -1;
+        sign *= -1; // sign alternates each IBP step
     }
 
-    // final term (power = 0)
-    const finalIntegratedTrig =
-        currentTrig === "sin"
-            ? `cos(${b}*x+${c})`
-            : `sin(${b}*x+${c})`;
-
-    terms.push(
-        `${sign * coeff}/${bPow}*${finalIntegratedTrig}`
-    );
-
-    return terms.join("+").replace(/\+\-/g, "-");
+    return terms.join(" + ").replace(/\+\-/g, "-");
 }
+
 
 
