@@ -296,40 +296,41 @@ canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
 
 canvas.upperCanvasEl.addEventListener("touchmove", (e)=>{
 
-    if(e.touches.length !== 2) return;
+    if (isDragging && e.touches.length == 2) {
+        e.preventDefault();
 
-    e.preventDefault();
+        const t1=e.touches[0];
+        const t2=e.touches[1];
 
-    const t1=e.touches[0];
-    const t2=e.touches[1];
+        const dist = Math.hypot(
+            t1.clientX - t2.clientX,
+            t1.clientY - t2.clientY
+        );
 
-    const dist = Math.hypot(
-        t1.clientX - t2.clientX,
-        t1.clientY - t2.clientY
-    );
+        const center = {
+            x:(t1.clientX+t2.clientX)/2,
+            y:(t1.clientY+t2.clientY)/2
+        };
 
-    const center = {
-        x:(t1.clientX+t2.clientX)/2,
-        y:(t1.clientY+t2.clientY)/2
-    };
+        /* zoom */
+        let zoom = canvas.getZoom();
+        zoom *= dist/lastDist;
+        zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
 
-    /* zoom */
-    let zoom = canvas.getZoom();
-    zoom *= dist/lastDist;
-    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
-
-    canvas.zoomToPoint(center, zoom);
+        canvas.zoomToPoint(center, zoom);
 
 
-    /* pan */
-    const vpt = canvas.viewportTransform;
-    vpt[4] += center.x - lastCenter.x;
-    vpt[5] += center.y - lastCenter.y;
+        /* pan */
+        const vpt = canvas.viewportTransform;
+        vpt[4] += center.x - lastCenter.x;
+        vpt[5] += center.y - lastCenter.y;
 
-    canvas.requestRenderAll();
+        canvas.requestRenderAll();
 
-    lastDist = dist;
-    lastCenter = center;
+        lastDist = dist;
+        lastCenter = center;
+    }
+
 });
 
 
