@@ -151,8 +151,18 @@ document.addEventListener('keydown', (e) => {
 });
 
 canvas.on('path:created', (e) => {
+
+    if (currentMode="pan") {
+        // Accidental dot/path
+        canvas.remove(e.path);
+        canvas.requestRenderAll();
+        return; // DO NOT save to history
+    }
+
+    // Normal drawing
     savePath(e.path);
 });
+
 
 function resizeCanvas(){
 
@@ -338,28 +348,6 @@ canvas.upperCanvasEl.addEventListener("touchend", ()=>{
 
     setMode(previousMode);
 });
-
-
-function removeAccidentalPath() {
-
-    if (!lastCreatedPath) return;
-
-    // Measure path length (dots only)
-    const bounds = lastCreatedPath.getBoundingRect();
-    const size = Math.max(bounds.width, bounds.height);
-
-    // Threshold in canvas units
-    if (size < 10) {
-        canvas.remove(lastCreatedPath);
-
-        const i = pathsStack.indexOf(lastCreatedPath);
-        if (i !== -1) pathsStack.splice(i, 1);
-
-        lastCreatedPath = null;
-        canvas.requestRenderAll();
-    }
-}
-
 
 function resetView(){
     canvas.setViewportTransform([1,0,0,1,0,0]);
