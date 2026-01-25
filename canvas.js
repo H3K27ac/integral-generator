@@ -266,7 +266,7 @@ canvas.on('mouse:up', function(){
 let lastDist = null;
 let lastCenter = null;
 
-canvas.upperCanvasEl.addEventListener("touchstart:before", (e)=>{
+canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
 
     if(e.touches.length === 2){
         allowDrawing=false;
