@@ -94,6 +94,19 @@ canvas{
 }
 
 /* =========================
+   Focus Mode
+========================= */
+
+body.focus #topBar{
+    position:relative;
+    height: auto;
+}
+
+body.focus #canvasTab{
+    display: none
+}
+
+/* =========================
    List Panel
 ========================= */
 

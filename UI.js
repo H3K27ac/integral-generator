@@ -180,3 +180,7 @@ document.querySelectorAll('[data-tooltip]').forEach(el => {
   });
 });
 
+
+function toggleFocus() {
+    document.body.classList.toggle("focus");
+}
