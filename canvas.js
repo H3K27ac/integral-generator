@@ -218,7 +218,7 @@ canvas.on('mouse:wheel', function(opt){
 /* SHIFT + drag to pan */
 canvas.on('mouse:down:before', function(opt){
 
-    if(opt.e.shiftKey){
+    if(opt.e.altKey){
         previousMode = currentMode;
         setMode("none");
 
@@ -266,7 +266,7 @@ canvas.on('mouse:up', function(){
 let lastDist = null;
 let lastCenter = null;
 
-canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
+canvas.upperCanvasEl.addEventListener("touchstart:before", (e)=>{
 
     if(e.touches.length === 2){
         allowDrawing=false;
