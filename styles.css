@@ -84,10 +84,6 @@ body.focus .math{
     white-space:nowrap;
 }
 
-#workspace {
-    height: max-content;
-}
-
 canvas{
     width:100%;
     border-radius:14px;

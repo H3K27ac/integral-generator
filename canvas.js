@@ -164,10 +164,8 @@ canvas.on('path:created', (e) => {
 
 function resizeCanvas(){
 
-    const container = $("workspace");
-
-    canvas.setWidth(container.clientWidth);
-    canvas.setHeight(container.clientHeight);
+    canvas.setWidth(window.innerWidth);
+    canvas.setHeight(window.innerHeight);
 
     canvas.renderAll();
 }
