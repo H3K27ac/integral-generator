@@ -29,6 +29,7 @@ const deleteEl = $('delete-selected'); // Add delete button in HTML
 ===================================================== */
 
 let currentMode = "draw";
+let allowDrawing = false;
 
 function setMode(mode){
 
@@ -42,13 +43,11 @@ function setMode(mode){
     if(mode === "select"){
         canvas.isDrawingMode = false;
         canvas.selection = true;
-        canvas.defaultCursor = "default";
     }
 
-    if(mode === "pan"){
+    if(mode === "none"){
         canvas.isDrawingMode = false;
         canvas.selection = false;
-        canvas.defaultCursor = "grab";
     }
 }
 
@@ -151,17 +150,15 @@ document.addEventListener('keydown', (e) => {
 });
 
 canvas.on('path:created', (e) => {
-
-    if (currentMode=="pan") {
-        // Accidental dot/path
+    if (!allowDrawing) {
         canvas.remove(e.path);
         canvas.requestRenderAll();
-        return; // DO NOT save to history
+        return;
     }
 
-    // Normal drawing
     savePath(e.path);
 });
+
 
 
 function resizeCanvas(){
@@ -222,12 +219,14 @@ canvas.on('mouse:down', function(opt){
 
     if(opt.e.shiftKey){
         previousMode = currentMode;
-        setMode("pan");
+        setMode("none");
 
         isDragging = true;
 
         lastPosX = opt.e.clientX;
         lastPosY = opt.e.clientY;
+    } else {
+        allowDrawing = true;
     }
 });
 
@@ -251,6 +250,7 @@ canvas.on('mouse:move', function(opt){
 
 
 canvas.on('mouse:up', function(){
+    allowDrawing = false;
 
     if(isDragging){
         isDragging = false;
@@ -272,7 +272,9 @@ canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
 
     if(e.touches.length === 2){
         previousMode = currentMode;
-        setMode("pan"); // disable drawing
+        setMode("none"); // disable drawing
+
+        isDragging=true;
 
         const t1=e.touches[0];
         const t2=e.touches[1];
@@ -286,6 +288,8 @@ canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
             x:(t1.clientX+t2.clientX)/2,
             y:(t1.clientY+t2.clientY)/2
         };
+    } else {
+        allowDrawing = true;
     }
 });
 
@@ -314,16 +318,6 @@ canvas.upperCanvasEl.addEventListener("touchmove", (e)=>{
     zoom *= dist/lastDist;
     zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
 
-    /*
-
-    const rect = canvas.upperCanvasEl.getBoundingClientRect();
-
-    const point = new fabric.Point(
-        center.x - rect.left,
-        center.y - rect.top
-    );
-    */
-
     canvas.zoomToPoint(center, zoom);
 
 
@@ -340,11 +334,14 @@ canvas.upperCanvasEl.addEventListener("touchmove", (e)=>{
 
 
 canvas.upperCanvasEl.addEventListener("touchend", ()=>{
-
+    allowDrawing = false;
     lastDist = null;
     lastCenter = null;
+    if(isDragging){
+        isDragging = false;
 
-    setMode(previousMode);
+        setMode(previousMode);
+    }
 });
 
 function resetView(){
