@@ -164,10 +164,8 @@ canvas.on('path:created', (e) => {
 
 function resizeCanvas(){
 
-    const rect = canvas.wrapperEl.parentNode.getBoundingClientRect();
-
-    canvas.setWidth(rect.width);
-    canvas.setHeight(rect.height);
+    canvas.setWidth(window.innerWidth-$("topBar").clientWidth);
+    canvas.setHeight(window.innerHeight-$("topBar").clientHeight);
 
     canvas.renderAll();
 }
