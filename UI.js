@@ -155,7 +155,7 @@ window.addEventListener("load", ()=>{
 
     /* mobile default fullscreen */
     if(window.innerWidth < 900){
-        toggleFullscreen();
+        toggleFocus();
     }
 });
 
