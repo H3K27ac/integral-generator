@@ -231,13 +231,13 @@ function integrateAxnTrig(a, n, b, c, trig = "sin") {
 
         if (k === 0) break;
 
-        // prepare next IBP step
+        currentTrig = currentTrig === "sin" ? "cos" : "sin";
+        
         coeff *= k;
         bPow *= b;
 
         // flip trig and sign deterministically
         if (currentTrig == "sin") sign *= -1;
-        currentTrig = currentTrig === "sin" ? "cos" : "sin";
         sign *= -1;
     }
 
