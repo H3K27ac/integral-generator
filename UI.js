@@ -146,17 +146,6 @@ function buildTechPanel(){
 }
 
 
-function toggleTechPanel(){
-    const p=document.getElementById("techPanel");
-    const btn=document.getElementById("techToggleBtn");
-
-    const show = p.style.display==="none";
-
-    p.style.display = show ? "block":"none";
-    btn.classList.toggle("inactive", !show);
-}
-
-
 
 window.addEventListener("load", ()=>{
     buildTechPanel();
@@ -204,6 +193,7 @@ function toggleFocus() {
         mountPanelInline();   // panel becomes inline
     } else {
         mountPanelToTabs();   // back to tab
+        showTab("canvas");
     }
 }
 
@@ -224,12 +214,20 @@ function mountPanelInline(){
 
 function showTab(name){
 
-    document.getElementById("canvasTab").style.display =
-        name==="canvas" ? "block":"none";
+    document.querySelectorAll(".tabView").forEach(v=>{
+        v.classList.add("is-hidden");
+    });
 
-    document.getElementById("techPanel").style.display =
-        name==="tech" ? "block":"none";
+    if(name==="canvas")
+        document.getElementById("canvasTab").classList.remove("is-hidden");
 
-    document.getElementById("tabCanvasBtn").classList.toggle("active", name==="canvas");
-    document.getElementById("tabTechBtn").classList.toggle("active", name==="tech");
+    if(name==="tech")
+        document.getElementById("techPanelTab").classList.remove("is-hidden");
+
+
+    document.getElementById("tabCanvasBtn")
+        .classList.toggle("inactive", name!=="canvas");
+
+    document.getElementById("tabTechBtn")
+        .classList.toggle("inactive", name!=="tech");
 }

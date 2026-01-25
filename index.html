@@ -37,7 +37,6 @@
     <div class="controls">
         <button onclick="newProblem()">New</button>
         <button onclick="showSolution()">Solution</button>
-        <button id="techToggleBtn" class="inactive" onclick="toggleTechPanel()">Techniques</button>
 <!--    <button id="funcToggleBtn" onclick="toggleFuncPanel()">Functions</button> -->
         <button id="toggleWatchBtn" class="inactive" onclick="toggleStopwatch()">Stopwatch</button>
         <button onclick="toggleFocus()">Focus</button>
@@ -59,12 +58,12 @@
 
     <div id="tabs">
         <button id="tabCanvasBtn" onclick="showTab('canvas')">Canvas</button>
-        <button id="tabTechBtn" onclick="showTab('tech')">Techniques</button>
+        <button id="tabTechBtn" class="inactive" onclick="showTab('tech')">Techniques</button>
     </div>
 </div>
 
 <div id="workspace">
-    <div id="canvasTab">
+    <div id="canvasTab" class="tabView">
         <canvas id="canvas"></canvas>
         <div class="tools">
             <button id="drawing-mode" data-tooltip="Toggle Drawing">
@@ -105,7 +104,7 @@
     </div>
 </div>
 
-<div id="techPanel" class="list-panel is-hidden">
+<div id="techPanel" class="list-panel">
     <h3>Select Techniques</h3>
     <div id="techList"></div>
 </div>
