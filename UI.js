@@ -30,16 +30,8 @@ function toggleCompress() {
 function toggleTimer() {
     if (running) {
         pauseTimer();
-        toggleTimerText.textContent = 'Start';
-        toggleTimerIcon.classList.remove('fa-pause');
-        toggleTimerIcon.classList.add('fa-play');
-        toggleTimerBtn.classList.remove("inactive");
     } else {
         startTimer();
-        toggleTimerText.textContent = 'Pause';
-        toggleTimerIcon.classList.remove('fa-play');
-        toggleTimerIcon.classList.add('fa-pause');
-        toggleTimerBtn.classList.add("inactive");
     }
 }
 
@@ -50,11 +42,19 @@ function startTimer(){
     last=performance.now();
 
     raf=requestAnimationFrame(tick);
+    toggleTimerText.textContent = 'Pause';
+    toggleTimerIcon.classList.remove('fa-play');
+    toggleTimerIcon.classList.add('fa-pause');
+    toggleTimerBtn.classList.add("inactive");
 }
 
 function pauseTimer(){
     running=false;
     cancelAnimationFrame(raf);
+    toggleTimerText.textContent = 'Start';
+    toggleTimerIcon.classList.remove('fa-pause');
+    toggleTimerIcon.classList.add('fa-play');
+    toggleTimerBtn.classList.remove("inactive");
 }
 
 function resetTimer(){
