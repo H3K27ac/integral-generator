@@ -207,49 +207,50 @@ function generateIBPPolynomial(n,variable="x") {
     return terms.join("+").replace(/\+\-/g,"-");
 }
 
+
+
 function integrateAxnTrig(a, n, b, c, trig = "sin") {
     let terms = [];
+
     let coeff = a;
-    let currentPower = n;
+    let power = n;
     let currentTrig = trig;
-    let sign = 1; // alternates each IBP step
+    let bPow = b;
 
-    for (let k = 0; k <= n; k++) {
-        // factorial part: n! / (n-k)!
-        let factorialPart = 1;
-        for (let i = 0; i < k; i++) {
-            factorialPart *= (currentPower - i);
-        }
+    // initial sign: ∫sin = -cos, ∫cos = sin
+    let sign = (trig === "sin") ? -1 : 1;
 
-        // b^(k+1) for trig integration
-        let bPow = Math.pow(b, k + 1);
+    while (power > 0) {
+        const integratedTrig =
+            currentTrig === "sin"
+                ? `cos(${b}*x+${c})`
+                : `sin(${b}*x+${c})`;
 
-        // coefficient as fraction (unsimplified)
-        let num = sign * coeff * factorialPart;
-        let denom = bPow;
+        terms.push(
+            `${sign * coeff}/${bPow}*x^${power}*${integratedTrig}`
+        );
 
-        // trig term
-        let trigTerm = currentTrig === "sin"
-            ? `sin(${b}*x+${c})`
-            : `cos(${b}*x+${c})`;
+        // prepare next IBP step
+        coeff *= power;
+        bPow *= b;
 
-        // x power
-        let xPower = currentPower - k;
-        let xPart = xPower > 0 ? `x^${xPower}` : "";
-
-        // format as fraction without simplifying
-        let frac = `${num}/${denom}`;
-
-        terms.push(`${frac}${xPart ? "*" + xPart : ""}*${trigTerm}`);
-
-        // prepare for next step
+        // flip trig and sign deterministically
+        if (currentTrig == "sin") sign *= -1;
         currentTrig = currentTrig === "sin" ? "cos" : "sin";
         sign *= -1;
+
+        power--;
     }
 
-    return terms.join(" + ").replace(/\+\-/g, "-");
+    // final term (power = 0)
+    const finalIntegratedTrig =
+        currentTrig === "sin"
+            ? `cos(${b}*x+${c})`
+            : `sin(${b}*x+${c})`;
+
+    terms.push(
+        `${sign * coeff}/${bPow}*${finalIntegratedTrig}`
+    );
+
+    return terms.join("+").replace(/\+\-/g, "-");
 }
-
-
-
-
