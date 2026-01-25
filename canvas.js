@@ -274,8 +274,6 @@ canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
         previousMode = currentMode;
         setMode("pan"); // disable drawing
 
-        removeAccidentalPath();
-
         const t1=e.touches[0];
         const t2=e.touches[1];
 
