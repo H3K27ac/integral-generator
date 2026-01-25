@@ -332,10 +332,7 @@ canvas.upperCanvasEl.addEventListener("touchend", ()=>{
     allowDrawing = true;
     lastDist = null;
     lastCenter = null;
-    if(isDragging){
-        isDragging = false;
-        setMode(previousMode);
-    }
+    setMode(previousMode);
 });
 
 function resetView(){
