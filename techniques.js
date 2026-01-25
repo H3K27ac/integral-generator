@@ -179,7 +179,7 @@ addTemplate({
 
         return {
             integral: `x^2/(${a}*x+${b})`,
-            solution: `${b}^2/${a}^2*log(abs(${a}*x+${b}))+x^2/(2*${a})-${b}*x/${a}^2`
+            solution: `${b}^2/${a}^3*log(abs(${a}*x+${b}))+x^2/(2*${a})-${b}*x/${a}^2`
         };
     }
 });
