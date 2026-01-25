@@ -153,6 +153,7 @@ canvas.on('path:created', (e) => {
     if (!allowDrawing) {
         canvas.remove(e.path);
         canvas.requestRenderAll();
+        allowDrawing = true;
         return;
     }
 
@@ -329,7 +330,6 @@ canvas.upperCanvasEl.addEventListener("touchmove", (e)=>{
 
 
 canvas.upperCanvasEl.addEventListener("touchend", ()=>{
-    allowDrawing = true;
     lastDist = null;
     lastCenter = null;
     setMode(previousMode);
