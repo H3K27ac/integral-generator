@@ -193,6 +193,7 @@ function toggleFocus() {
 
     if(isFocused){
         mountPanelInline();   // panel becomes inline
+        document.getElementById("tabCanvasBtn").classList.add("inactive");
     } else {
         mountPanelToTabs();   // back to tab
         showTab("canvas");
