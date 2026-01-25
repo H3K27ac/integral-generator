@@ -184,6 +184,7 @@ const MAX_ZOOM = 4;
 
 let isDragging = false;
 let lastPosX, lastPosY;
+let previousMode = "draw";
 
 
 /* wheel zoom (correct anchor) */
@@ -194,7 +195,7 @@ canvas.on('mouse:wheel', function(opt){
     let zoom = canvas.getZoom();
     zoom *= 0.999 ** e.deltaY;
 
-    zoom = Math.max(0.25, Math.min(4, zoom));
+    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
 
     const point = canvas.getPointer(e);
 
@@ -209,7 +210,7 @@ canvas.on('mouse:wheel', function(opt){
 canvas.on('mouse:down', function(opt){
 
     if(opt.e.shiftKey){
-
+        previousMode = currentMode;
         setMode("pan");
 
         isDragging = true;
@@ -243,7 +244,7 @@ canvas.on('mouse:up', function(){
     if(isDragging){
         isDragging = false;
 
-        setMode("select");
+        setMode(previousMode);
     }
 });
 
@@ -259,7 +260,7 @@ let lastCenter = null;
 canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
 
     if(e.touches.length === 2){
-
+        previousMode = currentMode;
         setMode("pan"); // disable drawing
 
         const t1=e.touches[0];
@@ -300,11 +301,20 @@ canvas.upperCanvasEl.addEventListener("touchmove", (e)=>{
     /* zoom */
     let zoom = canvas.getZoom();
     zoom *= dist/lastDist;
-    zoom = Math.max(0.25, Math.min(4, zoom));
+    zoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
 
-    const point = canvas.getPointer(center);
+    /*
 
-    canvas.zoomToPoint(point, zoom);
+    const rect = canvas.upperCanvasEl.getBoundingClientRect();
+
+    const point = new fabric.Point(
+        center.x - rect.left,
+        center.y - rect.top
+    );
+    */
+
+    canvas.zoomToPoint(center, zoom);
+
 
     /* pan */
     const vpt = canvas.viewportTransform;
@@ -323,7 +333,7 @@ canvas.upperCanvasEl.addEventListener("touchend", ()=>{
     lastDist = null;
     lastCenter = null;
 
-    setMode("draw"); // return to drawing
+    setMode(previousMode);
 });
 
 
