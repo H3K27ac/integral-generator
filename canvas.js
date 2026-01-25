@@ -219,6 +219,7 @@ canvas.on('mouse:wheel', function(opt){
 canvas.on('mouse:down', function(opt){
 
     if(opt.e.shiftKey){
+        allowDrawing=false;
         previousMode = currentMode;
         setMode("none");
 
