@@ -152,7 +152,7 @@ document.addEventListener('keydown', (e) => {
 
 canvas.on('path:created', (e) => {
 
-    if (currentMode="pan") {
+    if (currentMode=="pan") {
         // Accidental dot/path
         canvas.remove(e.path);
         canvas.requestRenderAll();
