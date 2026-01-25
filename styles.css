@@ -93,7 +93,7 @@ body.focus .math{
     overflow:hidden;
 }
 
-#canvas{
+canvas{
     width:100%;
     height: 100%;
     border-radius:14px;
@@ -103,7 +103,7 @@ body.focus .math{
 
 .canvas-container{
     width:100%;
-    height: 100%;
+    height:100%;
 }
 
 .icon-tool i {
