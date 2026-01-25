@@ -147,7 +147,7 @@ function showSolution(){
 
 function fitMath(el){
 
-    let size = 36;   // start big
+    let size = focus? 24 : 36;   // start big
 
     el.style.fontSize = size+"px";
 

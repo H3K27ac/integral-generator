@@ -185,9 +185,11 @@ document.querySelectorAll('[data-tooltip]').forEach(el => {
    Focus Mode
 ========================================= */
 
+let focus = false;
+
 function toggleFocus() {
     document.body.classList.toggle("focus");
-    const focus = document.body.classList.contains("focus");
+    focus = !focus;
 
     if(focus){
         mountPanelInline();   // panel becomes inline
