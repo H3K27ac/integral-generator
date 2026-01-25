@@ -213,44 +213,33 @@ function integrateAxnTrig(a, n, b, c, trig = "sin") {
     let terms = [];
 
     let coeff = a;
-    let power = n;
     let currentTrig = trig;
     let bPow = b;
 
-    // initial sign: ∫sin = -cos, ∫cos = sin
+    // initial sign
     let sign = (trig === "sin") ? -1 : 1;
 
-    while (power > 0) {
+    for (let k=n; k>=0; k--) {
         const integratedTrig =
             currentTrig === "sin"
                 ? `cos(${b}*x+${c})`
                 : `sin(${b}*x+${c})`;
 
         terms.push(
-            `${sign * coeff}/${bPow}*x^${power}*${integratedTrig}`
+            `${sign * coeff}/${bPow}*x^${k}*${integratedTrig}`
         );
 
+        if (k === 0) break;
+
         // prepare next IBP step
-        coeff *= power;
+        coeff *= k;
         bPow *= b;
 
         // flip trig and sign deterministically
         if (currentTrig == "sin") sign *= -1;
         currentTrig = currentTrig === "sin" ? "cos" : "sin";
         sign *= -1;
-
-        power--;
     }
-
-    // final term (power = 0)
-    const finalIntegratedTrig =
-        currentTrig === "sin"
-            ? `cos(${b}*x+${c})`
-            : `sin(${b}*x+${c})`;
-
-    terms.push(
-        `${sign * coeff}/${bPow}*${finalIntegratedTrig}`
-    );
 
     return terms.join("+").replace(/\+\-/g, "-");
 }
