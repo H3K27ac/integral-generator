@@ -22,6 +22,38 @@ const undoEl = $('undo'); // Add undo button in HTML
 const redoEl = $('redo'); // Add redo button in HTML
 const deleteEl = $('delete-selected'); // Add delete button in HTML
 
+
+
+/* =====================================================
+   MODE SYSTEM (draw / select / pan)
+===================================================== */
+
+let currentMode = "draw";
+
+function setMode(mode){
+
+    currentMode = mode;
+
+    if(mode === "draw"){
+        canvas.isDrawingMode = true;
+        canvas.selection = false;
+    }
+
+    if(mode === "select"){
+        canvas.isDrawingMode = false;
+        canvas.selection = true;
+    }
+
+    if(mode === "pan"){
+        canvas.isDrawingMode = false;
+        canvas.selection = false;
+        canvas.defaultCursor = "grab";
+    }
+}
+
+
+
+
 // State stack for undo/redo
 let pathsStack = [];
 let redoStack = []
@@ -75,11 +107,8 @@ function deleteSelected() {
 clearEl.onclick = () => { pathsStack = []; redoStack = []; canvas.clear(); };
 
 drawingModeEl.onclick = function () {
-    canvas.isDrawingMode = !canvas.isDrawingMode;
-    this.classList.toggle("inactive", canvas.isDrawingMode);
-    // this.innerHTML = canvas.isDrawingMode
-    //    ? 'Cancel drawing'
-    //    : 'Draw';
+    setMode(currentMode === "draw" ? "select" : "draw");
+    this.classList.toggle("inactive", currentMode == "select");
 };
 
 canvas.freeDrawingBrush.color = drawingColorEl.value;
@@ -146,64 +175,54 @@ resizeCanvas();
    PAN + ZOOM
 ===================================================== */
 
-let isPanning = false;
-let lastPosX, lastPosY;
-
 const MIN_ZOOM = 0.25;
 const MAX_ZOOM = 4;
 
+/* =====================================================
+   DESKTOP PAN + ZOOM
+===================================================== */
 
-/* =========================
-   Mouse wheel zoom (desktop)
-========================= */
+let isDragging = false;
+let lastPosX, lastPosY;
 
+
+/* wheel zoom (correct anchor) */
 canvas.on('mouse:wheel', function(opt){
 
-    const delta = opt.e.deltaY;
+    const e = opt.e;
 
     let zoom = canvas.getZoom();
+    zoom *= 0.999 ** e.deltaY;
 
-    zoom *= 0.999 ** delta;
+    zoom = Math.max(0.25, Math.min(4, zoom));
 
-    zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
+    const point = canvas.getPointer(e);
 
-    canvas.zoomToPoint(
-        { x: opt.e.offsetX, y: opt.e.offsetY },
-        zoom
-    );
+    canvas.zoomToPoint(point, zoom);
 
-    opt.e.preventDefault();
-    opt.e.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
 });
 
 
-/* =========================
-   PAN (spacebar or middle mouse)
-========================= */
-
+/* SHIFT + drag to pan */
 canvas.on('mouse:down', function(opt){
 
-    const evt = opt.e;
+    if(opt.e.shiftKey){
 
-    const middleClick = evt.button === 1;
-    const spaceHeld   = evt.code === 'Space' || evt.spaceKey;
+        setMode("pan");
 
-    if(middleClick || evt.shiftKey){
+        isDragging = true;
 
-        isPanning = true;
-
-        canvas.isDrawingMode = false;
-
-        lastPosX = evt.clientX;
-        lastPosY = evt.clientY;
-
-        canvas.setCursor('grab');
+        lastPosX = opt.e.clientX;
+        lastPosY = opt.e.clientY;
     }
 });
 
+
 canvas.on('mouse:move', function(opt){
 
-    if(!isPanning) return;
+    if(!isDragging) return;
 
     const e = opt.e;
 
@@ -218,53 +237,95 @@ canvas.on('mouse:move', function(opt){
     lastPosY = e.clientY;
 });
 
+
 canvas.on('mouse:up', function(){
 
-    isPanning = false;
+    if(isDragging){
+        isDragging = false;
 
-    canvas.setCursor('default');
-
-    canvas.isDrawingMode = drawingModeEl.classList.contains("inactive") === false;
-});
-
-/* =====================================================
-   TOUCH PINCH ZOOM + PAN
-===================================================== */
-
-let lastTouchDistance = null;
-
-canvas.upperCanvasEl.addEventListener('touchmove', function(e){
-
-    if(e.touches.length === 2){
-
-        e.preventDefault();
-
-        const t1 = e.touches[0];
-        const t2 = e.touches[1];
-
-        const dx = t1.clientX - t2.clientX;
-        const dy = t1.clientY - t2.clientY;
-
-        const dist = Math.sqrt(dx*dx + dy*dy);
-
-        if(lastTouchDistance){
-
-            let zoom = canvas.getZoom();
-
-            zoom *= dist / lastTouchDistance;
-
-            zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
-
-            canvas.setZoom(zoom);
-        }
-
-        lastTouchDistance = dist;
+        setMode("select");
     }
 });
 
-canvas.upperCanvasEl.addEventListener('touchend', ()=>{
-    lastTouchDistance = null;
+
+
+/* =====================================================
+   MOBILE PINCH + PAN
+===================================================== */
+
+let lastDist = null;
+let lastCenter = null;
+
+canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
+
+    if(e.touches.length === 2){
+
+        setMode("pan"); // disable drawing
+
+        const t1=e.touches[0];
+        const t2=e.touches[1];
+
+        lastDist = Math.hypot(
+            t1.clientX - t2.clientX,
+            t1.clientY - t2.clientY
+        );
+
+        lastCenter = {
+            x:(t1.clientX+t2.clientX)/2,
+            y:(t1.clientY+t2.clientY)/2
+        };
+    }
 });
+
+
+canvas.upperCanvasEl.addEventListener("touchmove", (e)=>{
+
+    if(e.touches.length !== 2) return;
+
+    e.preventDefault();
+
+    const t1=e.touches[0];
+    const t2=e.touches[1];
+
+    const dist = Math.hypot(
+        t1.clientX - t2.clientX,
+        t1.clientY - t2.clientY
+    );
+
+    const center = {
+        x:(t1.clientX+t2.clientX)/2,
+        y:(t1.clientY+t2.clientY)/2
+    };
+
+    /* zoom */
+    let zoom = canvas.getZoom();
+    zoom *= dist/lastDist;
+    zoom = Math.max(0.25, Math.min(4, zoom));
+
+    const point = canvas.getPointer(center);
+
+    canvas.zoomToPoint(point, zoom);
+
+    /* pan */
+    const vpt = canvas.viewportTransform;
+    vpt[4] += center.x - lastCenter.x;
+    vpt[5] += center.y - lastCenter.y;
+
+    canvas.requestRenderAll();
+
+    lastDist = dist;
+    lastCenter = center;
+});
+
+
+canvas.upperCanvasEl.addEventListener("touchend", ()=>{
+
+    lastDist = null;
+    lastCenter = null;
+
+    setMode("draw"); // return to drawing
+});
+
 
 function resetView(){
     canvas.setViewportTransform([1,0,0,1,0,0]);
