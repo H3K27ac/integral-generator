@@ -141,6 +141,29 @@ addTemplate({
 });
 
 
+addTemplate({
+
+    methods: ["Integration by parts","Trigonometric functions"],
+    difficulty: 2,
+
+    generate: ({a, b, c, n}) => {
+
+        const poly = generateIBPPolynomial(n, "x");
+
+        return {
+            integral: `${a}*x^${n}*sin(${b}*x+${c})`,
+            solution:
+                `${a}/(${b}^${n+1})*(` +
+                `${poly}*sin(${b}*x+${c})` +
+                `-${generateIBPPolynomial(n-1,"x")}*b*cos(${b}*x+${c})` +
+                `)`
+        };
+    }
+});
+
+
+
+
 function generateIBPPolynomial(n,variable="x") {
     /* build polynomial:
         x^n - n x^(n-1) + n(n-1)x^(n-2) ...
@@ -173,5 +196,6 @@ function generateIBPPolynomial(n,variable="x") {
 
     return terms.join("+").replace(/\+\-/g,"-");
 }
+
 
 
