@@ -5,7 +5,10 @@ const $ = (id) => document.getElementById(id);
    ========================= */
 
 
-const time = document.getElementById("time");
+const time = $("time");
+const toggleTimerBtn = $("toggleTimerBtn");
+const toggleTimerText = toggleTimerBtn.querySelector(".text");
+const toggleTimerIcon = toggleTimerBtn.querySelector(".icon");
 
 let watchVisible=false;
 let running=false;
@@ -24,13 +27,25 @@ function toggleCompress() {
     watch.classList.toggle('compressed');
 }
 
+function toggleTimer() {
+    if (running) {
+        pauseTimer();
+        toggleTimerText.textContent = 'Start';
+        toggleTimerIcon.classList.remove('fa-pause');
+        toggleTimerIcon.classList.add('fa-play');
+    } else {
+        startTimer();
+        toggleTimerText.textContent = 'Pause';
+        toggleTimerIcon.classList.remove('fa-play');
+        toggleTimerIcon.classList.add('fa-pause');
+    }
+}
+
 function startTimer(){
     if(running) return;
 
     running=true;
     last=performance.now();
-    $("startBtn").classList.add("inactive");
-    $("pauseBtn").classList.remove("inactive");
 
     raf=requestAnimationFrame(tick);
 }
@@ -38,9 +53,6 @@ function startTimer(){
 function pauseTimer(){
     running=false;
     cancelAnimationFrame(raf);
-
-    $("startBtn").classList.remove("inactive");
-    $("pauseBtn").classList.add("inactive");
 }
 
 function resetTimer(){
