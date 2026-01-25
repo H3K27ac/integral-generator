@@ -207,43 +207,49 @@ function generateIBPPolynomial(n,variable="x") {
     return terms.join("+").replace(/\+\-/g,"-");
 }
 
-
 function integrateAxnTrig(a, n, b, c, trig = "sin") {
     let terms = [];
     let coeff = a;
     let currentPower = n;
     let currentTrig = trig;
-    let sign = 1; // We'll include the trig integration sign in this
+    let sign = 1; // alternates each IBP step
 
     for (let k = 0; k <= n; k++) {
-        // Determine the trig factor for this term
-        let trigTerm;
-        if (currentTrig === "sin") {
-            trigTerm = `sin(${b}*x+${c})`;
-        } else {
-            trigTerm = `cos(${b}*x+${c})`;
+        // factorial part: n! / (n-k)!
+        let factorialPart = 1;
+        for (let i = 0; i < k; i++) {
+            factorialPart *= (currentPower - i);
         }
 
-        // Determine the coefficient: a * n! / (n-k)! * (1/b)^(k+1) * sign
-        let factorialPart = 1;
-        for (let i = 0; i < k; i++) factorialPart *= (currentPower - i);
+        // b^(k+1) for trig integration
+        let bPow = Math.pow(b, k + 1);
 
-        let bPower = Math.pow(b, k + 1); // each trig integration contributes 1/b
-        let termCoeff = (sign * coeff * factorialPart) / bPower;
+        // coefficient as fraction (unsimplified)
+        let num = sign * coeff * factorialPart;
+        let denom = bPow;
 
-        // Determine x power
+        // trig term
+        let trigTerm = currentTrig === "sin"
+            ? `sin(${b}*x+${c})`
+            : `cos(${b}*x+${c})`;
+
+        // x power
         let xPower = currentPower - k;
         let xPart = xPower > 0 ? `x^${xPower}` : "";
 
-        terms.push(`${termCoeff}${xPart ? "*" + xPart : ""}*${trigTerm}`);
+        // format as fraction without simplifying
+        let frac = `${num}/${denom}`;
 
-        // Prepare for next term: flip trig and sign
+        terms.push(`${frac}${xPart ? "*" + xPart : ""}*${trigTerm}`);
+
+        // prepare for next step
         currentTrig = currentTrig === "sin" ? "cos" : "sin";
-        sign *= -1; // sign alternates each IBP step
+        sign *= -1;
     }
 
     return terms.join(" + ").replace(/\+\-/g, "-");
 }
+
 
 
 
