@@ -26,14 +26,11 @@ h1{ text-align:center; }
     display:flex;
     align-items:center;
     justify-content:center;
-    margin-bottom:6px;
 }
 
 #appTitle{
-    font-size:1.2rem;
+    font-size:1.5rem;
     font-weight:600;
-    margin:0;
-    opacity:.75;
 }
 
 /* hide in focus mode */
@@ -76,11 +73,16 @@ button.inactive{
     font-size: 1.8rem;
     text-align: center;
     width:100%;
-    margin: 20px 0;
-    padding: 12px;
+    margin: 10px 0;
+    padding: 6px;
     background: #ffffff;
     border-radius: 16px;
     box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+body.focus .math{
+    margin: 20px 0;
+    padding: 12px;
 }
 
 .katex{
@@ -90,6 +92,7 @@ button.inactive{
 
 canvas{
     width:100%;
+    height:100%;
     border-radius:14px;
     border:2px solid #d1d5db;
     touch-action:none;
