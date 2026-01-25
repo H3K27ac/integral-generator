@@ -156,14 +156,25 @@ function toggleTechPanel(){
     btn.classList.toggle("inactive", !show);
 }
 
+
+
 window.addEventListener("load", ()=>{
     buildTechPanel();
  //   buildFuncPanel();
+    mountPanelToTabs();   // default tab mode
+    showTab("canvas");
+
+    /* mobile default fullscreen */
+    if(window.innerWidth < 900){
+        toggleFullscreen();
+    }
 });
 
 
 
-
+/* =========================================
+   Tooltips
+========================================= */
 
 
 document.querySelectorAll('[data-tooltip]').forEach(el => {
@@ -181,6 +192,44 @@ document.querySelectorAll('[data-tooltip]').forEach(el => {
 });
 
 
+/* =========================================
+   Focus Mode
+========================================= */
+
 function toggleFocus() {
     document.body.classList.toggle("focus");
+    const focus = document.body.classList.contains("focus");
+
+    if(focus){
+        mountPanelInline();   // panel becomes inline
+    } else {
+        mountPanelToTabs();   // back to tab
+    }
+}
+
+const techPanel = $("techPanel");
+
+function mountPanelToTabs(){
+    document.getElementById("techPanelMount").appendChild(techPanel);
+}
+
+function mountPanelInline(){
+    document.getElementById("inlineTechPanelMount").appendChild(techPanel);
+}
+
+
+/* =========================================
+   Tabs
+========================================= */
+
+function showTab(name){
+
+    document.getElementById("canvasTab").style.display =
+        name==="canvas" ? "block":"none";
+
+    document.getElementById("techTab").style.display =
+        name==="tech" ? "block":"none";
+
+    document.getElementById("tabCanvasBtn").classList.toggle("active", name==="canvas");
+    document.getElementById("tabTechBtn").classList.toggle("active", name==="tech");
 }

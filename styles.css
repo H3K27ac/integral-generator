@@ -22,11 +22,6 @@ h1{ text-align:center; }
     box-shadow:0 2px 10px rgba(0,0,0,.1);
 }
 
-#workspace{
-    height:calc(100vh - 160px);
-    overflow:auto;
-}
-
 .controls,.tools{
     display:flex;
     flex-wrap:wrap;
@@ -60,11 +55,17 @@ button.inactive{
 .math {
     font-size: 1.8rem;
     text-align: center;
+    width:100%;
     margin: 20px 0;
     padding: 12px;
     background: #ffffff;
     border-radius: 16px;
     box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+.katex{
+    max-width:100%;
+    white-space:nowrap;
 }
 
 canvas{
@@ -98,11 +99,16 @@ canvas{
 ========================= */
 
 body.focus #topBar{
-    position:relative;
+    position: relative;
     height: auto;
 }
 
-body.focus #canvasTab{
+body.focus .math{
+    position: relative;
+    height: auto;
+}
+
+body.focus #workspace{
     display: none
 }
 

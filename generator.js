@@ -121,13 +121,13 @@ function newProblem(){
     currentSolutionLatex = p.solutionLatex;
     currentMethod = p.method;
 
-    katex.render(p.latex, problem);
-
     katex.render(
         p.latex, problem, {
             displayMode: true,
         }
     );
+
+    fitMath(problem);
 
     if(watchVisible){
         resetTimer();
@@ -139,9 +139,22 @@ function showSolution(){
     katex.render(currentSolutionLatex, solution, {
         displayMode: true,
     });
+    fitMath(solution)
     method.innerHTML = currentMethod;
     solution.style.display = "block";
     if(watchVisible) pauseTimer();
+}
+
+function fitMath(el){
+
+    let size = 36;   // start big
+
+    el.style.fontSize = size+"px";
+
+    while(el.scrollWidth > el.clientWidth && size > 14){
+        size -= 1;
+        el.style.fontSize = size+"px";
+    }
 }
 
 

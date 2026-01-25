@@ -54,6 +54,13 @@
     <div id="problem" class="math is-hidden"></div>
     <div id="solution" class="math is-hidden"></div>
     <div id="method"></div>
+
+    <div id="inlineTechPanelMount"></div>
+
+    <div id="tabs">
+        <button id="tabCanvasBtn" onclick="showTab('canvas')">Canvas</button>
+        <button id="tabTechBtn" onclick="showTab('tech')">Techniques</button>
+    </div>
 </div>
 
 <div id="workspace">
@@ -91,6 +98,10 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
+    </div>
+
+    <div id="techPanelTab" class="tabView is-hidden">
+        <div id="techPanelMount"></div>
     </div>
 </div>
 
