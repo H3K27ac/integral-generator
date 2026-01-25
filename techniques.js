@@ -148,18 +148,49 @@ addTemplate({
 
     generate: ({a, b, c, n}) => {
 
-        const poly = generateIBPPolynomial(n, "x");
+        let terms = [];
+        let coeff = a;
+        let power = n;
+        let trig = "sin";
+        let sign = -1;   // sin to -cos first
+        let bPow = b;
+
+        while (power > 0) {
+
+            const trigTerm =
+                sign === -1
+                    ? `cos(${b}*x+${c})`
+                    : `sin(${b}*x+${c})`;
+
+            terms.push(
+                `${sign * coeff}/${bPow}*x^${power}*${trigTerm}`
+            );
+
+            // update for next IBP round
+            coeff *= power;
+            power--;
+            trig = (trig === "sin") ? "cos" : "sin";
+            sign *= -1;
+            bPow *= b;
+        }
+
+        // last integral (power = 0)
+        const finalTrig =
+            trig === "sin"
+                ? `cos(${b}*x+${c})`
+                : `sin(${b}*x+${c})`;
+
+        terms.push(
+            `${sign * coeff}/${bPow}*${finalTrig}`
+        );
 
         return {
             integral: `${a}*x^${n}*sin(${b}*x+${c})`,
-            solution:
-                `${a}/(${b}^${n+1})*(` +
-                `(${poly})*sin(${b}*x+${c})` +
-                `-(${generateIBPPolynomial(n-1,"x")})*b*cos(${b}*x+${c})` +
-                `)`
+            solution: terms.join("+").replace(/\+\-/g, "-")
         };
     }
 });
+
 
 
 
