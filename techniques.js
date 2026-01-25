@@ -39,6 +39,7 @@ addMethod("Logarithms");
 
 addMethod("u-substitution");
 addMethod("Integration by parts");
+addMethod("Zero substitution");
 
 
 addTemplate({
@@ -169,8 +170,19 @@ addTemplate({
     }
 });
 
+addTemplate({
 
+    methods: ["Zero substitution"],
+    difficulty: 2,
 
+    generate: ({a, b}) => {
+
+        return {
+            integral: `x^2/(${a}*x+${b})`,
+            solution: `${b}^2/${a}^2*log(abs(${a}*x+${b}))+x^2/(2*${a})-${b}*x/${a}^2`
+        };
+    }
+});
 
 
 
@@ -232,7 +244,7 @@ function integrateAxnTrig(a, n, b, c, trig = "sin") {
         if (k === 0) break;
 
         currentTrig = currentTrig === "sin" ? "cos" : "sin";
-        
+
         coeff *= k;
         bPow *= b;
 
