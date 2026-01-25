@@ -226,7 +226,7 @@ function integrateAxnTrig(a, n, b, c, trig = "sin") {
         const sign = (currentTrig === "sin") ? -1 : 1;
 
         terms.push(
-            `${sign * coeff}/${bPow}*x^${power}*${integratedTrig}`
+            forcePositiveCos(`${sign * coeff}/${bPow}*x^${power}*${integratedTrig}`)
         );
 
         // prepare next IBP round
@@ -244,18 +244,18 @@ function integrateAxnTrig(a, n, b, c, trig = "sin") {
 
     const finalSign = (currentTrig === "sin") ? -1 : 1;
 
-    let term = `${finalSign * coeff}/${bPow}*${finalIntegratedTrig}`;
-
-    if (term.includes("cos(") && term.startsWith("-")) {
-        term.slice(1); // remove leading "-"
-    }
-
     terms.push(
-        term
+        forcePositiveCos(`${finalSign * coeff}/${bPow}*${finalIntegratedTrig}`)
     );
 
     return terms.join("+").replace(/\+\-/g, "-");
 }
 
+function forcePositiveCos(term) {
+    if (term.includes("cos(") && term.startsWith("-")) {
+        return term.slice(1); // remove leading "-"
+    }
+    return term;
+}
 
 
