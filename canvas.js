@@ -42,6 +42,7 @@ function setMode(mode){
     if(mode === "select"){
         canvas.isDrawingMode = false;
         canvas.selection = true;
+        canvas.defaultCursor = "default";
     }
 
     if(mode === "pan"){
@@ -260,6 +261,9 @@ let lastCenter = null;
 canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
 
     if(e.touches.length === 2){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
         previousMode = currentMode;
         setMode("pan"); // disable drawing
 
