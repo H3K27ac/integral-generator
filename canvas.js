@@ -192,6 +192,7 @@ const MAX_ZOOM = 4;
 ===================================================== */
 
 let isDragging = false;
+let isTouchDragging = false;
 let lastPosX, lastPosY;
 let previousMode = "draw";
 
@@ -272,7 +273,7 @@ canvas.upperCanvasEl.addEventListener("touchstart", (e)=>{
         allowDrawing=false;
         previousMode = currentMode;
         setMode("none"); // disable drawing
-        isDragging=true;
+        isTouchDragging=true;
 
         const t1=e.touches[0];
         const t2=e.touches[1];
@@ -333,8 +334,8 @@ canvas.upperCanvasEl.addEventListener("touchmove", (e)=>{
 canvas.upperCanvasEl.addEventListener("touchend", ()=>{
     lastDist = null;
     lastCenter = null;
-    if (isDragging) {
-        isDragging=false;
+    if (isTouchDragging) {
+        isTouchDragging=false;
         setMode(previousMode);
     }
 });
