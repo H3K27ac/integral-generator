@@ -216,10 +216,9 @@ canvas.on('mouse:wheel', function(opt){
 
 
 /* SHIFT + drag to pan */
-canvas.on('mouse:down', function(opt){
+canvas.on('mouse:down:before', function(opt){
 
     if(opt.e.shiftKey){
-        allowDrawing=false;
         previousMode = currentMode;
         setMode("none");
 
