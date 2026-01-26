@@ -34,7 +34,7 @@ const Methods = {
 };
 
 const MethodState = Object.fromEntries(
-  Object.keys(MethodRegistry).map(name => [
+  Object.keys(Methods).map(name => [
     name,
     { enabled: true, blacklisted: false }
   ])
