@@ -121,7 +121,7 @@ addTemplate({
         const axb = `(${a}*x+${b})`;
         return {
             integral: `x*${axb}^${ninv}`,
-            solution: `${axb}^(${ninv}+2)/(${a}^2*(${ninv}+2))-${axb}^(${ninv}+1)/(${a}^2*(${ninv}+1))`
+            solution: `${axb}^(${ninv}+2)/((${a})^2*(${ninv}+2))-${axb}^(${ninv}+1)/((${a})^2*(${ninv}+1))`
         };
     }
 });
