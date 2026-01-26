@@ -41,12 +41,17 @@ h1{ text-align:center; }
     padding:10px;
 }
 
-.tools{
-    position:absolute;
-    top:50%;
-    left:12px;
-    flex-direction:column;
-    z-index:1000;
+.tools {
+    position: fixed;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 button{
@@ -114,6 +119,11 @@ canvas{
   border: none;
   background: none;
   cursor: pointer;
+}
+
+#tabs button {
+    padding: 4px 8px;
+    font-size: 12px;
 }
 
 /* =========================
