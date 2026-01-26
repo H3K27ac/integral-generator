@@ -6,6 +6,12 @@ const TEMPLATES = [];
 
 function addTemplate(template) {
   TEMPLATES.push(template);
+  // Update TemplateIndex for this new template
+  for (const m of template.methods) {
+    const key = MethodKeys.get(m); // get string key
+    if (!TemplateIndex.has(key)) TemplateIndex.set(key, []);
+    TemplateIndex.get(key).push(template);
+  }
 }
 
 // Create a lookup from method object to key
@@ -13,15 +19,6 @@ const MethodKeys = new Map(Object.entries(Methods).map(([k,v]) => [v, k]));
 
 
 const TemplateIndex = new Map();
-
-for (const t of TEMPLATES) {
-    for (const m of t.methods) {
-        const key = MethodKeys.get(m);
-        if (!TemplateIndex.has(key)) TemplateIndex.set(key, []);
-        TemplateIndex.get(key).push(t);
-    }
-}
-
 
 
 const Methods = {
