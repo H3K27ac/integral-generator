@@ -2,188 +2,92 @@
    METHODS + TEMPLATE REGISTRY
 ===================================================== */
 
-const TEMPLATES = [];
+const Templates = new Map(); // id -> template
 const TemplateIndex = new Map();
 
-function addTemplate(template) {
-  TEMPLATES.push(template);
-  // Update TemplateIndex for this new template
-  for (const m of template.methods) {
-    const key = MethodKeys.get(m); // get string key
-    if (!TemplateIndex.has(key)) TemplateIndex.set(key, []);
-    TemplateIndex.get(key).push(template);
-  }
+function validateTemplate(t) {
+    if (!t.id) throw "Missing id";
+    if (!Array.isArray(t.methods)) throw "methods must be array";
+    if (typeof t.generate !== "function") throw "generate must be function";
 }
 
+
+function addTemplate(template) {
+    validateTemplate(template);
+
+    Templates.set(template.id, template);
+
+    for (const method of template.methods) {
+        if (!TemplateIndex.has(method)) {
+        TemplateIndex.set(method, new Set());
+        }
+        TemplateIndex.get(method).add(template.id);
+    }
+}
+
+
 const Methods = {
-  POWER: { label: "Power rule" },
-  EXP: { label: "Exponentials" },
-  TRIG: { label: "Trigonometric functions" },
-  LOG: { label: "Logarithms" },
-  USUB: { label: "u-substitution" },
-  IBP: { label: "Integration by parts" },
-  ZERO: { label: "Zero substitution" }
+    POWER: { label: "Power rule" },
+    EXP: { label: "Exponentials" },
+    TRIG: { label: "Trigonometric functions" },
+    LOG: { label: "Logarithms" },
+    USUB: { label: "u-substitution" },
+    IBP: { label: "Integration by parts" },
+    ZERO: { label: "Zero substitution" }
 };
 
 const MethodState = Object.fromEntries(
-  Object.keys(Methods).map(key => [
-    key,
-    { enabled: true, blacklisted: false }
-  ])
+    Object.keys(Methods).map(key => [
+        key,
+        { enabled: true, blacklisted: false }
+    ])
 );
 
-// Create a lookup from method object to key
-const MethodKeys = new Map(Object.entries(Methods).map(([k,v]) => [v, k]));
+
+function getTemplates({
+    methods = null,
+    minDifficulty = 1,
+    maxDifficulty = Infinity
+} = {}) {
+
+    // If no methods explicitly provided, use enabled ones
+    const activeMethods = methods ?? Object.entries(MethodState)
+        .filter(([, s]) => s.enabled)
+        .map(([key]) => key);
+
+    if (activeMethods.length === 0) {
+        alert("Select at least one method.");
+        return [];
+    }
+
+    // Collect candidate template IDs
+    let ids = new Set();
+
+    for (const method of activeMethods) {
+        const bucket = TemplateIndex.get(method);
+        if (!bucket) continue;
+        for (const id of bucket) ids.add(id);
+    }
+
+    const results = [...ids]
+        .map(id => Templates.get(id))
+        .filter(t =>
+        // difficulty filter
+        t.difficulty >= minDifficulty &&
+        t.difficulty <= maxDifficulty &&
+
+        // must not use any blacklisted methods
+        !t.methods.some(m => MethodState[m].blacklisted)
+        );
+
+    return results;
+}
+
 
 
 /* =====================================================
    METHODS WITH DIFFICULTY
 ===================================================== */
-
-
-addTemplate({
-
-    methods:[Methods.POWER],
-    difficulty: 1,
-
-    generate: ({a,n}) => ({
-
-        integral: `${a}*x^${n}`,
-        solution: `${a}*x^${n+1}/${n+1}`
-
-    })
-});
-
-
-addTemplate({
-
-    methods:[Methods.EXP],
-    difficulty: 1,
-
-    generate: ({n}) => ({
-
-        integral: `e^(${n}*x)`,
-        solution: `e^(${n}*x) / ${n}`
-
-    })
-});
-
-
-addTemplate({
-
-    methods:[Methods.TRIG],
-    difficulty: 1,
-
-    generate: ({n}) => ({
-
-        integral: `sin(${n}*x)`,
-        solution: `-cos(${n}*x) / ${n}`
-
-    })
-});
-
-
-addTemplate({
-
-    methods:[Methods.TRIG],
-    difficulty: 1,
-
-    generate: ({n}) => ({
-
-        integral: `cos(${n}*x)`,
-        solution: `sin(${n}*x) / ${n}`
-
-    })
-});
-
-addTemplate({
-
-    methods:[Methods.USUB],
-    difficulty: 2,
-
-    generate: ({a,b,n}) => {
-        const ninv = `(1/(${n}+1))`;
-        const axb = `(${a}*x+${b})`;
-        return {
-            integral: `x*${axb}^${ninv}`,
-            solution: `${axb}^(${ninv}+2)/((${a})^2*(${ninv}+2))-${axb}^(${ninv}+1)/((${a})^2*(${ninv}+1))`
-        };
-    }
-});
-
-
-addTemplate({
-
-    methods:[Methods.IBP,Methods.EXP],
-    difficulty: 2,
-
-    generate: ({a,n}) => {
-
-        return {
-            integral: `${a}*x^${n}*exp(x)`,
-            solution: `${a}*exp(x)*(${generateIBPPolynomial(n)})`
-        };
-    }
-});
-
-
-addTemplate({
-
-    methods:[Methods.USUB,Methods.IBP,Methods.LOG,Methods.EXP],
-    difficulty: 2,
-
-    generate: ({a,n}) => {
-
-        return {
-            integral: `${a}*log(x)^${n}`,
-            solution: `${a}*x*(${generateIBPPolynomial(n,"log(x)")})`
-        };
-    }
-});
-
-
-addTemplate({
-
-    methods: [Methods.IBP,Methods.TRIG],
-    difficulty: 2,
-
-    generate: ({a, b, c, n}) => {
-
-        return {
-            integral: `${a}*x^${n}*sin(${b}*x+${c})`,
-            solution: integrateAxnTrig(a, n, b, c, trig = "sin")
-        };
-    }
-});
-
-addTemplate({
-
-    methods: [Methods.IBP,Methods.TRIG],
-    difficulty: 2,
-
-    generate: ({a, b, c, n}) => {
-
-        return {
-            integral: `${a}*x^${n}*cos(${b}*x+${c})`,
-            solution: integrateAxnTrig(a, n, b, c, trig = "cos")
-        };
-    }
-});
-
-addTemplate({
-
-    methods: [Methods.ZERO],
-    difficulty: 2,
-
-    generate: ({a, b}) => {
-
-        return {
-            integral: `x^2/(${a}*x+${b})`,
-            solution: `${b}^2/${a}^3*log(abs(${a}*x+${b}))+x^2/(2*${a})-${b}*x/${a}^2`
-        };
-    }
-});
-
 
 
 function generateIBPPolynomial(n,variable="x") {
@@ -255,3 +159,140 @@ function integrateAxnTrig(a, n, b, c, trig = "sin") {
 
     return terms.join("+").replace(/\+\-/g, "-");
 }
+
+
+const TEMPLATE_DEFS = [
+    {
+        id: "power_rule_basic",
+        methods: ["POWER"],
+        difficulty: 1,
+        params: ["a","n"],
+        generate: ({a,n}) => ({
+            integral: `${a}*x^${n}`,
+            solution: `${a}*x^${n+1}/${n+1}`
+        })
+    },
+
+    {
+        id: "exp_basic",
+        methods: ["EXP"],
+        difficulty: 1,
+        params: ["n"],
+        generate: ({n}) => ({
+            integral: `e^(${n}*x)`,
+            solution: `e^(${n}*x) / ${n}`
+        })
+    },
+
+    {
+        id: "sin_basic",
+        methods: ["TRIG"],
+        difficulty: 1,
+        params: ["a","b","c"],
+        generate: ({a,b,c}) => ({
+            integral: `${a}*sin(${b}*x+${c})`,
+            solution: `-${a}/${b}*cos(${b}*x+${c})`
+        })
+    },
+
+    {
+        id: "cos_basic",
+        methods: ["TRIG"],
+        difficulty: 1,
+        params: ["a","b","c"],
+        generate: ({a,b,c}) => ({
+            integral: `${a}*cos(${b}*x+${c})`,
+            solution: `${a}/${b}*sin(${b}*x+${c})`
+        })
+    },
+
+    {
+        id: "u_sub_ax+b",
+        methods: ["USUB"],
+        difficulty: 2,
+        params: ["a","b","n"],
+        generate: ({a,b,n}) => {
+            const ninv = `(1/(${n}+1))`;
+            const axb = `(${a}*x+${b})`;
+            return {
+                integral: `x*${axb}^${ninv}`,
+                solution: `${axb}^(${ninv}+2)/((${a})^2*(${ninv}+2))-${axb}^(${ninv}+1)/((${a})^2*(${ninv}+1))`
+            };
+        }
+    },
+
+    {
+        id: "ibp_with_exp",
+        methods: ["IBP","EXP"],
+        difficulty: 2,
+        params: ["a","n"],
+        generate: ({a,n}) => {
+        
+        return {
+            integral: `${a}*x^${n}*exp(x)`,
+            solution: `${a}*exp(x)*(${generateIBPPolynomial(n)})`
+        };
+        }
+    },
+
+    {
+        id: "u_sub_logn",
+        methods: ["USUB","IBP","LOG","EXP"],
+        difficulty: 2,
+        params: ["a","n"],
+        generate: ({a,n}) => {
+        
+        return {
+            integral: `${a}*log(x)^${n}`,
+            solution: `${a}*x*(${generateIBPPolynomial(n,"log(x)")})`
+        };
+        }
+    },
+
+    {
+        id: "ibp_x_sin",
+        methods: ["IBP","TRIG"],
+        difficulty: 2,
+        params: ["a","b","c","n"],
+        generate: ({a,b,c,n}) => {
+        
+        return {
+            integral: `${a}*x^${n}*sin(${b}*x+${c})`,
+            solution: integrateAxnTrig(a, n, b, c, trig = "sin")
+        };
+        }
+    },
+
+    {
+        id: "ibp_x_cos",
+        methods: ["IBP","TRIG"],
+        difficulty: 2,
+        params: ["a","b","c","n"],
+        generate: ({a,b,c,n}) => {
+        
+        return {
+            integral: `${a}*x^${n}*cos(${b}*x+${c})`,
+            solution: integrateAxnTrig(a, n, b, c, trig = "cos")
+        };
+        }
+    },
+
+    {
+        id: "zero_sub_basic",
+        methods: ["ZERO"],
+        difficulty: 2,
+        params: ["a","b"],
+        generate: ({a,b}) => {
+        
+        return {
+            integral: `x^2/(${a}*x+${b})`,
+            solution: `${b}^2/${a}^3*log(abs(${a}*x+${b}))+x^2/(2*${a})-${b}*x/${a}^2`
+        };
+        }
+    },
+];
+
+TEMPLATE_DEFS.forEach(addTemplate)
+
+
+
