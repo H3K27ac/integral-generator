@@ -230,9 +230,14 @@ body.focus .math{
 }
 
 .katex{
-    max-width:100%;
-    white-space:nowrap;
+    white-space:normal;
 }
+
+.katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 
 /* =========================
    Stopwatch card
