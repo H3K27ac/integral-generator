@@ -235,9 +235,6 @@ function fitMath(el) {
     // Read max-width from CSS
     let maxWidth = el.parentElement.clientWidth * (maxWidthPercent / 100);
 
-    const base = el.querySelector(".base");
-    if (!base) return;
-
     const katexDisplay = el.querySelector(".katex-display");
 
     // Try natural size
@@ -245,13 +242,13 @@ function fitMath(el) {
     el.style.transform = "scale(1)";
     el.style.fontSize = "";
 
-    if (base.getBoundingClientRect().width <= maxWidth) return;
+    if (el.getBoundingClientRect().width <= maxWidth) return;
 
     // Try font shrinking
     let size = isFocused ? 32 : 24;
     while (size > 14) {
         el.style.fontSize = size + "px";
-        if (base.getBoundingClientRect().width <= maxWidth) return;
+        if (el.getBoundingClientRect().width <= maxWidth) return;
         size--;
     }
 
