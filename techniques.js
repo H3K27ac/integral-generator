@@ -40,29 +40,6 @@ const MethodState = Object.fromEntries(
   ])
 );
 
-
-/* ---------- methods ---------- */
-
-function addMethod(name, enabled=true, blacklisted=false){
-    METHODS.push({
-        name,
-        enabled,
-        blacklisted
-    });
-}
-
-
-/* ---------- templates ---------- */
-
-function addTemplate({ generate, methods, difficulty=1}){
-
-    TEMPLATES.push({
-        generate,
-        methods,   // array of method names
-        difficulty
-    });
-}
-
 /* =====================================================
    METHODS WITH DIFFICULTY
 ===================================================== */
