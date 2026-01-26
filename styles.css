@@ -3,6 +3,7 @@ body{
     margin:0;
     padding:12px;
     background:#f3f4f8;
+    overflow:hidden;
 }
 
 h1{ text-align:center; }
@@ -45,7 +46,6 @@ h1{ text-align:center; }
     position: fixed;
     top: 50%;
     left: 8px;
-    transform: translateY(-50%);
     flex-direction: column;
     gap: 6px;
     padding: 4px;
@@ -114,6 +114,10 @@ canvas{
 /* =========================
    Focus Mode
 ========================= */
+
+body.focus {
+    overflow: auto;
+}
 
 body.focus #topBar{
     position: relative;
@@ -187,6 +191,7 @@ body.focus #workspace{
     flex-direction: row;
     justify-content: center;
     gap: 6px;
+    width: 100%;
     z-index: 100;
     pointer-events: none;
 }

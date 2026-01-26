@@ -225,7 +225,7 @@ function showSolution(){
 function fitMath(el) {
 
     let size = isFocused ? 36 : 24; // start big
-    let maxWidthPercent = isFocused ? 90 : 45; // start big
+    let maxWidthPercent = isFocused ? 90 : 45;
     const minSize = 14;
 
     // Read max-width from CSS
