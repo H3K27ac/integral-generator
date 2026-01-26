@@ -3,6 +3,7 @@
 ===================================================== */
 
 const TEMPLATES = [];
+const TemplateIndex = new Map();
 
 function addTemplate(template) {
   TEMPLATES.push(template);
@@ -13,13 +14,6 @@ function addTemplate(template) {
     TemplateIndex.get(key).push(template);
   }
 }
-
-// Create a lookup from method object to key
-const MethodKeys = new Map(Object.entries(Methods).map(([k,v]) => [v, k]));
-
-
-const TemplateIndex = new Map();
-
 
 const Methods = {
   POWER: { label: "Power rule" },
@@ -37,6 +31,10 @@ const MethodState = Object.fromEntries(
     { enabled: true, blacklisted: false }
   ])
 );
+
+// Create a lookup from method object to key
+const MethodKeys = new Map(Object.entries(Methods).map(([k,v]) => [v, k]));
+
 
 /* =====================================================
    METHODS WITH DIFFICULTY
