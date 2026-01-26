@@ -234,8 +234,7 @@ body.focus .math{
 }
 
 .katex-display {
-  max-width: 100%;
-  overflow-x: auto;
+    max-width: 100%;
 }
 
 
