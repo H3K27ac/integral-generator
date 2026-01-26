@@ -97,20 +97,6 @@ addTemplate({
     })
 });
 
-
-addTemplate({
-
-    methods:["u-substitution"],
-    difficulty: 2,
-
-    generate: ({a,b}) => ({
-
-        integral: `x*sqrt(${a}*x+${b})`,
-        solution: `(${a}*x+${b})^(3/2)*(6*${a}*x-4*${b}) / (15*${a}^2)`
-
-    })
-});
-
 addTemplate({
 
     methods:["u-substitution"],
