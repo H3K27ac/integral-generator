@@ -133,6 +133,12 @@ body.focus #workspace{
     display: none
 }
 
+#focusProblemMount{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 /* =========================
    List Panel
 ========================= */
@@ -211,13 +217,17 @@ body.focus #workspace{
     text-align: center;
 }
 
-body.focus .overlay-card {
+body.focus .overlay-background {
     width:100%;
     margin: 0 auto;
     padding: 6px;
     background: #ffffff;
     border-radius: 16px;
     box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+body.focus .overlay-card {
+    padding: 6px;
     max-width: 90%;
 }
 
