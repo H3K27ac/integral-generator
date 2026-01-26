@@ -235,17 +235,20 @@ function fitMath(el) {
     // Read max-width from CSS
     let maxWidth = el.parentElement.clientWidth * (maxWidthPercent / 100);
 
+    const base = el.querySelector(".base");
+    if (!base) return;
+
     // Try natural size
     el.style.transform = "scale(1)";
     el.style.fontSize = "";
 
-    if (el.getBoundingClientRect().width <= maxWidth) return;
+    if (base.getBoundingClientRect().width <= maxWidth) return;
 
     // Try font shrinking
     let size = isFocused ? 32 : 24;
     while (size > 14) {
         el.style.fontSize = size + "px";
-        if (el.getBoundingClientRect().width <= maxWidth) return;
+        if (base.getBoundingClientRect().width <= maxWidth) return;
         size--;
     }
 }
@@ -282,7 +285,7 @@ function mountPanelToTabs(){
 function mountPanelInline(){
     document.getElementById("focusTechPanelMount").appendChild(techPanel);
     document.getElementById("focusProblemMount").appendChild(problem);
-    document.getElementById("focusSolutionMount").appendChild(solution);
+    document.getElementById("focusProblemMount").appendChild(solution);
 }
 
 
