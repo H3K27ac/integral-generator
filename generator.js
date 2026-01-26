@@ -48,31 +48,46 @@ function randomConstants(options={}){
    Hybrid generator
 ===================================================== */
 
-
-function generateProblem(){
-
-    const enabled = Object.entries(MethodState)
+function getValidTemplates() {
+    const enabledKeys = Object.entries(MethodState)
         .filter(([, s]) => s.enabled)
         .map(([name]) => name);
 
-    if(enabled.length===0){
+    if(enabledKeys.length===0){
         alert("Select at least one method.");
         return null;
     }
 
-    const blacklisted = Object.entries(MethodState)
+    const blacklistedKeys = Object.entries(MethodState)
         .filter(([, s]) => s.blacklisted)
         .map(([name]) => name);
 
-    const valid = TEMPLATES.filter(t =>
-        t.methods.some(m => enabled.includes(m)) &&
-        !t.methods.some(m => blacklisted.includes(m))
-    );
+    let valid = new Set();
 
+    // Collect all templates from enabled methods
+    for (const key of enabledKeys) {
+        const templates = TemplateIndex.get(key) || [];
+        for (const t of templates) {
+            // Make sure none of the template's methods are blacklisted
+            if (!t.methods.some(m => blacklistedKeys.includes(MethodKeys.get(m)))) {
+                valid.add(t);
+            }
+        }
+    }
 
-
-    if(valid.length===0){
+    if(valid.size===0){
         alert("No templates match selected methods.");
+        return null;
+    }
+
+    return Array.from(valid);
+}
+
+
+function generateProblem(){
+    const valid = getValidTemplates();
+
+    if(valid===null){
         return null;
     }
 
