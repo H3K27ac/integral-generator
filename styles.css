@@ -69,26 +69,10 @@ button.inactive{
     background:#6b7280;
 }
 
-.math {
-    font-size: 1.8rem;
-    text-align: center;
-    width:100%;
-    margin: 10px 0;
-    padding: 6px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow:0 6px 18px rgba(0,0,0,.12);
-}
 
-body.focus .math{
-    margin: 20px 0;
-    padding: 12px;
-}
-
-.katex{
-    max-width:100%;
-    white-space:nowrap;
-}
+/* =========================
+   Canvas
+========================= */
 
 canvas{
     width:100%;
@@ -190,8 +174,51 @@ body.focus #workspace{
     text-decoration: line-through;
 }
 
+/* =========================
+   Problem and solution overlays
+========================= */
 
+#qaOverlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 500;
+    pointer-events: none;
+}
 
+.overlay-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 8px 12px;
+    max-width: 300px;
+}
+
+.math {
+    font-size: 1.8rem;
+    text-align: center;
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+body.focus .overlay-card {
+    width:100%;
+    margin: 10px 0;
+    padding: 6px;
+    background: #ffffff;
+    border-radius: 16px;
+}
+
+body.focus .math{
+    margin: 20px 0;
+    padding: 12px;
+}
+
+.katex{
+    max-width:100%;
+    white-space:nowrap;
+}
 
 /* =========================
    Stopwatch card

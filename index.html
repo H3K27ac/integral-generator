@@ -57,7 +57,8 @@
     <div id="solution" class="math is-hidden"></div>
     <div id="method"></div>
 
-    <div id="inlineTechPanelMount"></div>
+    <div id="focusTechPanelMount"></div>
+    <div id="focusProblemMount"></div>
 
     <div id="tabs">
         <button id="tabCanvasBtn" onclick="showTab('canvas')">Canvas</button>
@@ -67,6 +68,7 @@
 
 <div id="workspace">
     <div id="canvasTab" class="tabView">
+        <div id="qaOverlay"></div>
         <canvas id="canvas"></canvas>
         <div class="tools">
             <button id="drawing-mode" data-tooltip="Toggle Drawing">
@@ -112,6 +114,10 @@
     <div id="techList"></div>
 </div>
 
+<div id="problemSolution">
+    <div id="problem" class="math overlay-card is-hidden"></div>
+    <div id="solution" class="math overlay-card is-hidden"></div>
+</div>
 
 </body>
 </html>

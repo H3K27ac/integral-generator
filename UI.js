@@ -195,13 +195,16 @@ function toggleFocus() {
 }
 
 const techPanel = $("techPanel");
+const problemSolution = $("problemSolution");
 
 function mountPanelToTabs(){
     document.getElementById("techPanelMount").appendChild(techPanel);
+    document.getElementById("qaOverlay").appendChild(problemSolution);
 }
 
 function mountPanelInline(){
-    document.getElementById("inlineTechPanelMount").appendChild(techPanel);
+    document.getElementById("focusTechPanelMount").appendChild(techPanel);
+    document.getElementById("focusProblemMount").appendChild(problemSolution);
 }
 
 
