@@ -231,19 +231,22 @@ function showSolution(){
 
 function fitMath(el) {
     let maxWidthPercent = isFocused ? 90 : 45;
-    const minSize = 14;
 
     // Read max-width from CSS
     let maxWidth = el.parentElement.clientWidth * (maxWidthPercent / 100);
 
-    // reset
+    // Try natural size
     el.style.transform = "scale(1)";
+    el.style.fontSize = "";
 
-    const rect = el.getBoundingClientRect();
+    if (el.getBoundingClientRect().width <= maxWidth) return;
 
-    if (rect.width > maxWidth) {
-        const scale = maxWidth / rect.width;
-        el.style.transform = `scale(${scale})`;
+    // Try font shrinking
+    let size = isFocused ? 32 : 24;
+    while (size > 14) {
+        el.style.fontSize = size + "px";
+        if (el.getBoundingClientRect().width <= maxWidth) return;
+        size--;
     }
 }
 
