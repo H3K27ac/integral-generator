@@ -133,12 +133,6 @@ body.focus #workspace{
     display: none
 }
 
-#focusProblemMount{
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
 /* =========================
    List Panel
 ========================= */
