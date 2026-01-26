@@ -213,12 +213,12 @@ function newProblem(){
 }
 
 function showSolution(){
+    solution.style.display = "block";
+    method.innerHTML = currentMethod;
     katex.render(currentSolutionLatex, solution, {
         displayMode: true,
     });
     fitMath(solution)
-    method.innerHTML = currentMethod;
-    solution.style.display = "block";
     if(watchVisible) pauseTimer();
 }
 
