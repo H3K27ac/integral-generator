@@ -282,7 +282,7 @@ function mountPanelToTabs(){
 function mountPanelInline(){
     document.getElementById("focusTechPanelMount").appendChild(techPanel);
     document.getElementById("focusProblemMount").appendChild(problem);
-    document.getElementById("focusSolutionMount").appendChild(solution);
+    document.getElementById("focusProblemMount").appendChild(solution);
 }
 
 
