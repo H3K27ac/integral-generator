@@ -51,23 +51,24 @@ function randomConstants(options={}){
 
 function generateProblem(){
 
-    const enabledMethods = METHODS.filter(m=>m.enabled).map(m=>m.name);
+    const enabled = Object.entries(MethodState)
+        .filter(([, s]) => s.enabled)
+        .map(([name]) => name);
 
-    if(enabledMethods.length===0){
+    if(enabled.length===0){
         alert("Select at least one method.");
         return null;
     }
 
-    const blacklistedMethods = METHODS.filter(m=>m.blacklisted).map(m=>m.name);
+    const blacklisted = Object.entries(MethodState)
+        .filter(([, s]) => s.blacklisted)
+        .map(([name]) => name);
 
-
-    const valid = TEMPLATES.filter(t =>
-        /* must match at least one enabled */
-        t.methods.some(m => enabledMethods.includes(m)) &&
-
-        /* must not contain any blacklisted */
-        !t.methods.some(m => blacklistedMethods.includes(m))
+    const valid = Templates.filter(t =>
+        t.methods.some(m => enabled.includes(m)) &&
+        !t.methods.some(m => blacklisted.includes(m))
     );
+
 
 
     if(valid.length===0){

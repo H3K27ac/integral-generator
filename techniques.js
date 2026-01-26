@@ -2,8 +2,43 @@
    METHODS + TEMPLATE REGISTRY
 ===================================================== */
 
-const METHODS = [];
+const METHODS = new Map();
 const TEMPLATES = [];
+
+function addMethod(name, { enabled = true, blacklisted = false } = {}) {
+  METHODS.set(name, { name, enabled, blacklisted });
+}
+
+function addTemplate(template) {
+  TEMPLATES.push(template);
+}
+
+const TemplateIndex = new Map();
+
+for (const t of TEMPLATES) {
+  for (const m of t.methods) {
+    if (!TemplateIndex.has(m)) TemplateIndex.set(m, []);
+    TemplateIndex.get(m).push(t);
+  }
+}
+
+
+const Methods = {
+  POWER: { label: "Power rule" },
+  EXP: { label: "Exponentials" },
+  TRIG: { label: "Trigonometric functions" },
+  LOG: { label: "Logarithms" },
+  USUB: { label: "u-substitution" },
+  IBP: { label: "Integration by parts" },
+  ZERO: { label: "Zero substitution" }
+};
+
+const MethodState = Object.fromEntries(
+  Object.keys(MethodRegistry).map(name => [
+    name,
+    { enabled: true, blacklisted: false }
+  ])
+);
 
 
 /* ---------- methods ---------- */
@@ -32,19 +67,10 @@ function addTemplate({ generate, methods, difficulty=1}){
    METHODS WITH DIFFICULTY
 ===================================================== */
 
-addMethod("Power rule");
-addMethod("Exponentials");
-addMethod("Trigonometric functions");
-addMethod("Logarithms");
-
-addMethod("u-substitution");
-addMethod("Integration by parts");
-addMethod("Zero substitution");
-
 
 addTemplate({
 
-    methods:["Power rule"],
+    methods:[Methods.POWER],
     difficulty: 1,
 
     generate: ({a,n}) => ({
@@ -58,7 +84,7 @@ addTemplate({
 
 addTemplate({
 
-    methods:["Exponentials"],
+    methods:[Methods.EXP],
     difficulty: 1,
 
     generate: ({n}) => ({
@@ -72,7 +98,7 @@ addTemplate({
 
 addTemplate({
 
-    methods:["Trigonometric functions"],
+    methods:[Methods.TRIG],
     difficulty: 1,
 
     generate: ({n}) => ({
@@ -86,7 +112,7 @@ addTemplate({
 
 addTemplate({
 
-    methods:["Trigonometric functions"],
+    methods:[Methods.TRIG],
     difficulty: 1,
 
     generate: ({n}) => ({
@@ -99,7 +125,7 @@ addTemplate({
 
 addTemplate({
 
-    methods:["u-substitution"],
+    methods:[Methods.USUB],
     difficulty: 2,
 
     generate: ({a,b,n}) => {
@@ -115,7 +141,7 @@ addTemplate({
 
 addTemplate({
 
-    methods:["Integration by parts","Exponentials"],
+    methods:[Methods.IBP,Methods.EXP],
     difficulty: 2,
 
     generate: ({a,n}) => {
@@ -130,7 +156,7 @@ addTemplate({
 
 addTemplate({
 
-    methods:["u-substitution","Integration by parts","Logarithms","Exponentials"],
+    methods:[Methods.USUB,Methods.IBP,Methods.LOG,Methods.EXP],
     difficulty: 2,
 
     generate: ({a,n}) => {
@@ -145,7 +171,7 @@ addTemplate({
 
 addTemplate({
 
-    methods: ["Integration by parts","Trigonometric functions"],
+    methods: [Methods.IBP,Methods.TRIG],
     difficulty: 2,
 
     generate: ({a, b, c, n}) => {
@@ -159,7 +185,7 @@ addTemplate({
 
 addTemplate({
 
-    methods: ["Integration by parts","Trigonometric functions"],
+    methods: [Methods.IBP,Methods.TRIG],
     difficulty: 2,
 
     generate: ({a, b, c, n}) => {
@@ -173,7 +199,7 @@ addTemplate({
 
 addTemplate({
 
-    methods: ["Zero substitution"],
+    methods: [Methods.ZERO],
     difficulty: 2,
 
     generate: ({a, b}) => {

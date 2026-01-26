@@ -85,64 +85,58 @@ function updateDisplay(){
 ===================================================== */
 
 
-function buildTechPanel(){
+function buildTechPanel() {
+  const list = document.getElementById("techList");
+  list.innerHTML = "";
 
-    const list=document.getElementById("techList");
-    list.innerHTML="";
+  for (const [key, meta] of Object.entries(Methods)) {
+    const state = MethodState[key];
 
-    /* method rows */
+    const row = document.createElement("div");
+    row.className = "list-item";
 
-    METHODS.forEach(m=>{
+    const label = document.createElement("span");
+    label.textContent = meta.label;
 
-        const row=document.createElement("div");
-        row.className="list-item";
+    const enable = document.createElement("input");
+    enable.type = "checkbox";
+    enable.checked = state.enabled;
 
-        const label=document.createElement("span");
-        label.textContent=`${m.name}`;
+    const block = document.createElement("input");
+    block.type = "checkbox";
+    block.className = "blacklist-item";
+    block.title = "Blacklist";
+    block.checked = state.blacklisted;
 
-        const enable=document.createElement("input");
-        enable.type="checkbox";
-        enable.checked=m.enabled;
+    function syncClasses() {
+      row.classList.toggle("item-disabled", !state.enabled);
+      row.classList.toggle("item-blacklisted", state.blacklisted);
+    }
 
-        const block=document.createElement("input");
-        block.type="checkbox";
-        block.className="blacklist-item";
-        block.title="Blacklist";
-        block.checked=m.blacklisted;
+    enable.onchange = () => {
+      state.enabled = enable.checked;
+      if (state.enabled) state.blacklisted = false;
+      block.checked = state.blacklisted;
+      syncClasses();
+    };
 
-        enable.onchange=()=>{
-            m.enabled=enable.checked;
-            if (enable.checked) {
-                m.blacklisted=false;
-                block.checked=false;
-            }
-            row.classList.toggle("item-disabled",!m.enabled);
-            row.classList.toggle("item-blacklisted",m.blacklisted);
-        };
+    block.onchange = () => {
+      state.blacklisted = block.checked;
+      if (state.blacklisted) state.enabled = false;
+      enable.checked = state.enabled;
+      syncClasses();
+    };
 
-        block.onchange=()=>{
-            m.blacklisted=block.checked;
-            if (block.checked) {
-                m.enabled=false;
-                enable.checked=false;
-            }
-            row.classList.toggle("item-disabled",!m.enabled);
-            row.classList.toggle("item-blacklisted",m.blacklisted);
-        };
+    const controls = document.createElement("div");
+    controls.style.display = "flex";
+    controls.style.gap = "6px";
 
-        row.appendChild(label);
+    controls.append(enable, block);
+    row.append(label, controls);
+    list.appendChild(row);
 
-        const controls=document.createElement("div");
-        controls.style.display="flex";
-        controls.style.gap="6px";
-
-        controls.appendChild(enable);
-        controls.appendChild(block);
-
-        row.appendChild(controls);
-
-        list.appendChild(row);
-    });
+    syncClasses();
+  }
 }
 
 
