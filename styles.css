@@ -234,7 +234,7 @@ body.focus .math{
     padding: 12px;
 }
 
-.katex-display > .katex{
+.katex-wrap > .katex{
     white-space:normal;
 }
 

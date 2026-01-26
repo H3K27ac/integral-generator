@@ -238,7 +238,10 @@ function fitMath(el) {
     const base = el.querySelector(".base");
     if (!base) return;
 
+    const katexDisplay = el.querySelector(".katex-display");
+
     // Try natural size
+    katexDisplay.classList.remove("katex-wrap");
     el.style.transform = "scale(1)";
     el.style.fontSize = "";
 
@@ -251,6 +254,8 @@ function fitMath(el) {
         if (base.getBoundingClientRect().width <= maxWidth) return;
         size--;
     }
+
+    katexDisplay.classList.add("katex-wrap");
 }
 
 
