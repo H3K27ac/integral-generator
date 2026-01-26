@@ -211,12 +211,16 @@ body.focus #workspace{
     text-align: center;
 }
 
-body.focus .overlay-card {
-    margin: 0 auto;
-    padding: 6px;
+body.focus .overlay-background {
+    display: flex;
+    flex-direction: column;
     background: #ffffff;
     border-radius: 16px;
     box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+body.focus .overlay-card {
+    padding: 6px;
     max-width: 90%;
 }
 
