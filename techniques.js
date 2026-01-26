@@ -2,12 +2,7 @@
    METHODS + TEMPLATE REGISTRY
 ===================================================== */
 
-const METHODS = new Map();
 const TEMPLATES = [];
-
-function addMethod(name, { enabled = true, blacklisted = false } = {}) {
-  METHODS.set(name, { name, enabled, blacklisted });
-}
 
 function addTemplate(template) {
   TEMPLATES.push(template);
@@ -34,8 +29,8 @@ const Methods = {
 };
 
 const MethodState = Object.fromEntries(
-  Object.keys(Methods).map(name => [
-    name,
+  Object.keys(Methods).map(key => [
+    key,
     { enabled: true, blacklisted: false }
   ])
 );
