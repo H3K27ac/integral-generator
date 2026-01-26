@@ -201,6 +201,9 @@ function newProblem(){
     katex.render(
         p.latex, problem, {
             displayMode: true,
+            throwOnError: false,
+            trust: true,
+            macros: {},
         }
     );
 
@@ -217,27 +220,33 @@ function showSolution(){
     method.innerHTML = currentMethod;
     katex.render(currentSolutionLatex, solution, {
         displayMode: true,
+        throwOnError: false,
+        trust: true,
+        macros: {},
     });
     fitMath(solution)
     if(watchVisible) pauseTimer();
 }
 
-function fitMath(el) {
 
-    let size = isFocused ? 36 : 24; // start big
+function fitMath(el) {
     let maxWidthPercent = isFocused ? 90 : 45;
     const minSize = 14;
 
     // Read max-width from CSS
     let maxWidth = el.parentElement.clientWidth * (maxWidthPercent / 100);
 
-    el.style.fontSize = size + "px";
+    // reset
+    el.style.transform = "scale(1)";
 
-    while (el.scrollWidth > maxWidth && size > minSize) {
-        size--;
-        el.style.fontSize = size + "px";
+    const rect = el.getBoundingClientRect();
+
+    if (rect.width > maxWidth) {
+        const scale = maxWidth / rect.width;
+        el.style.transform = `scale(${scale})`;
     }
 }
+
 
 
 /* =========================================

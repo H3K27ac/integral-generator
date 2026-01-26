@@ -105,7 +105,12 @@ function generateProblem(){
 }
 
 function toLaTeX(expression) {
-    return nerdamer(expression).toTeX().replace(/\\cdot/g, "").replace(/log/g, "ln");
+    return nerdamer(expression)
+        .toTeX()
+        .replace(/\\cdot/g, "")
+        .replace(/log/g, "ln")
+        .replace(/\\left\(\\left\|/g, "\\left\|")
+        .replace(/\\right\|\\right\)/g, "\\right\|");
 }
 
 
