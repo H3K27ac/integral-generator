@@ -64,7 +64,7 @@ function generateProblem(){
         .filter(([, s]) => s.blacklisted)
         .map(([name]) => name);
 
-    const valid = Templates.filter(t =>
+    const valid = TEMPLATES.filter(t =>
         t.methods.some(m => enabled.includes(m)) &&
         !t.methods.some(m => blacklisted.includes(m))
     );
