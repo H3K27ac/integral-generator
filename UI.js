@@ -195,16 +195,19 @@ function toggleFocus() {
 }
 
 const techPanel = $("techPanel");
-const problemSolution = $("problemSolution");
+const problem = $("problem");
+const solution = $("solution");
 
 function mountPanelToTabs(){
     document.getElementById("techPanelMount").appendChild(techPanel);
-    document.getElementById("qaOverlay").appendChild(problemSolution);
+    document.getElementById("qaOverlay").appendChild(problem);
+    document.getElementById("qaOverlay").appendChild(solution);
 }
 
 function mountPanelInline(){
     document.getElementById("focusTechPanelMount").appendChild(techPanel);
-    document.getElementById("focusProblemMount").appendChild(problemSolution);
+    document.getElementById("focusProblemMount").appendChild(problem);
+    document.getElementById("focusProblemMount").appendChild(solution);
 }
 
 

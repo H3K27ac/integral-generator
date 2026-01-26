@@ -162,17 +162,22 @@ function showSolution(){
     if(watchVisible) pauseTimer();
 }
 
-function fitMath(el){
+function fitMath(el) {
 
-    let size = isFocused? 36 : 24;   // start big
+    let size = isFocused ? 36 : 24; // start big
+    const minSize = 14;
 
-    el.style.fontSize = size+"px";
+    // Read max-width from CSS
+    let maxWidth = 500;
 
-    while(el.scrollWidth > el.clientWidth && size > 14){
-        size -= 1;
-        el.style.fontSize = size+"px";
+    el.style.fontSize = size + "px";
+
+    while (el.scrollWidth > maxWidth && size > minSize) {
+        size--;
+        el.style.fontSize = size + "px";
     }
 }
+
 
 
 

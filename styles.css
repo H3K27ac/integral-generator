@@ -181,7 +181,6 @@ body.focus #workspace{
 
 #qaOverlay {
     position: absolute;
-    top: 20%;
     right: 50%;
     display: flex;
     flex-direction: row;
