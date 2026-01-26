@@ -174,6 +174,70 @@ document.querySelectorAll('[data-tooltip]').forEach(el => {
   });
 });
 
+/* =========================================
+   Problem and solution
+========================================= */
+
+let currentSolutionLatex="";
+let currentMethod="";
+
+const solution = $("solution");
+const problem = $("problem");
+const method = $("method");
+
+function newProblem(){
+
+    canvas.clear();
+    problem.style.display = "block";
+    solution.style.display = "none";
+    method.innerHTML="";
+
+    const p = generateProblem();
+    if (!p) return;
+
+    currentSolutionLatex = p.solutionLatex;
+    currentMethod = p.method;
+
+    katex.render(
+        p.latex, problem, {
+            displayMode: true,
+        }
+    );
+
+    fitMath(problem);
+
+    if(watchVisible){
+        resetTimer();
+        startTimer();
+    }
+}
+
+function showSolution(){
+    katex.render(currentSolutionLatex, solution, {
+        displayMode: true,
+    });
+    fitMath(solution)
+    method.innerHTML = currentMethod;
+    solution.style.display = "block";
+    if(watchVisible) pauseTimer();
+}
+
+function fitMath(el) {
+
+    let size = isFocused ? 36 : 24; // start big
+    const minSize = 14;
+
+    // Read max-width from CSS
+    let maxWidth = 500;
+
+    el.style.fontSize = size + "px";
+
+    while (el.scrollWidth > maxWidth && size > minSize) {
+        size--;
+        el.style.fontSize = size + "px";
+    }
+}
+
 
 /* =========================================
    Focus Mode
@@ -195,8 +259,6 @@ function toggleFocus() {
 }
 
 const techPanel = $("techPanel");
-const problem = $("problem");
-const solution = $("solution");
 
 function mountPanelToTabs(){
     document.getElementById("techPanelMount").appendChild(techPanel);

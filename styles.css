@@ -192,7 +192,7 @@ body.focus #workspace{
 .overlay-card {
     background: rgba(0, 0, 0, 0);
     padding: 8px 12px;
-    max-width: 300px;
+    max-width: 500px;
 }
 
 #solution{
@@ -211,6 +211,9 @@ body.focus .overlay-card {
     background: #ffffff;
     border-radius: 16px;
     box-shadow:0 6px 18px rgba(0,0,0,.12);
+}
+
+body.focus #solution{
     border: none;
 }
 
