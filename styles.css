@@ -202,10 +202,6 @@ body.focus #workspace{
     max-width: 45%;
 }
 
-#solution{
-    border: 1px solid black;
-}
-
 .math {
     font-size: 1.8rem;
     text-align: center;
@@ -224,10 +220,6 @@ body.focus #focusProblemMount {
     display: flex;
     flex-direction: column;
     gap: 8px;
-}
-
-body.focus #solution{
-    border: none;
 }
 
 body.focus .math{

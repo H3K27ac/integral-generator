@@ -20,35 +20,44 @@ function pick(arr){
 ===================================================== */
 
 
-function randomConstants(options={}){
-    const {
-        intRange = [-5, 5],      // range for a,b,c,d (excluding 0)
-        posIntRange = [1, 5]     // range for m,n,k
-        }= options;
+/* =====================================================
+   Template-aware constant replacement
+===================================================== */
 
-    const constants = {
-        a: null, b: null, c: null, d: null,
-        m: null, n: null, k: null
+const DEFAULT_CONSTANTS = {
+    a: { range: [-5, 5], nonZero: true },
+    b: { range: [-5, 5], nonZero: true },
+    c: { range: [-5, 5], nonZero: true },
+    d: { range: [-5, 5], nonZero: true },
+    m: { range: [1, 5] },
+    n: { range: [1, 5] },
+    k: { range: [1, 5] }
+};
+
+function randomConstants(template) {
+    const spec = {
+        ...DEFAULT_CONSTANTS,
+        ...(template.constants ?? {})
     };
 
-    for (const key of ["a", "b", "c", "d"]) {
-        constants[key] = rint(intRange[0], intRange[1], true);
+    const params = template.params ?? Object.keys(spec);
+    const result = {};
+
+    for (const key of params) {
+        const { range, nonZero = false } = spec[key];
+        result[key] = rint(range[0], range[1], nonZero);
     }
 
-    for (const key of ["m", "n", "k"]) {
-        constants[key] = rint(posIntRange[0], posIntRange[1]);
-    }
-
-
-    return constants;
+    return result;
 }
+
 
 
 /* =====================================================
    Hybrid generator
 ===================================================== */
 
-function generateProblem(){
+function generateProblem() {
     const valid = getTemplates();
 
     if (valid.length === 0) {
@@ -57,17 +66,17 @@ function generateProblem(){
     }
 
     const template = pick(valid);
-
-    const constants = randomConstants();
+    const constants = randomConstants(template);
 
     const { integral, solution } = template.generate(constants);
-    
+
     return {
         method: JSON.stringify(template.methods),
         latex: `\\int ${toLaTeX(integral)}\\,dx`,
         solutionLatex: `= \\boxed{${toLaTeX(solution)} +C}`
     };
 }
+
 
 function toLaTeX(expression) {
     return nerdamer(expression)

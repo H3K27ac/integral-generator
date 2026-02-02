@@ -253,6 +253,9 @@ const TEMPLATE_DEFS = [
         id: "ibp_x_sin",
         methods: ["IBP","TRIG"],
         difficulty: 2,
+        constants: {
+            n: { range: [1, 3] }
+        },
         params: ["a","b","c","n"],
         generate: ({a,b,c,n}) => {
         
@@ -267,6 +270,9 @@ const TEMPLATE_DEFS = [
         id: "ibp_x_cos",
         methods: ["IBP","TRIG"],
         difficulty: 2,
+        constants: {
+            n: { range: [1, 3] }
+        },
         params: ["a","b","c","n"],
         generate: ({a,b,c,n}) => {
         
