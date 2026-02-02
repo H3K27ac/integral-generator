@@ -65,7 +65,7 @@ function generateProblem(){
     return {
         method: JSON.stringify(template.methods),
         latex: `\\int ${toLaTeX(integral)}\\,dx`,
-        solutionLatex: `= ${toLaTeX(solution)} +C`
+        solutionLatex: `= \\boxed{${toLaTeX(solution)} +C}`
     };
 }
 
