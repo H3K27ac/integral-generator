@@ -225,6 +225,9 @@ const TEMPLATE_DEFS = [
         id: "ibp_with_exp",
         methods: ["IBP","EXP"],
         difficulty: 2,
+        constants: {
+            n: { range: [1, 4] }
+        },
         params: ["a","n"],
         generate: ({a,n}) => {
         
@@ -239,6 +242,9 @@ const TEMPLATE_DEFS = [
         id: "u_sub_logn",
         methods: ["USUB","IBP","LOG","EXP"],
         difficulty: 2,
+        constants: {
+            n: { range: [1, 4] }
+        },
         params: ["a","n"],
         generate: ({a,n}) => {
         
@@ -254,7 +260,7 @@ const TEMPLATE_DEFS = [
         methods: ["IBP","TRIG"],
         difficulty: 2,
         constants: {
-            n: { range: [1, 3] }
+            n: { range: [1, 2] }
         },
         params: ["a","b","c","n"],
         generate: ({a,b,c,n}) => {
@@ -271,7 +277,7 @@ const TEMPLATE_DEFS = [
         methods: ["IBP","TRIG"],
         difficulty: 2,
         constants: {
-            n: { range: [1, 3] }
+            n: { range: [1, 2] }
         },
         params: ["a","b","c","n"],
         generate: ({a,b,c,n}) => {
